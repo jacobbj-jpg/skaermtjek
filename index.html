@@ -3,7 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SkærmTjek – Forældreguide til digitalt indhold</title>
+<title>SkærmTjek – Hvad ser dine børn egentlig på skærmen?</title>
+<meta name="description" content="Dansk forældreguide til digitalt børneindhold. Søg på YouTube-kanaler, Netflix-serier og spil. Se hvad andre forældre mener om vold, sprog og vanedannelse.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://skaermtjek.netlify.app/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://skaermtjek.netlify.app/">
+<meta property="og:title" content="SkærmTjek – Hvad ser dine børn egentlig på skærmen?">
+<meta property="og:description" content="Dansk forældreguide til digitalt børneindhold. Se hvad andre forældre mener om YouTube-kanaler, Netflix-serier og spil.">
+<meta property="og:locale" content="da_DK">
+<meta property="og:site_name" content="SkærmTjek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="SkærmTjek – Hvad ser dine børn egentlig på skærmen?">
+<meta name="twitter:description" content="Dansk forældreguide til digitalt børneindhold.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"SkærmTjek","url":"https://skaermtjek.netlify.app","description":"Dansk forældreguide til digitalt børneindhold","inLanguage":"da","author":{"@type":"Person","name":"Jacob Benedictus Jørgensen"}}</script>
 <meta name="description" content="Søg og find vurderinger af YouTube-kanaler, Netflix-serier, spil og apps – lavet af danske forældre for danske forældre.">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -343,6 +356,20 @@ nav {
 }
 
 .filter-section:last-of-type { border-bottom: none; }
+
+.filter-platform-group {
+  margin-top: 10px;
+}
+
+.filter-platform-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+  color: var(--muted);
+  margin-bottom: 6px;
+  margin-top: 4px;
+}
 
 .filter-section-title {
   font-size: 11px;
@@ -3234,7 +3261,7 @@ input.autofilled, textarea.autofilled {
     </div>
     <div class="hero-stats">
       <div class="stat"><strong id="statCount">—</strong>Vurderinger</div>
-      <div class="stat"><strong id="statPlatforms">6</strong>Platforme</div>
+      <div class="stat"><strong id="statPlatforms">14</strong>Platforme</div>
       <div class="stat"><strong>Gratis</strong>Altid</div>
     </div>
   </div>
@@ -3252,18 +3279,46 @@ input.autofilled, textarea.autofilled {
   <!-- Collapsible filter panel -->
   <div class="filter-panel" id="filterPanel">
     <div class="filter-section">
+      <div class="filter-section">
       <div class="filter-section-title">Platform</div>
       <div class="filter-pills-wrap">
         <span class="filter-pill active" id="plt-all" onclick="setPlatform(this,'all')">Alle</span>
-        <span class="filter-pill" onclick="setPlatform(this,'youtube')">📺 YouTube</span>
-        <span class="filter-pill" onclick="setPlatform(this,'netflix')">🎬 Netflix</span>
-        <span class="filter-pill" onclick="setPlatform(this,'playstation')">🎮 PlayStation</span>
-        <span class="filter-pill" onclick="setPlatform(this,'disney')">✨ Disney+</span>
-        <span class="filter-pill" onclick="setPlatform(this,'tiktok')">🎵 TikTok</span>
-        <span class="filter-pill" onclick="setPlatform(this,'andet')">📱 Andet</span>
+      </div>
+      <div class="filter-platform-group">
+        <div class="filter-platform-label">📺 Streaming</div>
+        <div class="filter-pills-wrap">
+          <span class="filter-pill" onclick="setPlatform(this,'youtube')">YouTube</span>
+          <span class="filter-pill" onclick="setPlatform(this,'netflix')">Netflix</span>
+          <span class="filter-pill" onclick="setPlatform(this,'disney')">Disney+</span>
+          <span class="filter-pill" onclick="setPlatform(this,'dr')">DR</span>
+          <span class="filter-pill" onclick="setPlatform(this,'viaplay')">Viaplay</span>
+          <span class="filter-pill" onclick="setPlatform(this,'hbo')">HBO Max</span>
+        </div>
+      </div>
+      <div class="filter-platform-group">
+        <div class="filter-platform-label">🎮 Spil</div>
+        <div class="filter-pills-wrap">
+          <span class="filter-pill" onclick="setPlatform(this,'gaming')">Konsol & PC</span>
+          <span class="filter-pill" onclick="setPlatform(this,'switch')">Nintendo Switch</span>
+          <span class="filter-pill" onclick="setPlatform(this,'ipad')">iPad-apps</span>
+        </div>
+      </div>
+      <div class="filter-platform-group">
+        <div class="filter-platform-label">📱 Sociale medier</div>
+        <div class="filter-pills-wrap">
+          <span class="filter-pill" onclick="setPlatform(this,'tiktok')">TikTok</span>
+          <span class="filter-pill" onclick="setPlatform(this,'instagram')">Instagram</span>
+          <span class="filter-pill" onclick="setPlatform(this,'snapchat')">Snapchat</span>
+        </div>
+      </div>
+      <div class="filter-platform-group">
+        <div class="filter-platform-label">💬 Chat & fællesskaber</div>
+        <div class="filter-pills-wrap">
+          <span class="filter-pill" onclick="setPlatform(this,'discord')">Discord</span>
+          <span class="filter-pill" onclick="setPlatform(this,'twitch')">Twitch</span>
+        </div>
       </div>
     </div>
-    <div class="filter-section">
       <div class="filter-section-title">Barnets alder</div>
       <div class="filter-pills-wrap">
         <span class="filter-pill active" id="age-all" onclick="setAgeFilter(this,'all')">Alle</span>
@@ -3371,15 +3426,30 @@ input.autofilled, textarea.autofilled {
             </div>
             <div class="field-group">
               <label>Platform *</label>
-              <select id="f_platform">
+              <<select id="f_platform">
                 <option value="">Vælg platform…</option>
-                <option value="youtube">📺 YouTube</option>
-                <option value="netflix">🎬 Netflix</option>
-                <option value="playstation">🎮 PlayStation</option>
-                <option value="disney">✨ Disney+</option>
-                <option value="tiktok">🎵 TikTok</option>
-                <option value="twitch">🟣 Twitch</option>
-                <option value="andet">📱 Andet</option>
+                <optgroup label="📺 Streaming">
+                  <option value="youtube">YouTube</option>
+                  <option value="netflix">Netflix</option>
+                  <option value="disney">Disney+</option>
+                  <option value="dr">DR / Ramasjang</option>
+                  <option value="viaplay">Viaplay</option>
+                  <option value="hbo">HBO Max</option>
+                </optgroup>
+                <optgroup label="🎮 Spil">
+                  <option value="gaming">Konsol & PC</option>
+                  <option value="switch">Nintendo Switch</option>
+                  <option value="ipad">iPad-apps</option>
+                </optgroup>
+                <optgroup label="📱 Sociale medier">
+                  <option value="tiktok">TikTok</option>
+                  <option value="instagram">Instagram</option>
+                  <option value="snapchat">Snapchat</option>
+                </optgroup>
+                <optgroup label="💬 Chat & fællesskaber">
+                  <option value="discord">Discord</option>
+                  <option value="twitch">Twitch</option>
+                </optgroup>
               </select>
             </div>
           </div>
@@ -4133,18 +4203,36 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const DEMO_MODE = (SUPABASE_URL === 'YOUR_SUPABASE_URL');
 
 const CATEGORIES = [
-  { id:'violence',     icon:'⚔️',  name:'Voldsomt indhold',   desc:'Kamp, blod, aggression' },
-  { id:'language',     icon:'🗣️',  name:'Sprog & banden',     desc:'Bandeord, hårdt ordvalg' },
-  { id:'addiction',    icon:'🎯',  name:'Vanedannende',        desc:'Afhængighedsskabende format' },
-  { id:'commercialism',icon:'💰',  name:'Reklame & køb',       desc:'Skjult reklame, køb-i-spil' },
+  { id:'violence',     icon:'⚔️',  name:'Voldsomt indhold',    desc:'Kamp, blod, aggression' },
+  { id:'language',     icon:'🗣️',  name:'Sprog & tone',        desc:'Bandeord, hårdt ordvalg' },
+  { id:'dopamine',     icon:'🎰',  name:'Dopamin & belønning', desc:'Loot, level-ups, hurtige rewards' },
+  { id:'retention',    icon:'🔔',  name:'Fastholdelse',        desc:'FOMO, streaks, daglige bonusser' },
+  { id:'commercialism',icon:'💰',  name:'Kommercielt pres',    desc:'Skjult reklame, køb-i-spil' },
   { id:'values',       icon:'💡',  name:'Rollemodel',          desc:'Værdier og adfærd' },
   { id:'sexual',       icon:'🔞',  name:'Seksuelt indhold',    desc:'Antydninger eller eksplicit' },
   { id:'fear',         icon:'😨',  name:'Skræmmende',          desc:'Horror, jump-scares, angst' },
-  { id:'screentime',   icon:'⏱️',  name:'Skærmtidsfælde',     desc:'Uendeligt feed, ingen stop' },
+  { id:'passive',      icon:'🧠',  name:'Passivt vs. aktivt',  desc:'Stimulerer eller sløver hjernen?' },
+  { id:'socialpressure',icon:'👥', name:'Socialt pres',        desc:'Kropsidealer, livsstil, gruppepress' },
 ];
 
-const PLATFORM_EMOJI = {youtube:'📺',netflix:'🎬',playstation:'🎮',disney:'✨',twitch:'🟣',tiktok:'🎵',andet:'📱'};
-const PLATFORM_LABEL = {youtube:'YouTube',netflix:'Netflix',playstation:'PlayStation',disney:'Disney+',twitch:'Twitch',tiktok:'TikTok',andet:'Andet'};
+const PLATFORM_EMOJI = {
+  youtube:'📺', netflix:'🎬', disney:'✨', dr:'🇩🇰', viaplay:'🎭', hbo:'🎪',
+  gaming:'🎮', switch:'🕹️', ipad:'📱',
+  tiktok:'🎵', instagram:'📸', snapchat:'👻',
+  discord:'💬', twitch:'🟣'
+};
+const PLATFORM_LABEL = {
+  youtube:'YouTube', netflix:'Netflix', disney:'Disney+', dr:'DR / Ramasjang', viaplay:'Viaplay', hbo:'HBO Max',
+  gaming:'Konsol & PC', switch:'Nintendo Switch', ipad:'iPad-apps',
+  tiktok:'TikTok', instagram:'Instagram', snapchat:'Snapchat',
+  discord:'Discord', twitch:'Twitch'
+};
+const PLATFORM_CATEGORY = {
+  youtube:'streaming', netflix:'streaming', disney:'streaming', dr:'streaming', viaplay:'streaming', hbo:'streaming',
+  gaming:'spil', switch:'spil', ipad:'spil',
+  tiktok:'socialt', instagram:'socialt', snapchat:'socialt',
+  discord:'chat', twitch:'chat'
+};
 
 // ── BLOG POSTS ────────────────────────────────────────────────────────
 const BLOG_POSTS = [
@@ -4507,50 +4595,50 @@ const DEMO_DATA = [
       {label:'Medierådet: Guide til Minecraft', url:'https://medieraadet.dk/raad-og-vejledning/spil/minecraft', source:'Medierådet'},
       {label:'Børns Vilkår: Spil og skærmtid', url:'https://bornsvilkaar.dk/born-og-unge/digitale-medier/', source:'Børns Vilkår'},
       {label:'Lootboxes og gambling i spil', url:'#', source:'SkærmTjek Viden', internal:'a3'},
-    ], recommended_age:7, platform:'playstation', age_group:'7-9', episode:'Survival Mode', notes:'Kreativt og lærerigt. Online-multiplayer kan give kontakt med fremmede.', votes:31, created_at:'2025-02-14',
+    ], recommended_age:7, platform:'gaming', age_group:'7-9', episode:'Survival Mode', notes:'Kreativt og lærerigt. Online-multiplayer kan give kontakt med fremmede.', votes:31, created_at:'2025-02-14',
     ai_scores:{violence:3,language:3,addiction:8,commercialism:5,values:3,sexual:1,fear:2,screentime:8},
     ai_analysis:'Minecraft er i sin grundform et kreativt spil med lav vold. Bekymringen er vanedannelse og online-multiplayer, der kan bringe barnet i kontakt med fremmede. Brug forældrekontrol til at begrænse online-spil og sæt klare tidsgrænser.' },
   { id:14, title:'Fortnite', external_links:[
       {label:'Lootboxes og gambling i spil', url:'#', source:'SkærmTjek Viden', internal:'a3'},
       {label:'Medierådet: Guide til Fortnite', url:'https://medieraadet.dk/raad-og-vejledning/spil/fortnite', source:'Medierådet'},
       {label:'KU forskning: Gaming og gambling', url:'https://hum.ku.dk/faknyt/2024/november/drenge-og-unge-maend-investerer-i-uregulerede-finansielle-produkter-og-det-begynder-med-computerspil/', source:'Københavns Universitet'},
-    ], recommended_age:12, platform:'playstation', age_group:'10-12', episode:'Battle Royale', notes:'Skydespil med cartoon-stil. Høj vold, men ikke realistisk. Massivt skin-pres.', votes:48, created_at:'2025-02-01',
+    ], recommended_age:12, platform:'gaming', age_group:'10-12', episode:'Battle Royale', notes:'Skydespil med cartoon-stil. Høj vold, men ikke realistisk. Massivt skin-pres.', votes:48, created_at:'2025-02-01',
     ai_scores:{violence:6,language:4,addiction:9,commercialism:8,values:4,sexual:1,fear:3,screentime:9},
     ai_analysis:'Fortnite er PEGI 12 og det med god grund. Battle Royale-formatet med konstant kamp er ikke egnet til børn under 10. Det massive skin-pres og "Battle Pass"-systemet er designet til at presse på løbende køb. Til 10-12-årige: tilstrækkelig alder, men sæt budget-grænser og tidsgrænser.' },
   { id:15, title:'Roblox', external_links:[
       {label:'Medierådet: Guide til Roblox', url:'https://medieraadet.dk/raad-og-vejledning/spil/roblox', source:'Medierådet'},
       {label:'Forbrugerrådet: Lootboxes i spil', url:'https://taenk.dk/forbrugerliv/familieliv/boern-skal-ikke-plyndres-i-computerspil', source:'Forbrugerrådet Tænk'},
-    ], recommended_age:8, platform:'playstation', age_group:'7-9', episode:'Generel platform', notes:'Millioner af brugerskabt indhold – kvaliteten varierer enormt. Chat-risiko.', votes:44, created_at:'2025-01-10',
+    ], recommended_age:8, platform:'gaming', age_group:'7-9', episode:'Generel platform', notes:'Millioner af brugerskabt indhold – kvaliteten varierer enormt. Chat-risiko.', votes:44, created_at:'2025-01-10',
     ai_scores:{violence:4,language:4,addiction:8,commercialism:7,values:3,sexual:3,fear:2,screentime:8},
     ai_analysis:'Roblox er en platform, ikke et spil – kvaliteten af indholdet varierer enormt. Nogle spil er uskyldige, andre indeholder vold og upassende indhold. Chatfunktionen er den største risiko for yngre børn. Anbefaling: aktiver forældrekontrol, slå chat fra for under 10-årige, og spil gerne med barnet.' },
-  { id:16, title:'FIFA / EA Sports FC', platform:'playstation', age_group:'10-12', episode:'Ultimate Team', notes:'Ultimate Team-mode er gambling-lignende. Massivt pres for køb af spillerpakker.', votes:36, created_at:'2025-02-18',
+  { id:16, title:'FIFA / EA Sports FC', platform:'gaming', age_group:'10-12', episode:'Ultimate Team', notes:'Ultimate Team-mode er gambling-lignende. Massivt pres for køb af spillerpakker.', votes:36, created_at:'2025-02-18',
     ai_scores:{violence:2,language:4,addiction:8,commercialism:9,values:3,sexual:1,fear:1,screentime:7},
     ai_analysis:'EA Sports FC er et fodboldspil med relativt uskyldig grundspilmekanik. Ultimate Team er dog dybt problematisk: spillerpakker fungerer som lootboxes med gambling-elementer, og børn presses socialt til at købe for at have gode hold. Eksperter advarer specifikt mod dette format. Begræns til karriere-mode uden køb.' },
-  { id:17, title:'Among Us', platform:'playstation', age_group:'10-12', episode:'Online multiplayer', notes:'Socialt deduktionsspil. Kræver kommunikation og kan fremme fællesskab.', votes:25, created_at:'2025-01-15',
+  { id:17, title:'Among Us', platform:'gaming', age_group:'10-12', episode:'Online multiplayer', notes:'Socialt deduktionsspil. Kræver kommunikation og kan fremme fællesskab.', votes:25, created_at:'2025-01-15',
     ai_scores:{violence:2,language:4,addiction:6,commercialism:2,values:3,sexual:1,fear:2,screentime:6},
     ai_analysis:'Among Us er et socialt og kreativt deduktionsspil, der kræver kommunikation og strategisk tænkning. Spillet er relativt sikkert, men online-chat kan eksponere børn for ukendte spillere. Til 10-12-årige er spillet passende – bedst spillet med kendte venner.' },
-  { id:18, title:'GTA V', recommended_age:18, platform:'playstation', age_group:'13+', episode:'Story Mode', notes:'Ekstremt voldsomt og seksuelt indhold. Kun for over 18 ifølge PEGI.', votes:39, created_at:'2025-02-28',
+  { id:18, title:'GTA V', recommended_age:18, platform:'gaming', age_group:'13+', episode:'Story Mode', notes:'Ekstremt voldsomt og seksuelt indhold. Kun for over 18 ifølge PEGI.', votes:39, created_at:'2025-02-28',
     ai_scores:{violence:10,language:9,addiction:8,commercialism:6,values:8,sexual:7,fear:5,screentime:7},
     ai_analysis:'GTA V er PEGI 18 – dette spil er ikke for børn under 18. Indholdet inkluderer grafisk vold, seksuelt indhold, narkotika og groft sprog. At mange børn spiller det ændrer ikke på, at det er direkte uegnet for under 18-årige. Klar anbefaling: frarådes absolut til alle under 16 og bør diskuteres åbent med teenagere.' },
-  { id:19, title:'Call of Duty', recommended_age:16, platform:'playstation', age_group:'13+', episode:'Warzone', notes:'Realistisk krigsspil med grafisk vold. PEGI 18.', votes:27, created_at:'2025-03-02',
+  { id:19, title:'Call of Duty', recommended_age:16, platform:'gaming', age_group:'13+', episode:'Warzone', notes:'Realistisk krigsspil med grafisk vold. PEGI 18.', votes:27, created_at:'2025-03-02',
     ai_scores:{violence:9,language:7,addiction:8,commercialism:6,values:5,sexual:2,fear:5,screentime:8},
     ai_analysis:'Call of Duty Warzone er PEGI 18 og indeholder realistisk, grafisk vold samt militær krigsscenari. Online-lobbier er fyldt med groft sprog. Til teenagere over 16 er spillet en kulturel realitet, men forældre bør tale om forskellen på spil og virkelighed.' },
-  { id:20, title:'Zelda: Tears of the Kingdom', platform:'playstation', age_group:'10-12', episode:'Eventyrspil', notes:'Kreativt eventyrspil med lav vold. Fantastisk til børn der kan lide historier.', votes:22, created_at:'2025-01-22',
+  { id:20, title:'Zelda: Tears of the Kingdom', platform:'gaming', age_group:'10-12', episode:'Eventyrspil', notes:'Kreativt eventyrspil med lav vold. Fantastisk til børn der kan lide historier.', votes:22, created_at:'2025-01-22',
     ai_scores:{violence:4,language:1,addiction:6,commercialism:1,values:1,sexual:1,fear:3,screentime:6},
     ai_analysis:'The Legend of Zelda er et PEGI 12-spil med fokus på eventyr, puslespil og kreativitet. Volden er lav og cartoon-agtig. Der er ingen mikrotransaktioner eller online-elementer. Et af de bedste spil til 10-12-årige – engagerer hjerne og fantasi uden problematisk indhold.' },
-  { id:21, title:'Super Mario Bros. Wonder', platform:'playstation', age_group:'7-9', episode:'Platform-spil', notes:'Klassisk familievenligt platformspil. Ingen problematisk indhold overhovedet.', votes:31, created_at:'2025-01-08',
+  { id:21, title:'Super Mario Bros. Wonder', platform:'gaming', age_group:'7-9', episode:'Platform-spil', notes:'Klassisk familievenligt platformspil. Ingen problematisk indhold overhovedet.', votes:31, created_at:'2025-01-08',
     ai_scores:{violence:1,language:1,addiction:5,commercialism:1,values:1,sexual:1,fear:1,screentime:5},
     ai_analysis:'Super Mario Bros. Wonder er et af de mest forældreanbefalede spil på markedet. Ingen vold, intet groft sprog, ingen mikrotransaktioner og ingen online-farer. Sjovt for hele familien og kan spilles sammen. Varmt anbefalet til 7-9-årige.' },
-  { id:22, title:'Pokémon', platform:'playstation', age_group:'7-9', episode:'Scarlet & Violet', notes:'Klassisk børnespil. Svagt online-element og nogen vanedannelse i samle-aspektet.', votes:26, created_at:'2025-02-05',
+  { id:22, title:'Pokémon', platform:'gaming', age_group:'7-9', episode:'Scarlet & Violet', notes:'Klassisk børnespil. Svagt online-element og nogen vanedannelse i samle-aspektet.', votes:26, created_at:'2025-02-05',
     ai_scores:{violence:2,language:1,addiction:6,commercialism:4,values:2,sexual:1,fear:1,screentime:6},
     ai_analysis:'Pokémon er et klassisk og generelt sikkert børnespil. Scarlet & Violet har et online-element der er relativt sikkert. Samle-mekanikken kan skabe vanedannelse ("fang dem alle"). Ingen problematisk indhold, men begrænset spilletid anbefales som med alle spil.' },
-  { id:23, title:'Counter-Strike 2', platform:'playstation', age_group:'13+', episode:'Competitive', notes:'Realistisk skydespil. PEGI 18. Intenst online-miljø med groft sprog.', votes:21, created_at:'2025-03-08',
+  { id:23, title:'Counter-Strike 2', platform:'gaming', age_group:'13+', episode:'Competitive', notes:'Realistisk skydespil. PEGI 18. Intenst online-miljø med groft sprog.', votes:21, created_at:'2025-03-08',
     ai_scores:{violence:8,language:8,addiction:8,commercialism:5,values:4,sexual:1,fear:4,screentime:8},
     ai_analysis:'Counter-Strike 2 er PEGI 18 og indeholder realistisk skydespil i taktisk militær kontekst. Online-lobbier har intenst og til tider hadefuldt sprog. Til unge over 16 er spillet en etableret e-sport-genre, men under 16 frarådes det på grund af sprogtonen og spilformatet.' },
-  { id:24, title:'Hogwarts Legacy', platform:'playstation', age_group:'13+', episode:'Story Mode', notes:'Harry Potter-univers med mørke elementer. Fascinerende men til de ældre børn.', votes:18, created_at:'2025-01-28',
+  { id:24, title:'Hogwarts Legacy', platform:'gaming', age_group:'13+', episode:'Story Mode', notes:'Harry Potter-univers med mørke elementer. Fascinerende men til de ældre børn.', votes:18, created_at:'2025-01-28',
     ai_scores:{violence:6,language:2,addiction:6,commercialism:2,values:3,sexual:1,fear:5,screentime:6},
     ai_analysis:'Hogwarts Legacy er PEGI 12 og befinder sig i den mørkere ende af Harry Potter-universet. Volden er markant mere intens end filmene, og visse sektioner kan være skræmmende. Til 12-13-årige der er vant til action-spil er det passende, men yngre børn bør ikke spille det alene.' },
-  { id:25, title:'Stardew Valley', platform:'playstation', age_group:'10-12', episode:'Landsbybygger', notes:'Fredeligt gårdsimuleringsspil. Ingen vold. Meget positiv og beroligende.', votes:24, created_at:'2025-02-10',
+  { id:25, title:'Stardew Valley', platform:'gaming', age_group:'10-12', episode:'Landsbybygger', notes:'Fredeligt gårdsimuleringsspil. Ingen vold. Meget positiv og beroligende.', votes:24, created_at:'2025-02-10',
     ai_scores:{violence:1,language:1,addiction:6,commercialism:1,values:1,sexual:1,fear:1,screentime:6},
     ai_analysis:'Stardew Valley er et af de mest rolige og positive spil til børn og unge. Ingen vold, intet groft sprog og ingen mikrotransaktioner. Spillet lære om planlægning, tålmodighed og fællesskab. Vanedannelsen er moderat – det er svært at stoppe, men skader ikke. Varmt anbefalet til 10-12-årige.' },
 
@@ -4762,43 +4850,43 @@ const DEMO_DATA = [
     ai_analysis:'Zootopia er en af Disneys klogeste film om fordomme, stereotyper og samfundsstruktur pakket ind i et farverigt eventyr. Ingen problematisk indhold. Oplagt samtalefilm om fairness og fordomme for børn fra 6 år.' },
 
   // ── SPIL (81-90) ──────────────────────────────────────────────────────
-  { id:81, title:'Overwatch 2', recommended_age:13, platform:'playstation', age_group:'13+', notes:'Teambaseret skydespil. PEGI 12 men online-miljøet er groft. Lootbox-lignende kosmetik.',votes:0,parent_votes:0,parent_score:null,created_at:'2025-02-01',
+  { id:81, title:'Overwatch 2', recommended_age:13, platform:'gaming', age_group:'13+', notes:'Teambaseret skydespil. PEGI 12 men online-miljøet er groft. Lootbox-lignende kosmetik.',votes:0,parent_votes:0,parent_score:null,created_at:'2025-02-01',
     ai_scores:{violence:6,language:6,addiction:8,commercialism:7,values:3,sexual:2,fear:2,screentime:7},
     ai_analysis:'Overwatch 2 er et teambaseret skydespil der er skiftet til free-to-play med aggressiv kosmetisk monetarisering. Online-lobbier kan have groft sprog. Selve spilmekanikken er solid og strategisk. Til 13-årige er det passende, men forældrene bør sætte grænser for køb.' },
 
-  { id:82, title:'Valorant', recommended_age:16, platform:'playstation', age_group:'13+', notes:'Taktisk skydespil med realistisk vold. PEGI 16. Intenst online-miljø. Populært bland teenagere.',votes:0,parent_votes:0,parent_score:null,created_at:'2025-02-01',
+  { id:82, title:'Valorant', recommended_age:16, platform:'gaming', age_group:'13+', notes:'Taktisk skydespil med realistisk vold. PEGI 16. Intenst online-miljø. Populært bland teenagere.',votes:0,parent_votes:0,parent_score:null,created_at:'2025-02-01',
     ai_scores:{violence:7,language:7,addiction:8,commercialism:6,values:4,sexual:1,fear:3,screentime:7},
     ai_analysis:'Valorant er et professionelt taktisk skydespil der kræver kommunikation og strategi. Volden er til stede men ikke grafisk. Online-miljøet kan være groft. Til teenagere over 14-15 er det en etableret e-sport-genre. Under 14 frarådes det.' },
 
-  { id:83, title:'The Sims 4', recommended_age:10, platform:'playstation', age_group:'10-12', notes:'Livssimuleringsspil. PEGI 12. Kreativt og roligt – men kan inkludere romantik og alkohol.',votes:0,parent_votes:0,parent_score:null,created_at:'2025-02-01',
+  { id:83, title:'The Sims 4', recommended_age:10, platform:'gaming', age_group:'10-12', notes:'Livssimuleringsspil. PEGI 12. Kreativt og roligt – men kan inkludere romantik og alkohol.',votes:0,parent_votes:0,parent_score:null,created_at:'2025-02-01',
     ai_scores:{violence:1,language:2,addiction:7,commercialism:6,values:2,sexual:3,fear:1,screentime:6},
     ai_analysis:'The Sims 4 er et kreativt livssimuleringsspil der stimulerer fantasi og planlægning. DLC-model er ekstremt aggressiv – det er svært at spille fuldt ud uden at bruge mange penge. Romantiske og seksuelle elementer er til stede men stiliserede. Passende fra 10-12 år.' },
 
-  { id:84, title:'Apex Legends', recommended_age:14, platform:'playstation', age_group:'13+', notes:'Battle royale-skydespil. PEGI 18 men meget populær bland 13-15-årige. Intenst og vanedannende.',votes:0,parent_votes:0,parent_score:null,created_at:'2025-02-01',
+  { id:84, title:'Apex Legends', recommended_age:14, platform:'gaming', age_group:'13+', notes:'Battle royale-skydespil. PEGI 18 men meget populær bland 13-15-årige. Intenst og vanedannende.',votes:0,parent_votes:0,parent_score:null,created_at:'2025-02-01',
     ai_scores:{violence:7,language:6,addiction:8,commercialism:6,values:3,sexual:2,fear:3,screentime:7},
     ai_analysis:'Apex Legends er et poleret og strategi-krævende battle royale-spil der officielt er PEGI 18 men massevis af 13-15-årige spiller det. Vold er til stede men ikke grafisk. Sæsonpas og kosmetisk monetarisering er aggressiv. Forældre bør have aktiv dialog om aldersgrænsen.' },
 
-  { id:85, title:'Minecraft Dungeons', recommended_age:7, platform:'playstation', age_group:'7-9', notes:'Børnevenlig dungeon-crawler i Minecraft-universet. Lav vold, kooperativt og sjovt for hele familien.',votes:0,parent_votes:0,parent_score:null,created_at:'2025-01-15',
+  { id:85, title:'Minecraft Dungeons', recommended_age:7, platform:'gaming', age_group:'7-9', notes:'Børnevenlig dungeon-crawler i Minecraft-universet. Lav vold, kooperativt og sjovt for hele familien.',votes:0,parent_votes:0,parent_score:null,created_at:'2025-01-15',
     ai_scores:{violence:2,language:1,addiction:5,commercialism:2,values:1,sexual:1,fear:1,screentime:5},
     ai_analysis:'Minecraft Dungeons er en af de mest familievenlige spiloplevelser tilgængelige. Ingen groft indhold, lav vold og kan spilles kooperativt med forældre. Fremragende valg til 7-9-årige som supplement til Minecraft.' },
 
-  { id:86, title:'Fall Guys', recommended_age:7, platform:'playstation', age_group:'7-9', notes:'Farverigt og sjovt battle royale-partyspil. Meget familievenligt. Svag gratis-at-spille monetarisering.',votes:0,parent_votes:0,parent_score:null,created_at:'2025-01-15',
+  { id:86, title:'Fall Guys', recommended_age:7, platform:'gaming', age_group:'7-9', notes:'Farverigt og sjovt battle royale-partyspil. Meget familievenligt. Svag gratis-at-spille monetarisering.',votes:0,parent_votes:0,parent_score:null,created_at:'2025-01-15',
     ai_scores:{violence:1,language:1,addiction:6,commercialism:4,values:1,sexual:1,fear:1,screentime:5},
     ai_analysis:'Fall Guys er et af de mest familievenlige online-spil på markedet. Farverigt, sjovt og uden problematisk indhold. Kosmetiske køb er til stede men ikke aggressivt. Vanedannelsen er moderat. Anbefales varmt til 7-12-årige.' },
 
-  { id:87, title:'It Takes Two', recommended_age:8, platform:'playstation', age_group:'7-9', notes:'Prisvindende kooperativt spil til to spillere. Perfekt til forældre og barn. Ingen problematisk indhold.',votes:0,parent_votes:0,parent_score:null,created_at:'2025-01-15',
+  { id:87, title:'It Takes Two', recommended_age:8, platform:'gaming', age_group:'7-9', notes:'Prisvindende kooperativt spil til to spillere. Perfekt til forældre og barn. Ingen problematisk indhold.',votes:0,parent_votes:0,parent_score:null,created_at:'2025-01-15',
     ai_scores:{violence:2,language:2,addiction:4,commercialism:1,values:1,sexual:1,fear:1,screentime:4},
     ai_analysis:'It Takes Two vandt Game of the Year og er designet til to spillere – perfekt til forældre og barn. Kreativt, varieret og med gode budskaber om samarbejde og kommunikation. Ingen mikrotransaktioner. Varmt anbefalet som fællesoplevelse.' },
 
-  { id:88, title:'Elden Ring', recommended_age:16, platform:'playstation', age_group:'13+', notes:'Udfordrende action-RPG med grafisk vold og mørke temaer. PEGI 16. Kun for de ældre.',votes:0,parent_votes:0,parent_score:null,created_at:'2025-02-01',
+  { id:88, title:'Elden Ring', recommended_age:16, platform:'gaming', age_group:'13+', notes:'Udfordrende action-RPG med grafisk vold og mørke temaer. PEGI 16. Kun for de ældre.',votes:0,parent_votes:0,parent_score:null,created_at:'2025-02-01',
     ai_scores:{violence:8,language:2,addiction:7,commercialism:1,values:3,sexual:3,fear:6,screentime:6},
     ai_analysis:'Elden Ring er et kritikerrost men krævende action-RPG med grafisk vold og mørke fantasy-elementer. Spillet er PEGI 16 og henvender sig til erfarne spillere. Ingen mikrotransaktioner. Til teenagere over 15 der kan håndtere intenst og udfordrende indhold.' },
 
-  { id:89, title:'Mario Kart 8 Deluxe', recommended_age:5, platform:'playstation', age_group:'4-6', notes:'Det ultimative familiespil. Ingen problematisk indhold. Kan spilles af hele familien fra 5 år.',votes:0,parent_votes:0,parent_score:null,created_at:'2025-01-01',
+  { id:89, title:'Mario Kart 8 Deluxe', recommended_age:5, platform:'gaming', age_group:'4-6', notes:'Det ultimative familiespil. Ingen problematisk indhold. Kan spilles af hele familien fra 5 år.',votes:0,parent_votes:0,parent_score:null,created_at:'2025-01-01',
     ai_scores:{violence:1,language:1,addiction:5,commercialism:1,values:1,sexual:1,fear:1,screentime:4},
     ai_analysis:'Mario Kart 8 Deluxe er et af de bedste familiespil nogensinde lavet. Ingen problematisk indhold, kan spilles af alle aldersgrupper og er sjovest når hele familien spiller sammen. Et fremragende alternativ til passivt skærmforbrug.' },
 
-  { id:90, title:'FIFA / EA Sports FC 25', recommended_age:12, platform:'playstation', age_group:'10-12', notes:'Fodboldspil med gambling-lignende Ultimate Team. Se især op for lootbox-køb.',votes:0,parent_votes:0,parent_score:null,created_at:'2025-02-01',
+  { id:90, title:'FIFA / EA Sports FC 25', recommended_age:12, platform:'gaming', age_group:'10-12', notes:'Fodboldspil med gambling-lignende Ultimate Team. Se især op for lootbox-køb.',votes:0,parent_votes:0,parent_score:null,created_at:'2025-02-01',
     ai_scores:{violence:2,language:4,addiction:8,commercialism:9,values:3,sexual:1,fear:1,screentime:7},
     ai_analysis:'EA Sports FC (tidligere FIFA) er et teknisk godt fodboldspil der ødelægges af Ultimate Team-modens gambling-lignende lootbox-mekanik. Børn presses socialt til at købe for at have konkurrencedygtige hold. Begræns til karriere-mode uden køb og undgå at tilknytte betalingskort.' },
 
@@ -4962,14 +5050,14 @@ const DEMO_DATA = [
     ai_analysis:'AI-estimat. The Weekend er et typisk og fremragende Bluey-afsnit der skildrer hverdagsfamilien med humor og varme. Forældre genkender sig selv. Børn elsker det. Intet bekymrende.' },
 
   // ── Fortnite AFSNIT (sæsoner som afsnit) ─────────────────────────────────
-  { id:121, title:'Fortnite', platform:'playstation', content_type:'episode',
+  { id:121, title:'Fortnite', platform:'gaming', content_type:'episode',
     episode:'Sæson OG (Chapter 1 Return)',
     recommended_age:12,
     notes:'Nostalgisk sæson der trak millioner af gamle spillere tilbage. Ekstremt vanedannende.',
     votes:0, parent_votes:0, parent_score:null, created_at:'2025-01-01',
     ai_scores:{violence:6,language:4,addiction:9,commercialism:8,values:3,sexual:1,fear:3,screentime:9},
     ai_analysis:'AI-estimat. OG-sæsonen var et marketing-mesterværk der udnyttede nostalgi til at maksimere spilletid. Skins og Battle Pass-presset var ekstremt højt. Vanskelig periode for forældre at sætte grænser.' },
-  { id:122, title:'Fortnite', platform:'playstation', content_type:'episode',
+  { id:122, title:'Fortnite', platform:'gaming', content_type:'episode',
     episode:'Rocket Racing / Lego Fortnite tilstande',
     recommended_age:8,
     notes:'Fortnites mere børnevenlige tilstande uden kamp og skydevåben.',
@@ -4978,14 +5066,14 @@ const DEMO_DATA = [
     ai_analysis:'AI-estimat. Lego Fortnite og Rocket Racing er markant mere børnevenlige end standard battle royale. Ingen skydevåben og ingen vold. Kommercielt pres fra skins er dog stadig til stede. Et godt kompromis for yngre børn der vil spille Fortnite.' },
 
   // ── Minecraft AFSNIT ─────────────────────────────────────────────────────
-  { id:123, title:'Minecraft', platform:'playstation', content_type:'episode',
+  { id:123, title:'Minecraft', platform:'gaming', content_type:'episode',
     episode:'Survival mode – dag 1 (kreativ start)',
     recommended_age:7,
     notes:'Den klassiske Minecraft-opstart. Lav intensitet og høj kreativitet.',
     votes:0, parent_votes:0, parent_score:null, created_at:'2025-01-01',
     ai_scores:{violence:2,language:1,addiction:6,commercialism:1,values:1,sexual:1,fear:1,screentime:6},
     ai_analysis:'AI-estimat. Survival-mode start er Minecraft på sit mest kreative og engagerende. Lavt bekymringsniveau. Opfordrer til planlægning og problemløsning. En af de bedste spilstarter til børn.' },
-  { id:124, title:'Minecraft', platform:'playstation', content_type:'episode',
+  { id:124, title:'Minecraft', platform:'gaming', content_type:'episode',
     episode:'Multiplayer – online servere',
     recommended_age:10,
     notes:'Online Minecraft-servere. Chat og fremmede spillere øger risikoen markant.',
@@ -5542,8 +5630,15 @@ function setScoreMax(val) {
 function filterAndRender() {
   let data = allData;
 
-  // Platform
-  if (currentFilter !== 'all') data = data.filter(d => d.platform === currentFilter);
+  // Platform — supports both specific platform and category group
+  if (currentFilter !== 'all') {
+    if (currentFilter.startsWith('cat:')) {
+      const cat = currentFilter.replace('cat:', '');
+      data = data.filter(d => (PLATFORM_CATEGORY[d.platform] || 'andet') === cat);
+    } else {
+      data = data.filter(d => d.platform === currentFilter);
+    }
+  }
 
   // Age — filter on AI recommended_age OR legacy age_group
   if (currentAgeFilter !== 'all') {
