@@ -3381,9 +3381,7 @@ input.autofilled, textarea.autofilled {
       <h2 id="browseTitle">Seneste vurderinger</h2>
       <span class="count" id="browseCount"></span>
     </div>
-    <div id="cardGrid" class="card-grid">
-      <div class="loading"><div class="spinner"></div> Henter vurderinger…</div>
-    </div>
+    <div id="cardGrid" class="card-grid"></div>
   </div>
 
   <!-- SUBMIT PAGE -->
@@ -5405,6 +5403,11 @@ if (!DEMO_MODE) {
 // ---- INIT ----
 document.addEventListener('DOMContentLoaded', () => {
   buildSliders();
+  // Render demo data immediately — no waiting
+  allData = DEMO_DATA;
+  updateStats();
+  renderCards(allData);
+  // Then try Supabase in background
   loadData();
   if (DEMO_MODE) {
     document.getElementById('setupBanner').style.display = 'flex';
@@ -5666,11 +5669,6 @@ function updateFilterSummary() {
 
 // ---- LOAD DATA ----
 async function loadData() {
-  // Vis altid demo-data med det samme så siden ikke hænger
-  allData = DEMO_DATA;
-  updateStats();
-  renderCards(allData);
-
   if (DEMO_MODE) return;
 
   // Forsøg at hente rigtige data fra Supabase i baggrunden (3s timeout)
