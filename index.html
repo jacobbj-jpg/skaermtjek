@@ -2990,6 +2990,24 @@ input.autofilled, textarea.autofilled {
   border: 1px solid var(--border);
 }
 
+.film-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-left: 3px solid #1a1a2e;
+}
+
+.film-type-label {
+  color: #e2b96f !important;
+  background: #1a1a2e;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+}
+
+.ep-type-label {
+  color: var(--accent3);
+}
+
 .channel-card-header {
   margin: -22px -22px 10px;
   padding: 6px 16px;
@@ -5214,6 +5232,159 @@ const DEMO_DATA = [
     votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-01',
     ai_scores:{violence:1,language:1,dopamine:3,retention:4,commercialism:1,values:1,sexual:1,fear:1,passive:4,socialpressure:5},
     ai_analysis:'AI-estimat. Luisa-scenen i Encanto handler om at føle sig presset til altid at være stærk og præstere. Den rammer mange børn og forældre dybt. Fremragende samtaleemne om præstationspres og at det er okay at have det svært.' },
+  // ══════════════════════════════════════════════════════════════════════════
+  // FILM
+  // ══════════════════════════════════════════════════════════════════════════
+
+  // ── 0-4 ÅR ───────────────────────────────────────────────────────────────
+  { id:300, title:'Vaiana', recommended_age:4, platform:'disney', age_group:'4-6', content_type:'film',
+    notes:'Polynesisk Disney-prinsessefilm. Stærk kvindelig hovedperson, smuk musik og let skræmmende elementer.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-01',
+    ai_scores:{violence:3,language:1,dopamine:4,retention:5,commercialism:3,values:1,sexual:1,fear:4,passive:5,socialpressure:1},
+    ai_analysis:'Vaiana er en af Disneys stærkeste film med en selvstændig og modig kvindelig protagonist. Visse scener med havet og monsteret Te Kā kan skræmme de mindste. Fra 4 år med forbehold for de mest følsomme børn.' },
+
+  { id:301, title:'Frost (Frozen)', recommended_age:4, platform:'disney', age_group:'4-6', content_type:'film',
+    notes:'Disneys mest succesfulde prinsessefilm. Søsterkærlighed frem for romantik. Lette skræmmende elementer.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-01',
+    ai_scores:{violence:2,language:1,dopamine:4,retention:5,commercialism:5,values:1,sexual:1,fear:3,passive:5,socialpressure:2},
+    ai_analysis:'Frost er en Disney-klassiker med et stærkt budskab om søsterkærlighed. Merchandise-presset er massivt men selve filmen er uskyldig. Fra 4 år. Frost 2 er lidt mørkere i tonen.' },
+
+  { id:302, title:'Løvernes Konge (2019)', recommended_age:6, platform:'disney', age_group:'4-6', content_type:'film',
+    notes:'Live action-remake af klassikeren. Mere realistisk og dermed mere skræmmende end originalen.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-01',
+    ai_scores:{violence:5,language:1,dopamine:3,retention:5,commercialism:3,values:2,sexual:1,fear:6,passive:5,socialpressure:1},
+    ai_analysis:'Live action-versionen er markant mere realistisk end den originale tegnefilm — dyrene ligner rigtige dyr og vold og død føles mere nærværende. Mufasas død kan være traumatiserende for yngre børn. Fra 6 år.' },
+
+  { id:303, title:'Toy Story (1-4)', recommended_age:4, platform:'disney', age_group:'4-6', content_type:'film',
+    notes:'Pixar-klassiker. Særligt Toy Story 4 handler om at slippe det kære. Temaer om tab og forandring.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-01',
+    ai_scores:{violence:2,language:1,dopamine:4,retention:5,commercialism:4,values:1,sexual:1,fear:3,passive:5,socialpressure:1},
+    ai_analysis:'Toy Story-serien er Pixar på sit bedste. Film 1-3 er klassiske og uskyldig — film 4 behandler tab og forandring på en måde der kan gøre børn kede af det. God mulighed for samtale om at slippe ting man holder af.' },
+
+  // ── 4-6 ÅR ───────────────────────────────────────────────────────────────
+  { id:304, title:'Coco', recommended_age:6, platform:'disney', age_group:'4-6', content_type:'film',
+    notes:'Pixar-film om mexicansk dødekultus. Stærke temaer om familie, musik og at blive husket. Berører død.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-01',
+    ai_scores:{violence:2,language:1,dopamine:4,retention:6,commercialism:2,values:1,sexual:1,fear:4,passive:5,socialpressure:1},
+    ai_analysis:'Coco er en af Pixars smukkeste film med dybe temaer om familie og hvad det betyder at blive husket. Berører død og savn på en poetisk måde. Kan give anledning til vigtige samtaler. Fra 6 år — yngre børn kan finde temaerne forvirrende.' },
+
+  { id:305, title:'Kæledyrenes hemmeligheder', recommended_age:5, platform:'netflix', age_group:'4-6', content_type:'film',
+    notes:'Animationsfilm om kæledyrs liv når ejerne er væk. Let og underholdende. Ingen problematisk indhold.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-01',
+    ai_scores:{violence:2,language:1,dopamine:4,retention:4,commercialism:3,values:2,sexual:1,fear:2,passive:5,socialpressure:1},
+    ai_analysis:'Kæledyrenes hemmeligheder er let, sjov og familievenlig underholdning uden bekymrende indhold. Perfekt til 4-7-årige. Merchandise-presset er til stede men selve filmen er harmløs.' },
+
+  { id:306, title:'Soul', recommended_age:8, platform:'disney', age_group:'7-9', content_type:'film',
+    notes:'Pixar-film om livet og meningen med det. Dybere og mere filosofisk end typiske børnefilm.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-01',
+    ai_scores:{violence:1,language:1,dopamine:3,retention:5,commercialism:1,values:1,sexual:1,fear:3,passive:5,socialpressure:2},
+    ai_analysis:'Soul er Pixar på sit mest filosofiske — filmen handler om hvad der giver livet mening. For voksne er den dybt rørende. Til børn under 8 kan de eksistentielle temaer være svære at forstå. Fra 8 år og et fremragende samtaleemne.' },
+
+  // ── 7-9 ÅR ───────────────────────────────────────────────────────────────
+  { id:307, title:'Spider-Man: Into the Spider-Verse', recommended_age:8, platform:'netflix', age_group:'7-9', content_type:'film',
+    notes:'Animeret superheltefilm. Visuelt revolutionerende. Positive budskaber om identitet og ansvar.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-01',
+    ai_scores:{violence:4,language:2,dopamine:6,retention:7,commercialism:3,values:2,sexual:1,fear:3,passive:6,socialpressure:2},
+    ai_analysis:'Spider-Verse er en visuelt og narrativt revolutionerende superheltefilm med stærke budskaber om at finde sin egen identitet. Vold er til stede men ikke grafisk. Fra 8 år. En af de bedste animationsfilm i nyere tid.' },
+
+  { id:308, title:'Jumanji: Welcome to the Jungle', recommended_age:10, platform:'netflix', age_group:'10-12', content_type:'film',
+    notes:'Actionkomedie om teenagers der suges ind i et videospil. Sjov og livlig men med vold og voksenhumor.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-01',
+    ai_scores:{violence:5,language:4,dopamine:6,retention:6,commercialism:2,values:3,sexual:3,fear:3,passive:6,socialpressure:3},
+    ai_analysis:'Jumanji er en underholdende actionkomedie med en del voksenhumor og situationskomik. Vold er til stede men ikke grafisk. Fra 10 år. God familiemorgenmadsfilm for de lidt ældre.' },
+
+  { id:309, title:'Raya og den sidste drage', recommended_age:7, platform:'disney', age_group:'7-9', content_type:'film',
+    notes:'Disney-eventyrfilm med sydøstasiatisk kultur. Stærk kvindelig helt og temaer om tillid og splittelse.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-01',
+    ai_scores:{violence:4,language:1,dopamine:5,retention:6,commercialism:2,values:2,sexual:1,fear:4,passive:5,socialpressure:2},
+    ai_analysis:'Raya og den sidste drage er en actionfyldt Disney-film med stærke temaer om tillid og at overvinde fordomme. Kampscenerne er intense men ikke grafiske. Fra 7 år.' },
+
+  { id:310, title:'Lightyear', recommended_age:7, platform:'disney', age_group:'7-9', content_type:'film',
+    notes:'Sci-fi eventyrfilm i Toy Story-universet. Actionfyldt med let skræmmende rumvæsner.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-01',
+    ai_scores:{violence:4,language:1,dopamine:5,retention:5,commercialism:3,values:2,sexual:1,fear:4,passive:5,socialpressure:1},
+    ai_analysis:'Lightyear er en sci-fi eventyrfilm med actionsekvenser og let skræmmende rumvæsner. Temaer om tab af tid og venskab er mere komplekse end typiske børnefilm. Fra 7 år.' },
+
+  // ── 10-12 ÅR ─────────────────────────────────────────────────────────────
+  { id:311, title:'Black Panther', recommended_age:11, platform:'disney', age_group:'10-12', content_type:'film',
+    notes:'Marvel-film med afrikansk kultur og politiske temaer. Vold men ikke grafisk. Stærke karakterer.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-01',
+    ai_scores:{violence:6,language:2,dopamine:6,retention:7,commercialism:3,values:3,sexual:1,fear:3,passive:6,socialpressure:2},
+    ai_analysis:'Black Panther er en af Marvels stærkeste film med politiske temaer om kolonialisme og identitet. Vold er til stede men ikke grafisk. Positive afrikanske rollemodeller. Fra 11 år.' },
+
+  { id:312, title:'Top Gun: Maverick', recommended_age:12, platform:'netflix', age_group:'10-12', content_type:'film',
+    notes:'Actionfilm om kamppiloter. Glorificerer militær og krig men er ikke grafisk voldelig.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-01',
+    ai_scores:{violence:5,language:3,dopamine:7,retention:7,commercialism:2,values:4,sexual:3,fear:3,passive:6,socialpressure:3},
+    ai_analysis:'Top Gun: Maverick er en velproduceret actionfilm der glorificerer det militære. Ingen grafisk vold men krig fremstilles heroisk. God samtaleemne om krigens realitet vs. filmens romantisering. Fra 12 år.' },
+
+  { id:313, title:'Jurassic World', recommended_age:11, platform:'netflix', age_group:'10-12', content_type:'film',
+    notes:'Dinosaur-actionfilm. Skræmmende og voldelig men uden grafisk gore. Populær bland drenge.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-01',
+    ai_scores:{violence:6,language:2,dopamine:7,retention:7,commercialism:4,values:3,sexual:1,fear:7,passive:6,socialpressure:2},
+    ai_analysis:'Jurassic World er en spændende og skræmmende actionfilm med dinosaurer der jager og dræber mennesker. Ingen grafisk gore men intenst og skræmmende. Fra 11 år.' },
+
+  { id:314, title:'Thor: Ragnarok', recommended_age:10, platform:'disney', age_group:'10-12', content_type:'film',
+    notes:'Humoristisk Marvel-film. Den mest tilgængelige og sjoveste Thor-film. Lav vold relativt.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-01',
+    ai_scores:{violence:5,language:2,dopamine:6,retention:6,commercialism:3,values:3,sexual:1,fear:3,passive:6,socialpressure:2},
+    ai_analysis:'Thor: Ragnarok er den mest tilgængelige og humoristiske Marvel-film. Vold er til stede men behandlet lettere end i andre Marvel-film. Fra 10 år. God introfilm til Marvel-universet for børn.' },
+
+  { id:315, title:'Shrek (1-2)', recommended_age:7, platform:'netflix', age_group:'7-9', content_type:'film',
+    notes:'Animeret eventyrfilm med voksenhumor der flyver over børnenes hoveder. Klassiker for hele familien.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-01',
+    ai_scores:{violence:3,language:3,dopamine:5,retention:5,commercialism:2,values:2,sexual:2,fear:2,passive:5,socialpressure:1},
+    ai_analysis:'Shrek 1 og 2 er animerede klassikere med to lag — et for børn og et for voksne. Voksenhumoren flyver hen over de yngstes hoveder. Fra 7 år. Shrek 3 og 4 er markant svagere.' },
+
+  // ── 13+ ──────────────────────────────────────────────────────────────────
+  { id:316, title:'Dune (2021)', recommended_age:14, platform:'hbo', age_group:'13+', content_type:'film',
+    notes:'Episk sci-fi-film. Langsom og kompleks. Vold og intense scener men ikke grafisk.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-01',
+    ai_scores:{violence:6,language:2,dopamine:5,retention:7,commercialism:1,values:3,sexual:2,fear:5,passive:7,socialpressure:2},
+    ai_analysis:'Dune er en ambitiøs og langsom sci-fi-film der kræver tålmodighed og koncentration. Vold er til stede men ikke grafisk. Politiske og filosofiske temaer er komplekse. Fra 14 år for dem der kan lide tænksomme film.' },
+
+  { id:317, title:'Joker (2019)', recommended_age:16, platform:'hbo', age_group:'13+', content_type:'film',
+    notes:'Psykologisk karakterstudie. Ekstremt mørkt og voldsomt. Glorificerer ikke vold men skildrer den rå.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-01',
+    ai_scores:{violence:8,language:5,dopamine:5,retention:7,commercialism:1,values:7,sexual:2,fear:7,passive:7,socialpressure:4},
+    ai_analysis:'Joker er et mørkt og psykologisk krævende karakterstudie om mental sygdom og social marginalisering. Vold er rå og realistisk. Filmen glorificerer ikke vold men skildrer den uden filter. Kun 16+. Kræver moden seer.' },
+
+  { id:318, title:'Everything Everywhere All at Once', recommended_age:15, platform:'netflix', age_group:'13+', content_type:'film',
+    notes:'Eksperimentel multivers-film. Kaotisk, sjov og dybt rørende. Voksenhumor og vold.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-01',
+    ai_scores:{violence:6,language:4,dopamine:7,retention:8,commercialism:1,values:3,sexual:3,fear:4,passive:6,socialpressure:3},
+    ai_analysis:'Everything Everywhere er en kaotisk, sjov og dybt rørende film om en kinesisk-amerikansk families dynamik. Voksenhumor, vold og eksistentielle temaer. En af de bedste film de seneste år — fra 15 år.' },
+
+  { id:319, title:'The Batman (2022)', recommended_age:14, platform:'hbo', age_group:'13+', content_type:'film',
+    notes:'Mørk og realistisk Batman-film. Mere krimi-noir end superheltfilm. Intens og voldelig.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-01',
+    ai_scores:{violence:7,language:4,dopamine:6,retention:7,commercialism:2,values:4,sexual:2,fear:7,passive:6,socialpressure:2},
+    ai_analysis:'The Batman er den mørkeste og mest realistiske Batman-film til dato. Krimi-noir stemning og intense voldelige scener. Ikke for børn der forventer en superheltfilm. Fra 14 år for modne seere.' },
+
+  { id:320, title:'Avengers: Endgame', recommended_age:12, platform:'disney', age_group:'13+', content_type:'film',
+    notes:'Klimaks på 22 Marvel-films fortælling. Emotionelt intens med tab og ofring. Stor oplevelse.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-01',
+    ai_scores:{violence:7,language:2,dopamine:8,retention:9,commercialism:4,values:3,sexual:1,fear:4,passive:7,socialpressure:3},
+    ai_analysis:'Avengers: Endgame er klimakset på et 10-år langt Marvel-forløb. Emotionelt intens med temaer om tab, ofring og venskab. Vold er intensiveret men ikke grafisk. Fra 12 år — men kræver at barnet har set de foregående film.' },
+
+  // ── KLASSIKERE ────────────────────────────────────────────────────────────
+  { id:321, title:'Harry Potter og De Vises Sten', recommended_age:8, platform:'hbo', age_group:'7-9', content_type:'film',
+    notes:'Den første og mest tilgængelige Harry Potter-film. Magisk og eventyrlig. Serierne bliver mørkere.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-01',
+    ai_scores:{violence:3,language:1,dopamine:5,retention:7,commercialism:4,values:2,sexual:1,fear:4,passive:6,socialpressure:2},
+    ai_analysis:'Harry Potter 1 er magisk og eventyrlig og egnet fra 8 år. Men serien bliver markant mørkere fra film 4 og frem — Fønixordenen og fremefter er klart 12+. Introducer serien gradvist og vurder barnets modenhed undervejs.' },
+
+  { id:322, title:'Harry Potter og Flammernes Pokal', recommended_age:12, platform:'hbo', age_group:'10-12', content_type:'film',
+    notes:'Film 4 — vendepunktet hvor serien bliver mørk. Voldemort vender tilbage og der er et dødsfald.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-01',
+    ai_scores:{violence:6,language:2,dopamine:6,retention:8,commercialism:3,values:3,sexual:2,fear:7,passive:6,socialpressure:3},
+    ai_analysis:'Flammernes Pokal er det afgørende vendepunkt i Harry Potter-serien. Voldemorts tilbagekomst og et barns dødsfald er skræmmende og traumatiserende for yngre børn. Fra 12 år.' },
+
+  { id:323, title:'Ringenes Herre: Eventyret om Ringen', recommended_age:12, platform:'netflix', age_group:'10-12', content_type:'film',
+    notes:'Episk fantasy-klassiker. Lang, kompleks og med intense kampscener. Grundlaget for moderne fantasy.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-01',
+    ai_scores:{violence:7,language:2,dopamine:5,retention:8,commercialism:2,values:2,sexual:1,fear:6,passive:7,socialpressure:1},
+    ai_analysis:'Ringenes Herre er et af filmhistoriens største epos. Intense kampscener og skræmmende karakterer som Nazgûl og Saruman. Fra 12 år. Kræver koncentration og tålmodighed — belønner med en uforglemmelig oplevelse.' },
 ];
 
 let db = null;
@@ -5653,7 +5824,7 @@ function cardHTML(item) {
     <div class="episode-card-title">"${item.episode || 'Afsnit'}"</div>
     ` : `
     <div class="channel-card-header">
-      <span class="channel-type-label">⭐ KANAL / SERIE / SPIL</span>
+      ${isFilm ? '<span class="channel-type-label film-type-label">🎥 FILM</span>' : isEpisode ? '<span class="channel-type-label ep-type-label">▶ AFSNIT</span>' : '<span class="channel-type-label">⭐ KANAL / SERIE / SPIL</span>'}
     </div>
     <div class="card-top">
       <div class="card-icon">${pEmoji}</div>
@@ -5837,8 +6008,8 @@ function filterAndRender() {
       if (aScore !== bScore) return aScore - bScore;
 
       // Within same precision: channels before episodes, then most votes
-      const aIsEp = a.content_type === 'episode' ? 1 : 0;
-      const bIsEp = b.content_type === 'episode' ? 1 : 0;
+      const aIsEp = (a.content_type === 'episode') ? 2 : (a.content_type === 'film') ? 1 : 0;
+      const bIsEp = (b.content_type === 'episode') ? 2 : (b.content_type === 'film') ? 1 : 0;
       if (aIsEp !== bIsEp) return aIsEp - bIsEp;
 
       return (b.parent_votes || 0) - (a.parent_votes || 0);
@@ -5846,11 +6017,13 @@ function filterAndRender() {
 
   } else {
     // Default: channels/series first sorted by most parent votes, episodes after
-    const channels = data.filter(d => d.content_type !== 'episode');
+    const channels = data.filter(d => d.content_type === 'channel');
+    const films = data.filter(d => d.content_type === 'film');
     const episodes = data.filter(d => d.content_type === 'episode');
     channels.sort((a, b) => (b.parent_votes || 0) - (a.parent_votes || 0));
+    films.sort((a, b) => (b.parent_votes || 0) - (a.parent_votes || 0));
     episodes.sort((a, b) => (b.parent_votes || 0) - (a.parent_votes || 0));
-    data = [...channels, ...episodes];
+    data = [...channels, ...films, ...episodes];
   }
 
   // Update browse title
