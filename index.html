@@ -5403,11 +5403,11 @@ if (!DEMO_MODE) {
 // ---- INIT ----
 document.addEventListener('DOMContentLoaded', () => {
   buildSliders();
-  // Render demo data immediately — no waiting
+  // Vis demo-data øjeblikkeligt
   allData = DEMO_DATA;
   updateStats();
-  renderCards(allData);
-  // Then try Supabase in background
+  filterAndRender();
+  // Hent Supabase-data i baggrunden
   loadData();
   if (DEMO_MODE) {
     document.getElementById('setupBanner').style.display = 'flex';
@@ -5707,12 +5707,9 @@ async function loadData() {
     }
 
     updateStats();
-    renderCards(allData);
+    filterAndRender();
   } catch(e) {
-    // Fallback to demo data (network error, timeout, or Supabase unreachable)
-    allData = DEMO_DATA;
-    updateStats();
-    renderCards(allData);
+    // Fallback — demo data allerede vist, ingen action nødvendig
   }
 }
 
@@ -5775,6 +5772,7 @@ function getRelatedLink(item) {
 
 function cardHTML(item) {
   const isEpisode = item.content_type === 'episode';
+  const isFilm = item.content_type === 'film';
   const isVerified = item.parent_votes && item.parent_votes >= 3;
   const aiAvg = calcAvg(item.ai_scores || item.scores);
   const hasParent = item.parent_votes && item.parent_votes > 0;
