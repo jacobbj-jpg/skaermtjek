@@ -5666,14 +5666,14 @@ function updateFilterSummary() {
 
 // ---- LOAD DATA ----
 async function loadData() {
-  if (DEMO_MODE) {
-    allData = DEMO_DATA;
-    updateStats();
-    renderCards(allData);
-    return;
-  }
+  // Vis altid demo-data med det samme så siden ikke hænger
+  allData = DEMO_DATA;
+  updateStats();
+  renderCards(allData);
 
-  // Timeout fallback — if Supabase doesn't respond in 4s, use demo data
+  if (DEMO_MODE) return;
+
+  // Forsøg at hente rigtige data fra Supabase i baggrunden (3s timeout)
   const withTimeout = (promise, ms) => Promise.race([
     promise,
     new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), ms))
@@ -5683,7 +5683,7 @@ async function loadData() {
     const [ratingsRes, articlesRes] = await withTimeout(Promise.all([
       db.from('ratings').select('*').eq('country', COUNTRY).order('created_at', { ascending: false }),
       db.from('articles').select('*').order('published_at', { ascending: false })
-    ]), 4000);
+    ]), 3000);
 
     if (ratingsRes.error) throw ratingsRes.error;
     allData = ratingsRes.data || [];
