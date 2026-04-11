@@ -5576,8 +5576,27 @@ document.addEventListener('DOMContentLoaded', () => {
   const urlParams = new URLSearchParams(window.location.search);
   const rateParam = urlParams.get('rate');
   const ratePlatform = urlParams.get('platform');
+  const kanalParam = urlParams.get('kanal');
+  const afsnilParam = urlParams.get('afsnit');
+
   if (rateParam) {
     setTimeout(() => prefillAndGo(decodeURIComponent(rateParam), null, ratePlatform || null), 500);
+  }
+  if (kanalParam) {
+    setTimeout(() => {
+      const slug = kanalParam.toLowerCase();
+      const item = allData.find(d =>
+        d.content_type !== 'episode' && makeSlug(d.title) === slug
+      );
+      if (item) openDetail(item.id);
+    }, 400);
+  }
+  if (afsnilParam) {
+    setTimeout(() => {
+      const id = parseInt(afsnilParam);
+      const item = allData.find(d => d.id === id);
+      if (item) openDetail(item.id);
+    }, 400);
   }
   // Vis demo-data øjeblikkeligt
   allData = DEMO_DATA;
@@ -5590,6 +5609,16 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('submitBanner').style.display = 'flex';
   }
   animateOnScroll();
+});
+
+// Handle browser back/forward
+window.addEventListener('popstate', (e) => {
+  if (e.state && e.state.detailId) {
+    openDetail(e.state.detailId);
+  } else {
+    document.getElementById('detailOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
 });
 
 function animateOnScroll() {
@@ -5998,6 +6027,17 @@ async function loadData() {
 
     updateStats();
     filterAndRender();
+    // Re-check URL params now that real data is loaded
+    const kp = new URLSearchParams(window.location.search).get('kanal');
+    const ap = new URLSearchParams(window.location.search).get('afsnit');
+    if (kp) {
+      const item = allData.find(d => d.content_type !== 'episode' && makeSlug(d.title) === kp.toLowerCase());
+      if (item && !document.getElementById('detailOverlay').classList.contains('open')) openDetail(item.id);
+    }
+    if (ap) {
+      const item = allData.find(d => d.id === parseInt(ap));
+      if (item && !document.getElementById('detailOverlay').classList.contains('open')) openDetail(item.id);
+    }
   } catch(e) {
     // Fallback — demo data allerede vist, ingen action nødvendig
   }
@@ -6334,6 +6374,12 @@ async function openDetail(id) {
   if (!item) return;
   currentReportId = item.id;
   currentDetailId = item.id;
+
+  // Push URL state for deep linking + back button
+  const slug = makeSlug(item.title);
+  const param = item.content_type === 'episode' ? 'afsnit=' + item.id : 'kanal=' + slug;
+  const newUrl = window.location.pathname + '?' + param;
+  history.pushState({ detailId: item.id }, '', newUrl);
   const avg = calcAvg(item.scores);
   const color = scoreColor(avg);
   const verdict = getVerdict(avg);
@@ -6612,6 +6658,10 @@ function closeDetail(e) {
 function closeDetailBtn() {
   document.getElementById('detailOverlay').classList.remove('open');
   document.body.style.overflow = '';
+  // Clear URL param when closing
+  if (window.location.search) {
+    history.pushState({}, '', window.location.pathname);
+  }
 }
 
 // ---- AI ANALYSIS ----
@@ -7230,6 +7280,13 @@ async function submitRating() {
 }
 
 // ---- HELPERS ----
+function makeSlug(title) {
+  return title.toLowerCase()
+    .replace(/æ/g,'ae').replace(/ø/g,'oe').replace(/å/g,'aa')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
 function scoreTip(cat, val) {
   const v = parseInt(val) || 1;
   const feedback = v <= 2 ? 'Ingen/meget lav bekymring' :
