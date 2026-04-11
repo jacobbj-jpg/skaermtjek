@@ -7003,7 +7003,7 @@ async function submitRating() {
 
   } else {
     // New entry — generate AI score + analysis
-    btn.textContent = 'Genererer AI-analyse…';
+    btn.textContent = 'Gemmer…';
     const newEntry = {
       title,
       platform,
@@ -7016,15 +7016,14 @@ async function submitRating() {
       content_url: contentUrl,
       content_type: contentType,
       ai_scores: Object.keys(formScores).length > 0 ? {...formScores} : null,
-      scores: Object.keys(formScores).length > 0 ? {...formScores} : null,
       parent_score: parentScoreAvg,
       parent_votes: 1,
       votes: 1,
       created_at: new Date().toISOString()
     };
 
-    const analysis = await generateAI(newEntry);
-    newEntry.ai_analysis = analysis;
+    // AI-analyse genereres af agenten efter godkendelse — ikke fra browser (CORS)
+    newEntry.ai_analysis = null;
     newEntry.id = Date.now();
     newEntry.status = 'pending';
 
