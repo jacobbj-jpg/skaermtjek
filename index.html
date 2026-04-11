@@ -7224,6 +7224,21 @@ async function submitRating() {
         const { data, error } = await db.from('ratings').insert([insertPayload]).select();
         console.log('SUPABASE RESULT:', JSON.stringify({data, error}));
         if (!error && data) newEntry.id = data[0].id;
+
+        // Send email notifikation
+        fetch('/.netlify/functions/notify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: newEntry.title,
+            platform: newEntry.platform,
+            content_type: newEntry.content_type,
+            episode: newEntry.episode || null,
+            notes: newEntry.notes || null,
+            parent_score: newEntry.parent_score || null
+          })
+        }).catch(() => {}); // Fejl ignoreres — email er ikke kritisk
+
       } catch(e) {
         console.log('Supabase insert fejl:', e);
       }
