@@ -4032,6 +4032,17 @@ input.autofilled, textarea.autofilled {
     <div id="blogPosts" class="blog-posts"></div>
   </div>
 
+  <!-- ADMIN PAGE (skjult — tilgås via ?admin=1 i URL) -->
+  <div class="page" id="page-admin">
+    <div style="padding:20px 0">
+      <h2 style="font-family:'Fraunces',serif;font-size:24px;margin-bottom:4px">⚙️ Admin</h2>
+      <p style="color:var(--muted);font-size:13px;margin-bottom:24px">Vurderinger der afventer godkendelse</p>
+      <div id="adminQueue" style="display:flex;flex-direction:column;gap:12px">
+        <div style="color:var(--muted);font-size:14px;text-align:center;padding:40px">Henter...</div>
+      </div>
+    </div>
+  </div>
+
   <!-- VIDEN PAGE -->
   <div class="page" id="page-viden">
     <div class="viden-header">
@@ -4073,6 +4084,39 @@ input.autofilled, textarea.autofilled {
       <div class="detail-report-row">
         <button class="report-btn" onclick="reportRating()" id="reportBtn">🚩 Rapportér fejlagtig vurdering</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- THANK YOU OVERLAY -->
+<div class="article-overlay" id="thankYouOverlay" onclick="closeThankYou()">
+  <div class="detail-panel" style="max-width:520px;margin:auto">
+    <div class="detail-header" style="text-align:center;padding:40px 28px 28px">
+      <div style="font-size:48px;margin-bottom:16px">🙏</div>
+      <h2 style="font-family:'Fraunces',serif;font-size:24px;color:var(--cream);margin-bottom:12px">Tak for din vurdering!</h2>
+      <p style="color:rgba(250,247,242,0.7);font-size:15px;line-height:1.6;font-weight:300">
+        Din vurdering af <strong id="thankYouTitle" style="color:var(--cream)"></strong> er modtaget og vil fremgå på siden efter gennemgang.
+      </p>
+      <p style="color:rgba(250,247,242,0.5);font-size:13px;margin-top:12px;font-style:italic">
+        Vi tjekker typisk inden for 24 timer. Tak fordi du hjælper andre forældre!
+      </p>
+    </div>
+    <div class="detail-body" style="padding:20px 28px 28px">
+      <div style="background:rgba(250,247,242,0.05);border:1px solid rgba(250,247,242,0.1);border-radius:12px;padding:16px;margin-bottom:16px">
+        <div style="font-size:12px;font-weight:600;color:rgba(250,247,242,0.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Hvad sker der nu?</div>
+        <div style="font-size:13px;color:rgba(250,247,242,0.65);line-height:1.7">
+          ✓ Vi tjekker at indholdet er korrekt og relevant<br>
+          ✓ AI-analysen genereres automatisk<br>
+          ✓ Vurderingen publiceres på siden<br>
+          ✓ Du har gjort det nemmere for andre forældre
+        </div>
+      </div>
+      <button onclick="closeThankYou();showPage('submit')" style="width:100%;background:var(--accent);color:white;border:none;border-radius:12px;padding:14px;font-size:15px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;margin-bottom:10px">
+        ✏️ Tilføj en vurdering til →
+      </button>
+      <button onclick="closeThankYou()" style="width:100%;background:transparent;color:rgba(250,247,242,0.5);border:1px solid rgba(250,247,242,0.15);border-radius:12px;padding:12px;font-size:14px;font-family:'DM Sans',sans-serif;cursor:pointer">
+        Tilbage til forsiden
+      </button>
     </div>
   </div>
 </div>
@@ -5403,6 +5447,11 @@ if (!DEMO_MODE) {
 // ---- INIT ----
 document.addEventListener('DOMContentLoaded', () => {
   buildSliders();
+  // Check for admin mode via URL
+  if (window.location.search.includes('admin=1')) {
+    showPage('admin');
+    loadAdminQueue();
+  }
   // Vis demo-data øjeblikkeligt
   allData = DEMO_DATA;
   updateStats();
@@ -5528,6 +5577,7 @@ function showPage(page) {
   document.getElementById('filterToggleBtn').classList.remove('open');
   if (page === 'viden') renderArticles();
   if (page === 'blog') renderBlog();
+  if (page === 'admin') loadAdminQueue();
 }
 
 // ---- VIDEN / ARTICLES ----
@@ -5581,6 +5631,72 @@ function openBlogPost(id) {
 
   document.getElementById('blogPostOverlay').classList.add('open');
   document.body.style.overflow = 'hidden';
+}
+
+// ── ADMIN ────────────────────────────────────────────────────────────────
+async function loadAdminQueue() {
+  const el = document.getElementById('adminQueue');
+  if (!el) return;
+  if (DEMO_MODE) {
+    el.innerHTML = '<div style="color:var(--muted);font-size:14px;text-align:center;padding:40px">Admin kræver Supabase-forbindelse</div>';
+    return;
+  }
+  try {
+    const { data, error } = await db.from('ratings').select('*').eq('status','pending').order('created_at', { ascending: false });
+    if (error || !data || data.length === 0) {
+      el.innerHTML = '<div style="color:var(--good);font-size:14px;text-align:center;padding:40px">✓ Ingen vurderinger afventer godkendelse</div>';
+      return;
+    }
+    el.innerHTML = data.map(r => `
+      <div style="background:white;border:1px solid var(--border);border-radius:14px;padding:18px">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px">
+          <div>
+            <div style="font-weight:700;font-size:15px;color:var(--ink)">${r.title}${r.episode ? ' — ' + r.episode : ''}</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:3px">${PLATFORM_LABEL[r.platform] || r.platform} · ${r.content_type} · ${r.reviewer_name || 'Anonym'}</div>
+          </div>
+          <div style="font-size:11px;color:var(--muted);white-space:nowrap">${new Date(r.created_at).toLocaleDateString('da-DK')}</div>
+        </div>
+        ${r.notes ? '<div style="font-size:13px;color:var(--ink2);background:var(--warm);border-radius:8px;padding:10px;margin-bottom:10px;font-style:italic">"' + r.notes + '"</div>' : ''}
+        <div style="font-size:12px;color:var(--muted);margin-bottom:12px">
+          Forældrerscore: ${r.parent_score || '—'} · AI-scores: ${r.ai_scores ? Object.entries(r.ai_scores).map(([k,v]) => k+':'+v).join(', ') : '—'}
+        </div>
+        <div style="display:flex;gap:8px">
+          <button onclick="adminApprove(${r.id})" style="flex:1;background:var(--good);color:white;border:none;border-radius:8px;padding:10px;font-size:13px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer">✓ Godkend</button>
+          <button onclick="adminReject(${r.id})" style="flex:1;background:#c0392b;color:white;border:none;border-radius:8px;padding:10px;font-size:13px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer">✕ Afvis</button>
+        </div>
+      </div>
+    `).join('');
+  } catch(e) {
+    el.innerHTML = '<div style="color:var(--bad);font-size:14px;padding:20px">Fejl ved hentning af admin-kø</div>';
+  }
+}
+
+async function adminApprove(id) {
+  if (DEMO_MODE) return;
+  await db.from('ratings').update({ status: 'approved' }).eq('id', id);
+  showToast('✓ Godkendt!');
+  loadAdminQueue();
+  loadData(); // Refresh main list
+}
+
+async function adminReject(id) {
+  if (DEMO_MODE) return;
+  if (!confirm('Er du sikker på at du vil afvise denne vurdering?')) return;
+  await db.from('ratings').update({ status: 'rejected' }).eq('id', id);
+  showToast('Afvist og fjernet fra køen');
+  loadAdminQueue();
+}
+
+function showThankYou(title) {
+  const overlay = document.getElementById('thankYouOverlay');
+  document.getElementById('thankYouTitle').textContent = title;
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeThankYou() {
+  document.getElementById('thankYouOverlay').classList.remove('open');
+  document.body.style.overflow = '';
 }
 
 function closeBlogPost(e) {
@@ -5679,7 +5795,7 @@ async function loadData() {
 
   try {
     const [ratingsRes, articlesRes] = await withTimeout(Promise.all([
-      db.from('ratings').select('*').eq('country', COUNTRY).order('created_at', { ascending: false }),
+      db.from('ratings').select('*').eq('country', COUNTRY).in('status', ['approved', null]).order('created_at', { ascending: false }),
       db.from('articles').select('*').order('published_at', { ascending: false })
     ]), 3000);
 
@@ -6818,14 +6934,10 @@ async function submitRating() {
 
     const analysis = await generateAI(newEntry);
     newEntry.ai_analysis = analysis;
-    newEntry.id = Date.now(); // Temp ID — vises straks
+    newEntry.id = Date.now();
+    newEntry.status = 'pending';
 
-    // Vis kortet med det samme
-    allData.unshift(newEntry);
-    updateStats();
-    filterAndRender();
-
-    // Gem til Supabase i baggrunden
+    // Gem til Supabase med status pending
     if (!DEMO_MODE) {
       try {
         const { data, error } = await db.from('ratings').insert([{
@@ -6844,18 +6956,21 @@ async function submitRating() {
           parent_votes: newEntry.parent_votes,
           votes: newEntry.votes,
           ai_analysis: newEntry.ai_analysis,
+          status: 'pending',
           created_at: newEntry.created_at
         }]).select();
         if (!error && data) newEntry.id = data[0].id;
       } catch(e) {
         console.log('Supabase insert fejl:', e);
       }
+    } else {
+      // Demo mode: vis det lokalt
+      allData.unshift(newEntry);
+      updateStats();
+      filterAndRender();
     }
-    showToastWithAction(
-      '✓ Nyt program tilføjet — tak! 🎉',
-      'Vurder et til?',
-      () => showPage('submit')
-    );
+    showPage('browse');
+    showThankYou(newEntry.title);
   }
 
   btn.disabled = false; btn.textContent = 'Indsend vurdering →';
