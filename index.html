@@ -6732,11 +6732,20 @@ async function submitRating() {
 
   const parentScoreAvg = calcAvg(formScores);
 
-  // Check if an existing entry matches title + platform
-  const existing = allData.find(d =>
-    d.title.toLowerCase() === title.toLowerCase() &&
-    d.platform === platform
-  );
+  // Check if an existing entry matches title + platform + episode (for episodes)
+  const existing = allData.find(d => {
+    const titleMatch = d.title.toLowerCase() === title.toLowerCase() && d.platform === platform;
+    if (!titleMatch) return false;
+    // For episodes: only match if same episode name, or both have no episode
+    if (contentType === 'episode') {
+      const epMatch = episode && d.episode
+        ? d.episode.toLowerCase() === episode.toLowerCase()
+        : d.content_type === 'episode' && !episode && !d.episode;
+      return epMatch;
+    }
+    // For channels/films: match on title + platform (no episode)
+    return d.content_type === contentType || (!d.content_type && contentType === 'channel');
+  });
 
   if (existing) {
     // Merge parent score as rolling average
@@ -6792,6 +6801,7 @@ async function submitRating() {
     const newEntry = {
       title,
       platform,
+      country: COUNTRY,
       age_group: ageGroup,
       episode: episode,
       notes: document.getElementById('f_notes').value.trim() || null,
@@ -6800,7 +6810,6 @@ async function submitRating() {
       content_url: contentUrl,
       content_type: contentType,
       ai_scores: {...formScores},
-      scores: {...formScores},
       parent_score: parentScoreAvg,
       parent_votes: 1,
       votes: 1,
@@ -6809,23 +6818,39 @@ async function submitRating() {
 
     const analysis = await generateAI(newEntry);
     newEntry.ai_analysis = analysis;
+    newEntry.id = Date.now(); // Temp ID — vises straks
 
-    if (!DEMO_MODE) {
-      try {
-        const { data, error } = await db.from('ratings').insert([newEntry]).select();
-        if (error) throw error;
-        newEntry.id = data[0].id;
-      } catch(e) {
-        showToast('Fejl ved gemning – prøv igen');
-        btn.disabled = false; btn.textContent = 'Indsend vurdering →';
-        return;
-      }
-    } else {
-      newEntry.id = Date.now();
-    }
-
+    // Vis kortet med det samme
     allData.unshift(newEntry);
     updateStats();
+    filterAndRender();
+
+    // Gem til Supabase i baggrunden
+    if (!DEMO_MODE) {
+      try {
+        const { data, error } = await db.from('ratings').insert([{
+          title: newEntry.title,
+          platform: newEntry.platform,
+          country: newEntry.country,
+          age_group: newEntry.age_group,
+          episode: newEntry.episode,
+          notes: newEntry.notes,
+          reviewer_name: newEntry.reviewer_name,
+          child_age: newEntry.child_age,
+          content_url: newEntry.content_url,
+          content_type: newEntry.content_type,
+          ai_scores: newEntry.ai_scores,
+          parent_score: newEntry.parent_score,
+          parent_votes: newEntry.parent_votes,
+          votes: newEntry.votes,
+          ai_analysis: newEntry.ai_analysis,
+          created_at: newEntry.created_at
+        }]).select();
+        if (!error && data) newEntry.id = data[0].id;
+      } catch(e) {
+        console.log('Supabase insert fejl:', e);
+      }
+    }
     showToastWithAction(
       '✓ Nyt program tilføjet — tak! 🎉',
       'Vurder et til?',
