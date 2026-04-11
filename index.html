@@ -6516,8 +6516,10 @@ function closeDetailBtn() {
 // ---- AI ANALYSIS ----
 async function generateAI(item) {
   try {
-    const avg = calcAvg(item.scores);
-    const scoresText = CATEGORIES.map(c => `${c.name}: ${(item.scores && item.scores[c.id]) || 1}/10`).join(', ');
+    // Use ai_scores or scores — whichever is available
+    const scores = item.ai_scores || item.scores || {};
+    const avg = calcAvg(scores);
+    const scoresText = CATEGORIES.map(c => `${c.name}: ${scores[c.id] || 1}/10`).join(', ');
     const prompt = `Du er en erfaren dansk mediepædagog. Giv en præcis og nyttig vurdering på dansk af følgende indhold til forældre.
 
 Indhold: ${item.title}${item.episode ? ` (${item.episode})` : ''}
@@ -6531,8 +6533,11 @@ Svar med følgende format — INGEN andre ord, kun dette:
 ANBEFALET_ALDER: [ét tal, fx 8 — den minimumsalder du vil anbefale indholdet til baseret på scores]
 ANALYSE: [2-3 præcise sætninger til forældre. Vær konkret. Afslut med én klar anbefaling.]`;
 
+    const controller = new AbortController();
+    const aiTimeout = setTimeout(() => controller.abort(), 8000);
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
+      signal: controller.signal,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
@@ -6540,6 +6545,7 @@ ANALYSE: [2-3 præcise sætninger til forældre. Vær konkret. Afslut med én kl
         messages: [{ role: 'user', content: prompt }]
       })
     });
+    clearTimeout(aiTimeout);
     const data = await res.json();
     const raw = data.content?.[0]?.text || '';
     // Parse structured response
@@ -7009,7 +7015,8 @@ async function submitRating() {
       child_age: document.getElementById('f_child_age') ? document.getElementById('f_child_age').value.trim() || null : null,
       content_url: contentUrl,
       content_type: contentType,
-      ai_scores: {...formScores},
+      ai_scores: Object.keys(formScores).length > 0 ? {...formScores} : null,
+      scores: Object.keys(formScores).length > 0 ? {...formScores} : null,
       parent_score: parentScoreAvg,
       parent_votes: 1,
       votes: 1,
