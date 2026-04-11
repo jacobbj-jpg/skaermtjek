@@ -6849,17 +6849,18 @@ async function submitRating() {
   const parentScoreAvg = calcAvg(formScores);
 
   // Check if an existing entry matches title + platform + episode (for episodes)
+  // For episodes: only match entries that came from Supabase (have a real numeric ID)
+  // Demo data entries should not be merged — always create new Supabase entry
   const existing = allData.find(d => {
     const titleMatch = d.title.toLowerCase() === title.toLowerCase() && d.platform === platform;
     if (!titleMatch) return false;
-    // For episodes: only match if same episode name, or both have no episode
+    // Never merge with demo data (demo IDs are small integers under 500)
+    if (!d.id || d.id < 500) return false;
+    // For episodes: only match if same episode name
     if (contentType === 'episode') {
-      const epMatch = episode && d.episode
-        ? d.episode.toLowerCase() === episode.toLowerCase()
-        : d.content_type === 'episode' && !episode && !d.episode;
-      return epMatch;
+      return episode && d.episode && d.episode.toLowerCase() === episode.toLowerCase();
     }
-    // For channels/films: match on title + platform (no episode)
+    // For channels/films: match on title + platform + same type
     return d.content_type === contentType || (!d.content_type && contentType === 'channel');
   });
 
