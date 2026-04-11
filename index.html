@@ -4078,7 +4078,7 @@ input.autofilled, textarea.autofilled {
     <div class="detail-header">
       <button class="detail-close" onclick="closeDetailBtn()">✕</button>
     <button class="detail-share" onclick="shareDetail()" id="shareBtn">Del 🔗</button>
-    <button class="detail-rate-btn" onclick="prefillDetailRating()" id="rateBtn">✏️ Vurder</button>
+    <button class="detail-rate-btn" onclick="closeDetailBtn();smartPrefill(currentDetailId)" id="rateBtn">✏️ Vurder</button>
       <div class="detail-platform" id="d_platform"></div>
       <div class="detail-title" id="d_title"></div>
       <div class="detail-score-row">
@@ -5531,11 +5531,23 @@ function quickAge(el, age) {
 }
 
 // ---- PREFILL FORM & NAVIGATE ----
+function smartPrefill(id) {
+  const item = allData.find(d => d.id === id);
+  if (!item) return;
+  if (item.content_type === 'episode' && item.episode) {
+    // Episode: use episode prefill flow
+    prefillEpisodeAndGo(item.title, item.episode, item.platform, item.content_url || null);
+  } else {
+    // Channel/film: use channel prefill flow
+    prefillAndGo(item.title, null, item.platform);
+  }
+}
+
 function prefillDetailRating() {
   const item = allData.find(d => d.id === currentDetailId);
   if (!item) return;
   closeDetailBtn();
-  prefillAndGo(item.title, null, item.platform);
+  smartPrefill(currentDetailId);
 }
 
 function prefillAndGo(title, episode, platform) {
@@ -6276,7 +6288,7 @@ async function openDetail(id) {
             <strong>Kun AI-vurdering</strong><br>
             Scoren er baseret på offentlig tilgængelig information om kanalen — ikke på direkte analyse af indholdet. Ingen forældre har endnu bidraget med en vurdering.
             <div style="margin-top:14px">
-              <button onclick="prefillAndGo('${item.title}')" style="width:100%;background:var(--accent);color:white;border:none;border-radius:10px;padding:12px 16px;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">
+              <button onclick="closeDetailBtn();smartPrefill(${item.id})" style="width:100%;background:var(--accent);color:white;border:none;border-radius:10px;padding:12px 16px;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">
                 ✏️ Vær den første forælder til at vurdere →
               </button>
             </div>
@@ -6298,7 +6310,7 @@ async function openDetail(id) {
             <strong>${dVotes} forældreanmeldelse${dVotes > 1 ? 'r' : ''}</strong><br>
             AI-vurderingen (baseret på offentlig information) vejer stadig med. Jo flere forældre der bidrager, jo mere præcist og retvisende bliver resultatet.
             <div style="margin-top:14px">
-              <button onclick="prefillAndGo('${item.title}')" style="width:100%;background:var(--ink);color:var(--cream);border:none;border-radius:10px;padding:12px 16px;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">
+              <button onclick="closeDetailBtn();smartPrefill(${item.id})" style="width:100%;background:var(--ink);color:var(--cream);border:none;border-radius:10px;padding:12px 16px;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">
                 ✏️ Tilføj din vurdering og styrk datagrundlaget →
               </button>
             </div>
