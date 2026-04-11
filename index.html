@@ -5472,9 +5472,11 @@ document.addEventListener('DOMContentLoaded', () => {
     loadAdminQueue();
   }
   // Check for ?rate=title to prefill submit form
-  const rateParam = new URLSearchParams(window.location.search).get('rate');
+  const urlParams = new URLSearchParams(window.location.search);
+  const rateParam = urlParams.get('rate');
+  const ratePlatform = urlParams.get('platform');
   if (rateParam) {
-    setTimeout(() => prefillAndGo(decodeURIComponent(rateParam)), 300);
+    setTimeout(() => prefillAndGo(decodeURIComponent(rateParam), null, ratePlatform || null), 500);
   }
   // Vis demo-data øjeblikkeligt
   allData = DEMO_DATA;
@@ -5533,16 +5535,29 @@ function prefillDetailRating() {
   const item = allData.find(d => d.id === currentDetailId);
   if (!item) return;
   closeDetailBtn();
-  prefillAndGo(item.title);
+  prefillAndGo(item.title, null, item.platform);
 }
 
-function prefillAndGo(title, episode) {
+function prefillAndGo(title, episode, platform) {
   showPage('submit');
   setTimeout(() => {
     showManualForm();
+    // Fill title
     const input = document.getElementById('f_title');
-    if (input) { input.value = title; input.focus(); }
-  }, 100);
+    if (input) input.value = title;
+    // Fill platform
+    if (platform) {
+      const plt = document.getElementById('f_platform');
+      if (plt) plt.value = platform;
+    }
+    // Scroll to sliders
+    const sliders = document.getElementById('channelSliders');
+    if (sliders) {
+      sliders.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    // Show a helper toast
+    showToast('✓ ' + title + ' er forudfyldt — rate indholdet nedenfor');
+  }, 150);
 }
 
 function prefillEpisodeAndGo(channelTitle, episodeTitle, platform, contentUrl) {
