@@ -921,6 +921,27 @@ nav {
   margin: 24px 0;
 }
 
+.slider-hints {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+
+.slider-hint-low,
+.slider-hint-high {
+  font-size: 10px;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.slider-feedback {
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 5px;
+  color: var(--good);
+  transition: color 0.2s;
+}
+
 .slider-card {
   background: var(--warm);
   border: 1px solid var(--border);
@@ -6579,21 +6600,39 @@ function buildSliders() {
       </div>
       <input type="range" min="1" max="10" value="1" oninput="updateFormScore('${cat.id}', this.value)"
         style="background:linear-gradient(to right, ${scoreColor(1)} 0%, ${scoreColor(1)} 0%, rgba(26,23,20,0.1) 0%)">
+      <div class="slider-hints">
+        <span class="slider-hint-low">1 — ${cat.low}</span>
+        <span class="slider-hint-high">${cat.high} — 10</span>
+      </div>
+      <div class="slider-feedback" id="sf_${cat.id}">🟢 Ingen bekymring</div>
     `;
     container.appendChild(div);
   });
+}
+
+function sliderFeedback(v) {
+  if (v <= 2) return '🟢 Ingen/meget lav bekymring';
+  if (v <= 4) return '🟡 Lav — de fleste vil ikke bekymre sig';
+  if (v <= 6) return '🟠 Moderat — vær opmærksom';
+  if (v <= 8) return '🔴 Høj bekymring — tal med dit barn om det';
+  return '🔴 Meget høj bekymring';
 }
 
 function updateFormScore(id, val) {
   val = parseInt(val);
   formScores[id] = val;
   const el = document.getElementById('fv_' + id);
+  const fb = document.getElementById('sf_' + id);
   const color = scoreColor(val);
   el.textContent = val;
   el.style.color = color;
   const pct = ((val-1)/9*100).toFixed(0);
   el.closest('.slider-card').querySelector('input').style.background =
     `linear-gradient(to right, ${color} 0%, ${color} ${pct}%, rgba(26,23,20,0.1) ${pct}%)`;
+  if (fb) {
+    fb.textContent = sliderFeedback(val);
+    fb.style.color = val <= 2 ? 'var(--good)' : val <= 4 ? '#b5882a' : val <= 6 ? '#c97a2a' : 'var(--bad)';
+  }
 }
 
 function selectAge(el, age) {
