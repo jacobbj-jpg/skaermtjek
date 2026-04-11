@@ -203,6 +203,47 @@ nav {
 
 .search-bar button:hover { opacity: 0.9; }
 
+.hero-steps {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 16px 0 20px;
+  justify-content: center;
+}
+
+.hero-step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: rgba(250,247,242,0.7);
+}
+
+.hero-step-num {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(250,247,242,0.15);
+  color: var(--cream);
+  font-size: 11px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.hero-step-sep {
+  font-size: 12px;
+  color: rgba(250,247,242,0.3);
+}
+
+@media (max-width: 500px) {
+  .hero-steps { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .hero-step-sep { display: none; }
+}
+
 .hero-age-row {
   display: flex;
   align-items: center;
@@ -3338,6 +3379,14 @@ input.autofilled, textarea.autofilled {
       <input type="text" id="heroSearch" placeholder="Søg fx 'ComKean', 'Minecraft', 'Cocomelon'…" onkeydown="if(event.key==='Enter') doSearch()">
       <button onclick="doSearch()">Søg nu</button>
     </div>
+    <div class="hero-steps">
+      <div class="hero-step"><span class="hero-step-num">1</span><span>Søg på kanal, serie eller spil</span></div>
+      <div class="hero-step-sep">→</div>
+      <div class="hero-step"><span class="hero-step-num">2</span><span>Se AI-vurdering og forældreanmeldelser</span></div>
+      <div class="hero-step-sep">→</div>
+      <div class="hero-step"><span class="hero-step-num">3</span><span>Tilføj din egen vurdering</span></div>
+    </div>
+
     <div class="hero-age-row">
       <span class="hero-age-label">Mit barn er</span>
       <span class="hero-age-chip" onclick="quickAge(this,'0-2')">0–2 år</span>
