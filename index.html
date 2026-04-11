@@ -6895,8 +6895,9 @@ async function submitRating() {
         await db.from('ratings').update({
           parent_score: existing.parent_score,
           parent_votes: existing.parent_votes,
-          notes: existing.notes,
-          parent_notes_list: existing.parent_notes_list || null
+          notes: existing.notes || null,
+          parent_notes_list: existing.parent_notes_list || null,
+          status: 'pending'
         }).eq('id', existing.id);
       } catch(e) {
         showToast('Fejl ved opdatering – prøv igen');
@@ -6940,25 +6941,28 @@ async function submitRating() {
     // Gem til Supabase med status pending
     if (!DEMO_MODE) {
       try {
-        const { data, error } = await db.from('ratings').insert([{
+        const insertPayload = {
           title: newEntry.title,
           platform: newEntry.platform,
-          country: newEntry.country,
-          age_group: newEntry.age_group,
-          episode: newEntry.episode,
-          notes: newEntry.notes,
-          reviewer_name: newEntry.reviewer_name,
-          child_age: newEntry.child_age,
-          content_url: newEntry.content_url,
-          content_type: newEntry.content_type,
-          ai_scores: newEntry.ai_scores,
-          parent_score: newEntry.parent_score,
-          parent_votes: newEntry.parent_votes,
-          votes: newEntry.votes,
-          ai_analysis: newEntry.ai_analysis,
+          country: newEntry.country || 'dk',
+          content_type: newEntry.content_type || 'channel',
           status: 'pending',
-          created_at: newEntry.created_at
-        }]).select();
+          parent_score: newEntry.parent_score || null,
+          parent_votes: newEntry.parent_votes || 1,
+          votes: newEntry.votes || 1,
+          created_at: new Date().toISOString()
+        };
+        if (newEntry.episode) insertPayload.episode = newEntry.episode;
+        if (newEntry.notes) insertPayload.notes = newEntry.notes;
+        if (newEntry.reviewer_name) insertPayload.reviewer_name = newEntry.reviewer_name;
+        if (newEntry.child_age) insertPayload.child_age = newEntry.child_age;
+        if (newEntry.content_url) insertPayload.content_url = newEntry.content_url;
+        if (newEntry.age_group) insertPayload.age_group = newEntry.age_group;
+        if (newEntry.ai_analysis) insertPayload.ai_analysis = newEntry.ai_analysis;
+        if (newEntry.ai_scores && Object.keys(newEntry.ai_scores).length > 0) {
+          insertPayload.ai_scores = newEntry.ai_scores;
+        }
+        const { data, error } = await db.from('ratings').insert([insertPayload]).select();
         if (!error && data) newEntry.id = data[0].id;
       } catch(e) {
         console.log('Supabase insert fejl:', e);
