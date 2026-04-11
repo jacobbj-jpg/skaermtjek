@@ -5541,23 +5541,38 @@ function prefillDetailRating() {
 function prefillAndGo(title, episode, platform) {
   showPage('submit');
   setTimeout(() => {
-    showManualForm();
+    // Make sure channel flow is visible
+    const channelFlow = document.getElementById('channelFlow');
+    if (channelFlow) channelFlow.style.display = 'block';
+
     // Fill title
     const input = document.getElementById('f_title');
-    if (input) input.value = title;
+    if (input) {
+      input.value = title;
+      input.dispatchEvent(new Event('input')); // trigger any listeners
+    }
+
     // Fill platform
     if (platform) {
       const plt = document.getElementById('f_platform');
-      if (plt) plt.value = platform;
+      if (plt) {
+        plt.value = platform;
+        plt.dispatchEvent(new Event('change'));
+      }
     }
-    // Scroll to sliders
+
+    // Show sliders if hidden
     const sliders = document.getElementById('channelSliders');
-    if (sliders) {
-      sliders.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-    // Show a helper toast
-    showToast('✓ ' + title + ' er forudfyldt — rate indholdet nedenfor');
-  }, 150);
+    if (sliders) sliders.style.display = 'block';
+
+    // Scroll to ratings section
+    setTimeout(() => {
+      const ratingsSection = document.getElementById('ratingsSection');
+      if (ratingsSection) ratingsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+
+    showToast('✓ ' + title + ' er forudfyldt — sæt dine scores nedenfor');
+  }, 200);
 }
 
 function prefillEpisodeAndGo(channelTitle, episodeTitle, platform, contentUrl) {
