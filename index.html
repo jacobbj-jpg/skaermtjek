@@ -7052,7 +7052,9 @@ async function submitRating() {
         if (newEntry.ai_scores && Object.keys(newEntry.ai_scores).length > 0) {
           insertPayload.ai_scores = newEntry.ai_scores;
         }
+        console.log('INSERTING TO SUPABASE:', JSON.stringify(insertPayload));
         const { data, error } = await db.from('ratings').insert([insertPayload]).select();
+        console.log('SUPABASE RESULT:', JSON.stringify({data, error}));
         if (!error && data) newEntry.id = data[0].id;
       } catch(e) {
         console.log('Supabase insert fejl:', e);
