@@ -1155,6 +1155,37 @@ input[type="range"]::-webkit-slider-thumb {
   margin-bottom: 24px;
 }
 
+.score-tooltip {
+  position: relative;
+  display: inline-block;
+  cursor: help;
+}
+
+.score-tooltip::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ink);
+  color: var(--cream);
+  font-size: 11px;
+  font-weight: 400;
+  padding: 5px 10px;
+  border-radius: 8px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+  z-index: 100;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.score-tooltip:hover::after,
+.score-tooltip:focus::after {
+  opacity: 1;
+}
+
 .detail-bar-row {
   display: flex;
   align-items: center;
@@ -6060,7 +6091,7 @@ function cardHTML(item) {
         const v = (item.ai_scores || item.scores) && ((item.ai_scores || item.scores)[cat.id]) || 1;
         const pct = ((v-1)/9*100).toFixed(0);
         const c = scoreColor(v);
-        return `<div class="bar-row">
+        return `<div class="bar-row score-tooltip" data-tip="${scoreTip(cat, v)}" tabindex="0">
           <div class="bar-label">${cat.icon} ${cat.name}</div>
           <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${c}"></div></div>
           <div class="bar-val" style="color:${c}">${v}</div>
@@ -6413,7 +6444,7 @@ async function openDetail(id) {
     if (hasEnoughParent) {
       // We don't have per-parameter parent scores yet — show parent overall
       // Use ai scores as placeholder for now, show avg indicator
-      return `<div class="detail-bar-row">
+      return `<div class="detail-bar-row score-tooltip" data-tip="${scoreTip(cat, aiVal)}" tabindex="0">
         <div class="detail-bar-icon">${cat.icon}</div>
         <div class="detail-bar-info">
           <div class="detail-bar-name">${cat.name}</div>
@@ -6427,7 +6458,7 @@ async function openDetail(id) {
         </div>
       </div>`;
     } else {
-      return `<div class="detail-bar-row">
+      return `<div class="detail-bar-row score-tooltip" data-tip="${scoreTip(cat, aiVal)}" tabindex="0">
         <div class="detail-bar-icon">${cat.icon}</div>
         <div class="detail-bar-info">
           <div class="detail-bar-name">${cat.name}</div>
@@ -7150,6 +7181,17 @@ async function submitRating() {
 }
 
 // ---- HELPERS ----
+function scoreTip(cat, val) {
+  const v = parseInt(val) || 1;
+  const feedback = v <= 2 ? 'Ingen/meget lav bekymring' :
+                   v <= 4 ? 'Lav bekymring' :
+                   v <= 6 ? 'Moderat — vær opmærksom' :
+                   v <= 8 ? 'Høj bekymring' : 'Meget høj bekymring';
+  const low = cat.low || '';
+  const high = cat.high || '';
+  return `${v}/10 — ${feedback}${low && v <= 3 ? ' (' + low + ')' : ''}${high && v >= 8 ? ' (' + high + ')' : ''}`;
+}
+
 function calcAvg(scores) {
   if (!scores) return 1;
   const vals = Object.values(scores);
