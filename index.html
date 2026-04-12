@@ -5280,9 +5280,9 @@ const DEMO_DATA = [
   { id:129, title:'Huset med de 100 børn', recommended_age:8, platform:'viaplay', age_group:'7-9', content_type:'channel', notes:'Populær norsk realityserie med børn. Sociale dynamikker og gruppeadfærd i fokus.', votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-01', ai_scores:{violence:2,language:2,dopamine:6,retention:7,commercialism:2,values:4,sexual:1,fear:2,passive:6,socialpressure:7}, ai_analysis:'Norsk realityserie der følger børn uden voksne. Sociale dynamikker og konflikter er centrale temaer. Godt udgangspunkt for samtaler om venskab og konflikthåndtering.' },
 
   // ── HBO MAX ───────────────────────────────────────────────────────────────
-  { id:130, title:'Wednesday (HBO Max)', recommended_age:13, platform:'hbo', age_group:'13+', content_type:'channel', notes:'Populær mørk teenageserie. Sæson 2 på HBO Max i 2025. Gothic horror og teenager-drama.', votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-01', ai_scores:{violence:6,language:4,dopamine:7,retention:8,commercialism:2,values:4,sexual:3,fear:7,passive:6,socialpressure:5}, ai_analysis:'Wednesday er en mørk og stilfuld teenageserie med gothic horror-elementer. Sæson 2 intensiverer de overnaturlige elementer. Klart til 13+. Stærk kvindelig protagonist der er anderledes og stolt af det.' },
-  { id:131, title:'Euphoria', recommended_age:18, platform:'hbo', age_group:'13+', content_type:'channel', notes:'PEGI 18. Eksplicit indhold om stoffer, sex og teenagere. Meget populær bland unge — men ikke for børn.', votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-01', ai_scores:{violence:7,language:8,dopamine:6,retention:8,commercialism:2,values:7,sexual:9,fear:6,passive:6,socialpressure:8}, ai_analysis:'Euphoria indeholder ekstremt eksplicit indhold om narkotikamisbrug, seksualitet og psykiske lidelser. Absolut ikke for under 18. Mange 14-16-årige ser den alligevel — åbn samtalen frem for at forbyde.' },
-  { id:132, title:'The Last of Us', recommended_age:18, platform:'hbo', age_group:'13+', content_type:'channel', notes:'Post-apokalyptisk HBO-serie. Ekstremt rå og realistisk vold. Fremragende kunst — men kun for voksne.', votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-01', ai_scores:{violence:10,language:6,dopamine:7,retention:9,commercialism:1,values:4,sexual:4,fear:9,passive:6,socialpressure:2}, ai_analysis:'The Last of Us indeholder ekstremt rå og realistisk vold samt dybt traumatiserende narrativer. Serien er fremragende kunst for voksne men hører ikke hjemme i børns mediediæt under 16.' },
+  { id:130, title:'Wednesday (HBO Max)', recommended_age:13, platform:'max', age_group:'13+', content_type:'channel', notes:'Populær mørk teenageserie. Sæson 2 på HBO Max i 2025. Gothic horror og teenager-drama.', votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-01', ai_scores:{violence:6,language:4,dopamine:7,retention:8,commercialism:2,values:4,sexual:3,fear:7,passive:6,socialpressure:5}, ai_analysis:'Wednesday er en mørk og stilfuld teenageserie med gothic horror-elementer. Sæson 2 intensiverer de overnaturlige elementer. Klart til 13+. Stærk kvindelig protagonist der er anderledes og stolt af det.' },
+  { id:131, title:'Euphoria', recommended_age:18, platform:'max', age_group:'13+', content_type:'channel', notes:'PEGI 18. Eksplicit indhold om stoffer, sex og teenagere. Meget populær bland unge — men ikke for børn.', votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-01', ai_scores:{violence:7,language:8,dopamine:6,retention:8,commercialism:2,values:7,sexual:9,fear:6,passive:6,socialpressure:8}, ai_analysis:'Euphoria indeholder ekstremt eksplicit indhold om narkotikamisbrug, seksualitet og psykiske lidelser. Absolut ikke for under 18. Mange 14-16-årige ser den alligevel — åbn samtalen frem for at forbyde.' },
+  { id:132, title:'The Last of Us', recommended_age:18, platform:'max', age_group:'13+', content_type:'channel', notes:'Post-apokalyptisk HBO-serie. Ekstremt rå og realistisk vold. Fremragende kunst — men kun for voksne.', votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-01', ai_scores:{violence:10,language:6,dopamine:7,retention:9,commercialism:1,values:4,sexual:4,fear:9,passive:6,socialpressure:2}, ai_analysis:'The Last of Us indeholder ekstremt rå og realistisk vold samt dybt traumatiserende narrativer. Serien er fremragende kunst for voksne men hører ikke hjemme i børns mediediæt under 16.' },
 
   // ── NINTENDO SWITCH ───────────────────────────────────────────────────────
   { id:133, title:'Animal Crossing: New Horizons', recommended_age:6, platform:'switch', age_group:'4-6', content_type:'channel', notes:'Rolig livssimulator til Nintendo Switch. Ingen vold, ingen køb-i-spil. Kreativt og afslappende.', votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-01', ai_scores:{violence:1,language:1,dopamine:5,retention:6,commercialism:1,values:1,sexual:1,fear:1,passive:3,socialpressure:2}, ai_analysis:'Animal Crossing er et af de mest børnevenlige spil på markedet. Ingen vold, ingen køb-i-spil og et kreativt univers. Den daglige struktur kan skabe svag vanedannelse men intet bekymrende.' },
@@ -5509,13 +5509,13 @@ const DEMO_DATA = [
     ai_analysis:'Shrek 1 og 2 er animerede klassikere med to lag — et for børn og et for voksne. Voksenhumoren flyver hen over de yngstes hoveder. Fra 7 år. Shrek 3 og 4 er markant svagere.' },
 
   // ── 13+ ──────────────────────────────────────────────────────────────────
-  { id:316, title:'Dune (2021)', recommended_age:14, platform:'hbo', age_group:'13+', content_type:'film',
+  { id:316, title:'Dune (2021)', recommended_age:14, platform:'max', age_group:'13+', content_type:'film',
     notes:'Episk sci-fi-film. Langsom og kompleks. Vold og intense scener men ikke grafisk.',
     votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-01',
     ai_scores:{violence:6,language:2,dopamine:5,retention:7,commercialism:1,values:3,sexual:2,fear:5,passive:7,socialpressure:2},
     ai_analysis:'Dune er en ambitiøs og langsom sci-fi-film der kræver tålmodighed og koncentration. Vold er til stede men ikke grafisk. Politiske og filosofiske temaer er komplekse. Fra 14 år for dem der kan lide tænksomme film.' },
 
-  { id:317, title:'Joker (2019)', recommended_age:16, platform:'hbo', age_group:'13+', content_type:'film',
+  { id:317, title:'Joker (2019)', recommended_age:16, platform:'max', age_group:'13+', content_type:'film',
     notes:'Psykologisk karakterstudie. Ekstremt mørkt og voldsomt. Glorificerer ikke vold men skildrer den rå.',
     votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-01',
     ai_scores:{violence:8,language:5,dopamine:5,retention:7,commercialism:1,values:7,sexual:2,fear:7,passive:7,socialpressure:4},
@@ -5527,7 +5527,7 @@ const DEMO_DATA = [
     ai_scores:{violence:6,language:4,dopamine:7,retention:8,commercialism:1,values:3,sexual:3,fear:4,passive:6,socialpressure:3},
     ai_analysis:'Everything Everywhere er en kaotisk, sjov og dybt rørende film om en kinesisk-amerikansk families dynamik. Voksenhumor, vold og eksistentielle temaer. En af de bedste film de seneste år — fra 15 år.' },
 
-  { id:319, title:'The Batman (2022)', recommended_age:14, platform:'hbo', age_group:'13+', content_type:'film',
+  { id:319, title:'The Batman (2022)', recommended_age:14, platform:'max', age_group:'13+', content_type:'film',
     notes:'Mørk og realistisk Batman-film. Mere krimi-noir end superheltfilm. Intens og voldelig.',
     votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-01',
     ai_scores:{violence:7,language:4,dopamine:6,retention:7,commercialism:2,values:4,sexual:2,fear:7,passive:6,socialpressure:2},
@@ -5540,13 +5540,13 @@ const DEMO_DATA = [
     ai_analysis:'Avengers: Endgame er klimakset på et 10-år langt Marvel-forløb. Emotionelt intens med temaer om tab, ofring og venskab. Vold er intensiveret men ikke grafisk. Fra 12 år — men kræver at barnet har set de foregående film.' },
 
   // ── KLASSIKERE ────────────────────────────────────────────────────────────
-  { id:321, title:'Harry Potter og De Vises Sten', recommended_age:8, platform:'hbo', age_group:'7-9', content_type:'film',
+  { id:321, title:'Harry Potter og De Vises Sten', recommended_age:8, platform:'max', age_group:'7-9', content_type:'film',
     notes:'Den første og mest tilgængelige Harry Potter-film. Magisk og eventyrlig. Serierne bliver mørkere.',
     votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-01',
     ai_scores:{violence:3,language:1,dopamine:5,retention:7,commercialism:4,values:2,sexual:1,fear:4,passive:6,socialpressure:2},
     ai_analysis:'Harry Potter 1 er magisk og eventyrlig og egnet fra 8 år. Men serien bliver markant mørkere fra film 4 og frem — Fønixordenen og fremefter er klart 12+. Introducer serien gradvist og vurder barnets modenhed undervejs.' },
 
-  { id:322, title:'Harry Potter og Flammernes Pokal', recommended_age:12, platform:'hbo', age_group:'10-12', content_type:'film',
+  { id:322, title:'Harry Potter og Flammernes Pokal', recommended_age:12, platform:'max', age_group:'10-12', content_type:'film',
     notes:'Film 4 — vendepunktet hvor serien bliver mørk. Voldemort vender tilbage og der er et dødsfald.',
     votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-01',
     ai_scores:{violence:6,language:2,dopamine:6,retention:8,commercialism:3,values:3,sexual:2,fear:7,passive:6,socialpressure:3},
@@ -5557,6 +5557,1197 @@ const DEMO_DATA = [
     votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-01',
     ai_scores:{violence:7,language:2,dopamine:5,retention:8,commercialism:2,values:2,sexual:1,fear:6,passive:7,socialpressure:1},
     ai_analysis:'Ringenes Herre er et af filmhistoriens største epos. Intense kampscener og skræmmende karakterer som Nazgûl og Saruman. Fra 12 år. Kræver koncentration og tålmodighed — belønner med en uforglemmelig oplevelse.' },
+
+  // ── BØLGE 1: DR / RAMASJANG ───────────────────────────────────────────────
+  { id:324, title:'Ramasjang – Generel kanal', recommended_age:3, platform:'dr', age_group:'4-6', content_type:'channel',
+    notes:'DRs børnekanal til de 3-8-årige. Reklamefri, dansksproget og pædagogisk gennemtænkt.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:1,language:1,dopamine:3,retention:4,commercialism:1,values:1,sexual:1,fear:1,passive:5,socialpressure:1},
+    ai_analysis:'Ramasjang er det bedste udgangspunkt for danske forældre med yngre børn. Reklamefri, dansksproget og produceret med pædagogisk omhu. Indholdet er alderssvarende og understøtter sprogudvikling. En af de sikreste anbefalinger på hele platformen.' },
+
+  { id:325, title:'Ultra – Generel kanal', recommended_age:8, platform:'dr', age_group:'7-9', content_type:'channel',
+    notes:'DRs kanal til de 8-12-årige. Nyheder, underholdning og serier tilpasset målgruppen.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:2,language:2,dopamine:4,retention:5,commercialism:1,values:2,sexual:1,fear:2,passive:5,socialpressure:3},
+    ai_analysis:'Ultra er DRs tilbud til de lidt ældre børn og er gennemgående af høj kvalitet. Reklamefri og med relevant dansk indhold. Ultra Nyt giver børn en seriøs og alderssvarende indgang til nyheder. Anbefales varmt.' },
+
+  { id:326, title:'Dyr på Spil', recommended_age:5, platform:'dr', age_group:'4-6', content_type:'channel',
+    notes:'Dansksproget naturprogram til de yngste. Sjovt, lærerigt og visuelt engagerende.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:1,language:1,dopamine:3,retention:4,commercialism:1,values:1,sexual:1,fear:2,passive:6,socialpressure:1},
+    ai_analysis:'Dyr på Spil er et klassisk dansksproget naturprogram der engagerer de yngstes nysgerrighed på dyrenes verden. Lavt bekymringsniveau på alle parametre. Et trygt og lærerigt valg.' },
+
+  { id:327, title:'Stjerneskud', recommended_age:6, platform:'dr', age_group:'7-9', content_type:'channel',
+    notes:'Dansk DR-serie om børn der drømmer om at blive stjerner. Sang, dans og drama.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:1,language:1,dopamine:5,retention:6,commercialism:1,values:2,sexual:1,fear:1,passive:6,socialpressure:5},
+    ai_analysis:'Stjerneskud er populær dansk dramafiction for børn med fokus på drømme og fællesskab. Socialt pres og præstationskultur er tilstede men behandlet nuanceret. Til 6-10-årige.' },
+
+  { id:328, title:'Ultra Nyt', recommended_age:8, platform:'dr', age_group:'7-9', content_type:'channel',
+    notes:'Børnenyheder på DR Ultra. Giver børn en seriøs og alderssvarende indgang til aktuelle begivenheder.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:2,language:1,dopamine:2,retention:3,commercialism:1,values:1,sexual:1,fear:3,passive:5,socialpressure:1},
+    ai_analysis:'Ultra Nyt er en af de bedste måder at introducere børn til nyheder og samfundsdebat. Journalistisk solidt og alderssvarende præsenteret. Kan give anledning til vigtige familiesamtaler om verden.' },
+
+  { id:329, title:'Lasses Verden', recommended_age:4, platform:'dr', age_group:'4-6', content_type:'channel',
+    notes:'Klassisk dansk børneprogram med Lasse og hans venner. Hverdagssituationer og enkle værdier.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:1,language:1,dopamine:2,retention:3,commercialism:1,values:1,sexual:1,fear:1,passive:6,socialpressure:1},
+    ai_analysis:'Lasses Verden er rolig og tryg dansk børne-tv i den bedste tradition. Enkle hverdagsfortællinger med gode værdier. Ingen bekymringer på nogen parametre. Anbefales til 3-6-årige.' },
+
+  // ── BØLGE 1: TV 2 PLAY ────────────────────────────────────────────────────
+  { id:330, title:'Hjem til Gård', recommended_age:7, platform:'tv2', age_group:'7-9', content_type:'channel',
+    notes:'Populær dansk realityserie om familier der skifter byliv ud med gårdliv. Hyggelig og familievenlig.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:1,language:1,dopamine:4,retention:5,commercialism:2,values:2,sexual:1,fear:1,passive:7,socialpressure:3},
+    ai_analysis:'Hjem til Gård er harmløs dansk realityunderholdning med fokus på natur og fællesskab. Ingen bekymrende indhold. Kan inspirere børn til at interessere sig for naturen og bæredygtighed. Til hele familien.' },
+
+  { id:331, title:'Ludvig & Julemanden', recommended_age:4, platform:'tv2', age_group:'4-6', content_type:'channel',
+    notes:'Dansk julekalender til de yngste. Klassisk TV 2-julekalender med Ludvig og venner.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:1,language:1,dopamine:5,retention:6,commercialism:3,values:1,sexual:1,fear:1,passive:6,socialpressure:2},
+    ai_analysis:'Ludvig & Julemanden er en klassisk og tryg dansk julekalender. Daglige afsnit skaber forventningsglæde snarere end afhængighed. Merchandise-pres er tilstede men moderat. Et sæsonbestemt hyggevalg.' },
+
+  { id:332, title:'Familien fra Bryggen', recommended_age:10, platform:'tv2', age_group:'10-12', content_type:'channel',
+    notes:'Dansk realityserie om en stor familie. Populær bland tween-piger. Livsstilsfokus.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:1,language:2,dopamine:5,retention:6,commercialism:5,values:4,sexual:2,fear:1,passive:7,socialpressure:7},
+    ai_analysis:'Familien fra Bryggen er populær bland 10-13-årige piger men indeholder et betydeligt livsstils- og forbrugsfokus. Socialt pres og idealiserede familieforhold kan påvirke unges selvopfattelse. Brug det som samtaleemne.' },
+
+  { id:333, title:'Løvens Hule', recommended_age:12, platform:'tv2', age_group:'10-12', content_type:'channel',
+    notes:'Dansk investorshow. Overraskende populær bland nysgerrige 10-13-årige. Giver indblik i iværksætteri.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:1,language:2,dopamine:4,retention:5,commercialism:3,values:2,sexual:1,fear:1,passive:7,socialpressure:4},
+    ai_analysis:'Løvens Hule er overraskende pædagogisk for nysgerrige børn. Giver indblik i iværksætteri, økonomi og forhandling. Ingen bekymrende indhold. Kan inspirere til kreativitet og forretningssans.' },
+
+  { id:334, title:'Go\' Morgen Danmark', recommended_age:10, platform:'tv2', age_group:'10-12', content_type:'channel',
+    notes:'Dansk morgenmagasin. Bred nyhedsformidling og underholdning. Familievenlig men med nyhedstunge emner.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:2,language:1,dopamine:3,retention:3,commercialism:3,values:2,sexual:1,fear:3,passive:6,socialpressure:2},
+    ai_analysis:'Go\' Morgen Danmark er familievenlig morgenunderholdning med aktuelle nyheder. Til 10-12-årige er det en fin måde at følge med i samfundet på. Visse nyhedsemner kan kræve forældreopfølgning.' },
+
+  { id:335, title:'Blachman', recommended_age:16, platform:'tv2', age_group:'13+', content_type:'channel',
+    notes:'Dansk talkshow med provokerende elementer. Stærke meninger og indimellem kontroversielle gæster.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:2,language:5,dopamine:5,retention:5,commercialism:2,values:5,sexual:4,fear:1,passive:7,socialpressure:3},
+    ai_analysis:'Blachman er et dansk talkshow der til tider er provokerende og kontroversielt. Sproget er til tider råt og emnerne voksne. Ikke egnet til under 16. Til ældre teenagere kan det fremme kritisk tænkning om samfund og meninger.' },
+
+  // ── BØLGE 1: MAX (TIDLIGERE HBO MAX) ─────────────────────────────────────
+  { id:336, title:'Huset på en skov', recommended_age:8, platform:'max', age_group:'7-9', content_type:'channel',
+    notes:'Dansk familieserie på Max. Eventyr og hverdagsliv i naturomgivelser.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:2,language:1,dopamine:4,retention:5,commercialism:1,values:2,sexual:1,fear:2,passive:6,socialpressure:2},
+    ai_analysis:'Huset på en skov er dansk familieunderholdning i naturmæssige omgivelser. Lav bekymringsscore. Til 7-10-årige er det et trygt og underholdende valg.' },
+
+  { id:337, title:'Game of Thrones', recommended_age:18, platform:'max', age_group:'13+', content_type:'channel',
+    notes:'Voksent fantasydrama. Ekstremt grafisk vold og seksuelt indhold. Meget populær bland teenagere.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:10,language:6,dopamine:7,retention:9,commercialism:2,values:6,sexual:9,fear:7,passive:7,socialpressure:4},
+    ai_analysis:'Game of Thrones er absolut voksent indhold med ekstremt grafisk vold og seksuelt eksplicit materiale. Aldersgrænsen er 18. Mange 14-16-årige ser den alligevel — åbn samtalen fremfor at forbyde og undgå at de ser det alene.' },
+
+  { id:338, title:'House of the Dragon', recommended_age:18, platform:'max', age_group:'13+', content_type:'channel',
+    notes:'Game of Thrones-prequel. Samme grafiske indholdstype som originalen. Kun for voksne.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:9,language:5,dopamine:6,retention:8,commercialism:2,values:5,sexual:8,fear:6,passive:7,socialpressure:3},
+    ai_analysis:'House of the Dragon er en direkte forlængelse af Game of Thrones-universet med tilsvarende grafisk vold og seksuelt indhold. Absolut kun for over 18. Klart fra mediæval politisk drama til brutal vold.' },
+
+  { id:339, title:'Looney Tunes Cartoons', recommended_age:5, platform:'max', age_group:'4-6', content_type:'channel',
+    notes:'Klassiske animerede kortfilm med Bugs Bunny, Daffy Duck m.fl. Slapstick-humor.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:3,language:1,dopamine:5,retention:4,commercialism:2,values:2,sexual:1,fear:2,passive:6,socialpressure:1},
+    ai_analysis:'Looney Tunes er klassisk slapstick-animation med cartoon-vold. Humoren er tidløs men visse ældre afsnit indeholder forældede stereotyper. Generelt et ufarligt hyggevalg til 5-9-årige.' },
+
+  { id:340, title:'Adventure Time', recommended_age:9, platform:'max', age_group:'7-9', content_type:'channel',
+    notes:'Animeret eventyrsserie med dybe emotionelle lag under overfladen. Til børn og voksne.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:4,language:2,dopamine:6,retention:7,commercialism:2,values:2,sexual:1,fear:4,passive:6,socialpressure:2},
+    ai_analysis:'Adventure Time er overfladisk set en sjov eventyrsserie men indeholder dybe emotionelle temaer om ensomhed, identitet og tab. Fra 9 år. Serien belønner eftertænksomme seere og kan åbne vigtige samtaler.' },
+
+  // ── BØLGE 1: SKYSHOWTIME ──────────────────────────────────────────────────
+  { id:341, title:'Paw Patrol – The Movie', recommended_age:3, platform:'skyshowtime', age_group:'4-6', content_type:'channel',
+    notes:'Paw Patrol-film baseret på den populære animationsserie. Klassisk børneunderholdning.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:1,language:1,dopamine:4,retention:5,commercialism:7,values:1,sexual:1,fear:1,passive:6,socialpressure:3},
+    ai_analysis:'Paw Patrol-filmen er harmløs børneunderholdning med høj merkantil sidestøtte. Selve indholdet er ufarligt, men Paw Patrol-franchisens merchandise-imperium er massivt. Sæt grænser for legetøjskøb.' },
+
+  { id:342, title:'Sonic the Hedgehog 2', recommended_age:7, platform:'skyshowtime', age_group:'7-9', content_type:'channel',
+    notes:'Familiefilm baseret på spilfranchisen. Action og humor for børn og forældre.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:3,language:2,dopamine:5,retention:6,commercialism:4,values:2,sexual:1,fear:2,passive:7,socialpressure:2},
+    ai_analysis:'Sonic 2 er underholdende familiefilm med lavt bekymringsniveau. Action og humor fungerer for hele familien. Ingen problematisk indhold. Anbefales fra 7 år.' },
+
+  { id:343, title:'Transformers: Rise of the Beasts', recommended_age:12, platform:'skyshowtime', age_group:'10-12', content_type:'channel',
+    notes:'Action-blockbuster med robotkampe og eksplosioner. Til de lidt ældre børn.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:7,language:3,dopamine:6,retention:6,commercialism:5,values:3,sexual:2,fear:4,passive:8,socialpressure:3},
+    ai_analysis:'Transformers er ren actionblockbuster med mange eksplosioner og kampe. Indholdet er til de 12-årige og opefter. Stærkt kommercielt franchise men selve filmen er harmløs underholdning i sin genre.' },
+
+  { id:346, title:'Bamse og Kylling', recommended_age:3, platform:'sfkids', age_group:'4-6', content_type:'channel',
+    notes:'Klassisk dansk animationsfilm. Bamse og Kylling er venner der løser problemer sammen.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:1,language:1,dopamine:3,retention:4,commercialism:2,values:1,sexual:1,fear:1,passive:6,socialpressure:1},
+    ai_analysis:'Bamse og Kylling er klassisk dansk familiefilm i den bedste tradition. Venskab, samarbejde og problemløsning er de centrale temaer. Ingen bekymringer. Perfekt til de 3-6-årige.' },
+
+  { id:347, title:'Hodja fra Pjort', recommended_age:6, platform:'sfkids', age_group:'7-9', content_type:'channel',
+    notes:'Dansk animationsfilm baseret på den klassiske tegneserie. Humor og eventyr i historisk setting.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:2,language:2,dopamine:4,retention:5,commercialism:1,values:2,sexual:1,fear:2,passive:7,socialpressure:1},
+    ai_analysis:'Hodja fra Pjort er en charmerende dansk animationsfilm med historisk og kulturel rigdom. Humor og eventyr fungerer for hele familien. Anbefales til 6-10-årige.' },
+
+  { id:348, title:'Olsen Banden Junior', recommended_age:7, platform:'sfkids', age_group:'7-9', content_type:'channel',
+    notes:'Dansk komedie til børn baseret på Olsen Banden-universet. Genkendeligt og hyggeligt.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:2,language:2,dopamine:4,retention:5,commercialism:1,values:2,sexual:1,fear:1,passive:7,socialpressure:2},
+    ai_analysis:'Olsen Banden Junior er en solid dansk børnefilm med det kendte univers tilpasset de yngre. Harmløs komedie med gode værdier om venskab og kreativitet. Anbefales til 7-10-årige.' },
+
+  { id:349, title:'Terkel i Knibe', recommended_age:12, platform:'sfkids', age_group:'10-12', content_type:'channel',
+    notes:'Animeret dansk komedie for voksne der er ekstremt populær bland 10-14-årige. Sort humor og groft sprog.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:5,language:8,dopamine:6,retention:6,commercialism:1,values:6,sexual:3,fear:3,passive:7,socialpressure:5},
+    ai_analysis:'Terkel i Knibe er lavet til voksne men er kulturelt allestedsnærværende bland danske børn fra 10 år. Groft sprog, sort humor og hård mobning er centrale temaer. Se den gerne med barnet og brug det som samtaleemne om mobning.' },
+
+  { id:350, title:'Rejsen til Saturn', recommended_age:10, platform:'sfkids', age_group:'10-12', content_type:'channel',
+    notes:'Dansk sci-fi animationsfilm med voksen humor. Populær bland børn og voksne.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:4,language:5,dopamine:5,retention:6,commercialism:1,values:3,sexual:3,fear:3,passive:7,socialpressure:3},
+    ai_analysis:'Rejsen til Saturn er en velproduceret dansk animationsfilm med humor på to niveauer. Den voksne humor og visse scener gør den mest egnet til 10+ med forbehold. God til familieaften.' },
+
+  // ── BØLGE 1: YOUTUBE – DANSKE KANALER (UDVIDELSE) ────────────────────────
+  { id:351, title:'Fie Laursen', recommended_age:13, platform:'youtube', age_group:'13+', content_type:'channel',
+    notes:'Dansk influencer og YouTuber med fokus på livsstil og personlig fortælling. Åben om psykisk sygdom.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:1,language:3,dopamine:6,retention:6,commercialism:6,values:4,sexual:2,fear:2,passive:7,socialpressure:7},
+    ai_analysis:'Fie Laursen er en af Danmarks kendteste influencere og er åben om sine psykiske udfordringer. Hendes åbenhed kan normalisere samtalen om mental sundhed. Kommercielt pres og livsstilsfokus er dog tilstede. Til 13+ med forældreopmærksomhed.' },
+
+  { id:352, title:'GamerBrother', recommended_age:12, platform:'youtube', age_group:'10-12', content_type:'channel',
+    notes:'Dansk gaming-YouTuber med fokus på FIFA og EA Sports FC. Høj energi og daglige uploads.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:3,language:4,dopamine:7,retention:7,commercialism:6,values:3,sexual:1,fear:1,passive:7,socialpressure:6},
+    ai_analysis:'GamerBrother er en af Danmarks mest sete gaming-YouTubere med fokus på fodboldspil. Sproget er til tider råt og FUT-mekanikken normaliserer lootbox-tænkning. Til 12+ med åben snak om mikrotransaktioner.' },
+
+  { id:353, title:'Mikkel Duelund', recommended_age:10, platform:'youtube', age_group:'10-12', content_type:'channel',
+    notes:'Ung dansk YouTuber med challenges og hverdagsvlogs. Positiv og energisk tone.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:1,language:2,dopamine:5,retention:5,commercialism:3,values:2,sexual:1,fear:1,passive:6,socialpressure:4},
+    ai_analysis:'Mikkel Duelund er en ung og positiv dansk YouTuber med et bredt publikum bland 10-13-årige. Lavt bekymringsniveau. Et af de mere børnevenlige valg bland danske YouTubere.' },
+
+  { id:354, title:'Jonathan Piil', recommended_age:10, platform:'youtube', age_group:'10-12', content_type:'channel',
+    notes:'Dansk YouTube-par med challenges og rejse-vlogs. Til tider kommercielt orienteret.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:1,language:2,dopamine:5,retention:5,commercialism:5,values:3,sexual:2,fear:1,passive:7,socialpressure:5},
+    ai_analysis:'Jonathan Piil kombinerer challenges med rejseindhold og har en positiv tone. Kommercielt pres og livsstilsfokus er mærkbart. Til 10-12-årige generelt uproblematisk.' },
+
+  { id:355, title:'Emil og Ida', recommended_age:6, platform:'youtube', age_group:'7-9', content_type:'channel',
+    notes:'Dansk børnekanal med leg, udfordringer og familievenligt indhold. Primært til 6-10-årige.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:1,language:1,dopamine:5,retention:6,commercialism:4,values:2,sexual:1,fear:1,passive:6,socialpressure:3},
+    ai_analysis:'Emil og Ida er en dansk familiekanal med legende og positivt indhold til de yngre børn. Lavt bekymringsniveau. Vanedannelsesrisikoen er moderat. Et trygt valg til 6-10-årige.' },
+
+  { id:356, title:'Lasse Rune', recommended_age:13, platform:'youtube', age_group:'13+', content_type:'channel',
+    notes:'Dansk YouTuber med humor og satire. Populær bland danske teenagere. Til tider groft sprog.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:2,language:6,dopamine:6,retention:6,commercialism:3,values:4,sexual:3,fear:1,passive:7,socialpressure:5},
+    ai_analysis:'Lasse Rune er dansk underholdning med humoristisk og satirisk tilgang. Sproget er til tider groft og humoren kræver et vist modenhedsniveau. Til 13+ er indholdet generelt acceptabelt.' },
+
+  // ── BØLGE 1: YOUTUBE – INTERNATIONALE (UDVIDELSE) ────────────────────────
+  { id:357, title:'Like Nastya', recommended_age:3, platform:'youtube', age_group:'4-6', content_type:'channel',
+    notes:'Russisk-amerikansk YouTube-stjerne med legevideo og eventyr. Et af verdens mest sete børnekanaler.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:1,language:1,dopamine:6,retention:6,commercialism:8,values:3,sexual:1,fear:1,passive:7,socialpressure:4},
+    ai_analysis:'Like Nastya er teknisk harmløs men er i bund og grund en forbrugsplatform. Legetøj og luksuriøse oplevelser er det konstante fokus. Skaber urealistiske forventninger hos de mindste. Brug med måde.' },
+
+  { id:358, title:'Vlad og Niki', recommended_age:3, platform:'youtube', age_group:'4-6', content_type:'channel',
+    notes:'Ukrainsk-amerikanerne brødre der leger og åbner legetøj. Massivt kommercielt pres.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:1,language:1,dopamine:6,retention:6,commercialism:9,values:4,sexual:1,fear:1,passive:7,socialpressure:4},
+    ai_analysis:'Vlad og Niki har 100+ millioner abonnenter og er teknisk ufarlige. Det konstante fokus på luksuriøst legetøj og oplevelser er dog problematisk for de mindste. Skaber forbrugsmønstre tidligt. Sæt klare grænser.' },
+
+  { id:359, title:'Blippi', recommended_age:2, platform:'youtube', age_group:'4-6', content_type:'channel',
+    notes:'Pædagogisk underholdning for småbørn. Stewie udforsker steder og genstande med høj energi.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:1,language:1,dopamine:5,retention:5,commercialism:5,values:1,sexual:1,fear:1,passive:6,socialpressure:1},
+    ai_analysis:'Blippi er pædagogisk rettet og giver læring om farver, tal og steder. Mere indhold end fx Cocomelon. Merchandise-presset er mærkbart men selve indholdet er sundt. Til 2-5-årige.' },
+
+  { id:360, title:'Lankybox', recommended_age:7, platform:'youtube', age_group:'7-9', content_type:'channel',
+    notes:'Animeret reaktionskanal. Høj energi og sjov men meget støjende format.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:2,language:2,dopamine:8,retention:7,commercialism:6,values:3,sexual:1,fear:1,passive:7,socialpressure:4},
+    ai_analysis:'Lankybox er ekstremt energisk animation med høje lyde og hurtige klip. Vanedannelsesrisikoen er høj. Merchandise-pres er massivt. Til 7-9-årige bør tidsbegrænsning anvendes.' },
+
+  { id:362, title:'Dream', recommended_age:13, platform:'youtube', age_group:'13+', content_type:'channel',
+    notes:'Kontroversiel Minecraft-YouTuber. Ekstremt populær bland 12-16-årige. Speedruns og challenges.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:3,language:4,dopamine:7,retention:7,commercialism:4,values:4,sexual:1,fear:1,passive:7,socialpressure:6},
+    ai_analysis:'Dream er en af verdens mest sete gaming-YouTubere med fokus på Minecraft. Kontrovers om snyd og personlige skandaler er en del af kanalkulturen. Til 13+ er indholdet generelt acceptabelt men forældreopmærksomhed anbefales.' },
+
+  { id:363, title:'Mark Rober', recommended_age:9, platform:'youtube', age_group:'7-9', content_type:'channel',
+    notes:'Tidligere NASA-ingeniør der laver imponerende videnskabsprojekter. Pædagogisk og inspirerende.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:1,language:1,dopamine:6,retention:6,commercialism:3,values:1,sexual:1,fear:1,passive:7,socialpressure:2},
+    ai_analysis:'Mark Rober er et af de bedste eksempler på pædagogisk YouTube. Tidligere NASA-ingeniør der kombinerer videnskab med underholdning. Inspirerer til nysgerrighed og STEM-interesse. Anbefales varmt fra 9 år.' },
+
+  { id:364, title:'Kurzgesagt', recommended_age:12, platform:'youtube', age_group:'10-12', content_type:'channel',
+    notes:'Animerede dokumentarvideoer om videnskab, filosofi og samfund. Høj kvalitet og pædagogisk.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:2,language:1,dopamine:4,retention:5,commercialism:2,values:2,sexual:1,fear:3,passive:7,socialpressure:1},
+    ai_analysis:'Kurzgesagt er YouTube i sin bedste form — komplekse emner formidlet visuelt og engagerende. Visse emner om eksistentielle trusler kan være angstprovokerende for yngre seere. Fra 12 år er det fremragende indhold.' },
+
+  { id:365, title:'SSSniperWolf', recommended_age:13, platform:'youtube', age_group:'13+', content_type:'channel',
+    notes:'Reaktionskanal med gaming og pop culture. Meget populær bland teenagepiger.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:3,language:4,dopamine:7,retention:7,commercialism:5,values:4,sexual:3,fear:1,passive:8,socialpressure:6},
+    ai_analysis:'SSSniperWolf er primært reaktionsindhold og er passivt medieforbrug. Til 13+ er indholdet acceptabelt men lav pædagogisk værdi. Livsstilsfokus og kropsidealer er tilstede.' },
+
+  { id:367, title:'YouTube Shorts – Generel brug', recommended_age:13, platform:'ytshorts', age_group:'13+', content_type:'channel',
+    notes:'YouTubes kortformatfunktion. Endnu mere vanedannende end standard YouTube. Uendelig scroll.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:3,language:4,dopamine:9,retention:10,commercialism:5,values:5,sexual:4,fear:2,passive:8,socialpressure:6},
+    ai_analysis:'YouTube Shorts er Googles svar på TikTok og er mindst ligeså vanedannende. Algoritmen er ekstremt god til at fastholde opmærksomheden med kortformat videoer. Uendelig scroll uden naturlige stopmekanikker. Til 13+ med daglige tidsbegrænsninger.' },
+
+  { id:368, title:'BeReal – Generel brug', recommended_age:14, platform:'bereal', age_group:'13+', content_type:'channel',
+    notes:'Socialt medie med fokus på autenticitet. To-kamera-snapshot én gang dagligt. Mindre vanedannende end konkurrenterne.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:1,language:3,dopamine:5,retention:5,commercialism:2,values:3,sexual:3,fear:1,passive:4,socialpressure:6},
+    ai_analysis:'BeReal er designet som et modsvar til de perfektionerede sociale medier — én daglig to-kamera-snapshot fremmer autenticitet. Lavere vanedannelse end Instagram og TikTok. Det sociale pres om at deltage dagligt er dog tilstede. Til 14+ det mindst bekymrende sociale medie.' },
+
+  // ── BØLGE 1: VIAPLAY (UDVIDELSE) ─────────────────────────────────────────
+  { id:369, title:'Brødrene Løvehjerte', recommended_age:8, platform:'viaplay', age_group:'7-9', content_type:'channel',
+    notes:'Filmatisering af Astrid Lindgrens klassiker. Dybe temaer om mod, kærlighed og død.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:4,language:1,dopamine:4,retention:6,commercialism:1,values:1,sexual:1,fear:5,passive:8,socialpressure:1},
+    ai_analysis:'Brødrene Løvehjerte er en nordisk klassiker der behandler temaer som mod, broderskab og død med stor litterær kvalitet. Kan være skræmmende for de yngste. Fra 8 år med forældresnakke om bogens temaer.' },
+
+  { id:370, title:'Norsemen', recommended_age:16, platform:'viaplay', age_group:'13+', content_type:'channel',
+    notes:'Norsk vikingekomedie med sort humor og vold. Populær bland teenagere. Til de ældste.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:7,language:6,dopamine:5,retention:6,commercialism:1,values:5,sexual:5,fear:3,passive:7,socialpressure:2},
+    ai_analysis:'Norsemen er norsk vikingekomedie med satirisk sort humor. Vold og seksuelt indhold er til stede og gør serien uegnet for under 16. Til ældre teenagere er det intelligent satire over norsk selvforståelse.' },
+
+  { id:371, title:'Borgen', recommended_age:14, platform:'viaplay', age_group:'13+', content_type:'channel',
+    notes:'Dansk politisk drama af høj klasse. Excellent udgangspunkt for samtaler om demokrati og lederskab.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:2,language:3,dopamine:5,retention:7,commercialism:1,values:2,sexual:3,fear:1,passive:7,socialpressure:4},
+    ai_analysis:'Borgen er internationalt anerkendt dansk dramaskrivning på højeste niveau. Til teenagere over 14 er det et fremragende udgangspunkt for samtaler om politik, lederskab og dilemmaer. Ikke til yngre børn men heller ikke bekymrende for unge.' },
+
+  { id:372, title:'Young Royals', recommended_age:14, platform:'viaplay', age_group:'13+', content_type:'channel',
+    notes:'Svensk teenageserie om en prins der forelskser sig i en klassekammerat. LGBTQ+-tema.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:2,language:3,dopamine:7,retention:8,commercialism:1,values:3,sexual:5,fear:1,passive:6,socialpressure:7},
+    ai_analysis:'Young Royals er en populær og gennemtænkt svensk teenageserie med LGBTQ+-temaer. Seksuelt indhold er til stede men behandlet med respekt. Fra 14 år. Kan åbne vigtige samtaler om identitet og kærlighed.' },
+
+  // ── BØLGE 2: NETFLIX (UDVIDELSE) ─────────────────────────────────────────
+  { id:377, title:'My Little Pony: A New Generation', recommended_age:5, platform:'netflix', age_group:'4-6', content_type:'channel',
+    notes:'Animationsfilm i det kendte My Little Pony-univers. Venlig, farverig og med gode værdier.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:1,language:1,dopamine:3,retention:4,commercialism:5,values:1,sexual:1,fear:1,passive:6,socialpressure:2},
+    ai_analysis:'My Little Pony er farverig animation med klare positive værdier om venskab og accept. Merchandise-presset er massivt men selve indholdet er harmløst. Til 4-7-årige.' },
+
+  { id:378, title:'Black Mirror', recommended_age:16, platform:'netflix', age_group:'13+', content_type:'channel',
+    notes:'Dystopisk antologi om teknologi og samfund. Meget populær bland unge. Psykologisk krævende.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:6,language:4,dopamine:6,retention:8,commercialism:1,values:4,sexual:5,fear:9,passive:8,socialpressure:3},
+    ai_analysis:'Black Mirror er genial tv men absolutt ikke for yngre teenagere. De psykologiske skrækscenarier og eksplicitte indhold kræver et modent publikum. Fra 16 år. Kan åbne vigtige samtaler om teknologi og fremtiden.' },
+
+  { id:380, title:'Trolls (film)', recommended_age:4, platform:'netflix', age_group:'4-6', content_type:'channel',
+    notes:'Animationsfilm med musik og farver. Trollerne bekæmper kulhed med glæde og musik.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:2,language:1,dopamine:5,retention:5,commercialism:5,values:2,sexual:1,fear:2,passive:7,socialpressure:2},
+    ai_analysis:'Trolls er farverig og musikalsk animation til de yngste. Positive budskaber om glæde og fællesskab. Merchandise-pres er synligt. Til 4-7-årige et uproblematisk valg.' },
+
+  // ── BØLGE 2: DISNEY+ (UDVIDELSE) ─────────────────────────────────────────
+  { id:383, title:'Wish', recommended_age:5, platform:'disney', age_group:'4-6', content_type:'channel',
+    notes:'Disneys 100-års jubilæumsfilm. Klassisk eventyrformat med ønsker og stjerner.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:2,language:1,dopamine:4,retention:5,commercialism:3,values:1,sexual:1,fear:2,passive:7,socialpressure:2},
+    ai_analysis:'Wish er Disneys hyldestvlm til egne klassikere. Klassisk format med gode værdier. Modtaget blandet men er et uproblematisk valg til 5-8-årige.' },
+
+  { id:386, title:'High School Musical: The Musical: The Series', recommended_age:10, platform:'disney', age_group:'10-12', content_type:'channel',
+    notes:'Musical-drama serie til tweens. Sang, dans og ungdomsdrama i gymnasiemiljø.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:1,language:2,dopamine:6,retention:6,commercialism:3,values:3,sexual:2,fear:1,passive:6,socialpressure:7},
+    ai_analysis:'HSMTMTS er populær bland 10-13-årige piger med fokus på drama, sang og kærlighed. Socialt pres og præstationskultur er centrale temaer. Lavt bekymringsniveau generelt. Til 10+ uproblematisk.' },
+
+  { id:387, title:'Percy Jackson and the Olympians', recommended_age:9, platform:'disney', age_group:'7-9', content_type:'channel',
+    notes:'Eventyrsserie baseret på Rick Riordans populære bøger. Græsk mytologi og action.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:4,language:2,dopamine:6,retention:7,commercialism:3,values:2,sexual:1,fear:3,passive:7,socialpressure:2},
+    ai_analysis:'Percy Jackson er vellykket adaptation af de elskede bøger. Eventyr og mytologi kombineres med stærke venskabsværdier. Vold er til stede men ikke grafisk. Fra 9 år — og kan inspirere til at læse bøgerne.' },
+
+  // ── BØLGE 2: GAMING (UDVIDELSE) ───────────────────────────────────────────
+  { id:393, title:'Sims 4', recommended_age:10, platform:'gaming', age_group:'10-12', content_type:'channel',
+    notes:'Livssimulationsspil. Gratis at spille men med massivt DLC-pres. Kreativt og åbent univers.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:2,language:2,dopamine:6,retention:7,commercialism:8,values:3,sexual:3,fear:1,passive:4,socialpressure:3},
+    ai_analysis:'Sims 4 er et kreativt livssimulationsspil men med et ekstremt aggressivt DLC-system. Grundspillet er gratis men fuld oplevelse kræver mange hundrede kroner i tilkøb. Sæt klare regler om køb. Fra 10 år.' },
+
+  { id:396, title:'Rocket League', recommended_age:8, platform:'gaming', age_group:'7-9', content_type:'channel',
+    notes:'Fodbold med raketter. Læring og kompetence i centrum. Online-miljøet kan have groft sprog.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:1,language:3,dopamine:7,retention:7,commercialism:6,values:2,sexual:1,fear:1,passive:3,socialpressure:5},
+    ai_analysis:'Rocket League er et sjovt og kompetencebaseret spil der belønner øvelse og teamwork. Online-chatsystemet kan indeholde groft sprog — slå chat fra for yngre spillere. Kosmetiske køb er ikke pay-to-win.' },
+
+  { id:397, title:'Minecraft Education', recommended_age:6, platform:'gaming', age_group:'4-6', content_type:'channel',
+    notes:'Pædagogisk version af Minecraft brugt i skoler. Ingen mikrotransaktioner og struktureret læring.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:1,language:1,dopamine:4,retention:5,commercialism:1,values:1,sexual:1,fear:1,passive:2,socialpressure:1},
+    ai_analysis:'Minecraft Education er den pædagogisk optimerede version uden reklamer og mikrotransaktioner. Bruges i danske skoler. Fremmer kreativitet, matematik og samarbejde. En af de bedste digitale læringsoplevelser til 6-10-årige.' },
+
+  // ── BØLGE 2: YOUTUBE – INTERNATIONALE (FORTSAT) ───────────────────────────
+  { id:398, title:'Veritasium', recommended_age:13, platform:'youtube', age_group:'13+', content_type:'channel',
+    notes:'Videnskabelig YouTube-kanal med dybdegående forklaringer. Fremragende til nysgerrige teenagere.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:1,language:1,dopamine:4,retention:6,commercialism:2,values:1,sexual:1,fear:1,passive:7,socialpressure:1},
+    ai_analysis:'Veritasium er videnskabelig formidling på højeste niveau. Komplekse emner fra fysik, matematik og biologi forklaret engagerende. Ingen bekymringer. Fremragende for nysgerrige teenagere.' },
+
+  { id:399, title:'Dude Perfect', recommended_age:8, platform:'youtube', age_group:'7-9', content_type:'channel',
+    notes:'Trickshots og sportsudfordringer. Ekstremt populær bland drenge 8-14. Positiv tone.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:1,language:1,dopamine:7,retention:7,commercialism:5,values:2,sexual:1,fear:1,passive:7,socialpressure:3},
+    ai_analysis:'Dude Perfect er underholdende sportsunderholdning med trickshots og positive vibes. Ingen bekymrende indhold. Merchandise-pres er tilstede. Et af de mere uskyldige valg bland de store YouTube-kanaler.' },
+
+  { id:400, title:'Good Mythical Morning', recommended_age:11, platform:'youtube', age_group:'10-12', content_type:'channel',
+    notes:'Amerikansk talkshow-format med mad-udfordringer og sjove tests. Familiær og positiv tone.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:1,language:2,dopamine:5,retention:5,commercialism:4,values:2,sexual:1,fear:1,passive:7,socialpressure:2},
+    ai_analysis:'Good Mythical Morning er venlig og positiv underholdning med lave bekymringsscores. Mad-udfordringer og legende format. Til 11+ uproblematisk og underholdende.' },
+
+  { id:402, title:'Alphablocks', recommended_age:3, platform:'youtube', age_group:'4-6', content_type:'channel',
+    notes:'Britisk pædagogisk serie om bogstaver og læsning. Fra skaberne af Numberblocks.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:1,language:1,dopamine:3,retention:4,commercialism:1,values:1,sexual:1,fear:1,passive:5,socialpressure:1},
+    ai_analysis:'Alphablocks er søsterkanalel til Numberblocks og lærer bogstaver og læsning på en engagerende måde. Ingen bekymringer. Anbefales varmt som supplement til dagtilbud for 3-6-årige.' },
+
+  { id:403, title:'Jacksepticeye', recommended_age:13, platform:'youtube', age_group:'13+', content_type:'channel',
+    notes:'Irsk gaming-YouTuber med energisk og humoristisk stil. Populær bland 12-18-årige.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:4,language:6,dopamine:7,retention:6,commercialism:4,values:2,sexual:2,fear:2,passive:7,socialpressure:4},
+    ai_analysis:'Jacksepticeye er positiv og energisk gaming-underholdning. Sproget er til tider råt med banden og voksent humor. Til 13+ er indholdet acceptabelt. Generelt en af de mere positive store gaming-YouTubere.' },
+
+  { id:404, title:'PewDiePie', recommended_age:14, platform:'youtube', age_group:'13+', content_type:'channel',
+    notes:'Verdens tidligere mest sete YouTuber. Gaming og kommentarer. Kontroversiel historik.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:4,language:6,dopamine:6,retention:6,commercialism:4,values:5,sexual:3,fear:2,passive:7,socialpressure:5},
+    ai_analysis:'PewDiePie har en lang og kontroversiel historik med antisemitiske jokes og racistiske kommentarer i fortiden. Nyere indhold er mere modent og reflekteret. Til 14+ med forældreopmærksomhed på historikken.' },
+
+  { id:405, title:'Technoblade', recommended_age:11, platform:'youtube', age_group:'10-12', content_type:'channel',
+    notes:'Minecraft-YouTuber kendt for humor og kompetence. Afdød i 2022 — kanal drives stadig af familien.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:3,language:3,dopamine:6,retention:6,commercialism:2,values:2,sexual:1,fear:1,passive:7,socialpressure:3},
+    ai_analysis:'Technoblade er en elsket Minecraft-YouTuber der døde af kræft i 2022. Hans humor er intelligent og hans indhold generelt uproblematisk. Familien driver kanalen videre. Til 11+ er det positivt indhold.' },
+
+  // ── BØLGE 2: DR (UDVIDELSE) ───────────────────────────────────────────────
+  { id:406, title:'Absalon', recommended_age:10, platform:'dr', age_group:'10-12', content_type:'channel',
+    notes:'Dansk DR-serie om en ung dreng i middelalderens Danmark. Historisk drama til børn.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:4,language:2,dopamine:5,retention:6,commercialism:1,values:2,sexual:1,fear:3,passive:6,socialpressure:2},
+    ai_analysis:'Absalon er solid dansk historisk dramafiction til børn. Middelalderlig vold er til stede men ikke grafisk. Giver et levende indblik i dansk historie. Fra 10 år — og kan bruges som supplement til historieundervisning.' },
+
+  { id:407, title:'Dansernes By', recommended_age:8, platform:'dr', age_group:'7-9', content_type:'channel',
+    notes:'Dansk DR-serie om unge dansere. Dans, drømme og venskaber i centrum.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:1,language:1,dopamine:5,retention:6,commercialism:1,values:2,sexual:1,fear:1,passive:6,socialpressure:6},
+    ai_analysis:'Dansernes By er populær dansk serie for 8-12-årige med fokus på dans og ungdomsliv. Socialt pres og præstationskultur er centrale temaer. Lavt bekymringsniveau. Anbefales til børn der interesserer sig for dans og musik.' },
+
+  { id:408, title:'Klovn (DR)', recommended_age:16, platform:'dr', age_group:'13+', content_type:'channel',
+    notes:'Dansk komedieserie med Frank Hvam og Casper Christensen. Sort humor og eksplicit indhold. Voksent.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:3,language:7,dopamine:5,retention:6,commercialism:1,values:6,sexual:7,fear:2,passive:7,socialpressure:3},
+    ai_analysis:'Klovn er et dansk kulturelt fænomen men absolutt kun for voksne. Seksuelt eksplicit indhold og sort humor kræver modenhed. Ikke egnet for under 16. Mange teenagere kender det og er nysgerrige — åbn samtalen.' },
+
+  { id:409, title:'Matador (klassiker)', recommended_age:12, platform:'dr', age_group:'10-12', content_type:'channel',
+    notes:'Ikonisk dansk historisk dramaserie fra 1982. Dansk kulturarv i TV-format.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:3,language:2,dopamine:4,retention:6,commercialism:1,values:2,sexual:2,fear:2,passive:8,socialpressure:3},
+    ai_analysis:'Matador er dansk TV-histories største serie og en vigtig del af kulturarven. Til 12+ er det en fremragende introduktion til dansk historie og samfund. Kræver tålmodighed men belønner med en uforglemmelig fortælling.' },
+
+  // ── BØLGE 2: TV 2 PLAY (UDVIDELSE) ───────────────────────────────────────
+  { id:410, title:'Badehotellet', recommended_age:12, platform:'tv2', age_group:'10-12', content_type:'channel',
+    notes:'Populær dansk periodedrama. Sommerhotel i 1920-30erne. Familiær og hyggelig tone.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:2,language:2,dopamine:4,retention:6,commercialism:1,values:2,sexual:3,fear:1,passive:8,socialpressure:3},
+    ai_analysis:'Badehotellet er populær dansk periodedrama med nostalgisk charme. Til 12+ er det uproblematisk underholdning med historisk indpakning. Kan ses med forældre fra 10 år.' },
+
+  { id:411, title:'Den som dræber', recommended_age:16, platform:'tv2', age_group:'13+', content_type:'channel',
+    notes:'Dansk krimidrama. Psykologisk krimithriller med vold og mørke temaer. Til voksne og ældre teens.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:7,language:4,dopamine:7,retention:8,commercialism:1,values:4,sexual:3,fear:7,passive:7,socialpressure:2},
+    ai_analysis:'Den som dræber er dansk psykologisk krimithriller med intense og mørke scener. Vold og psykologisk horror gør den uegnet for under 16. Til ældre teenagere med interesse for krimigenren er det høj kvalitet.' },
+
+  { id:412, title:'X Factor (Danmark)', recommended_age:10, platform:'tv2', age_group:'10-12', content_type:'channel',
+    notes:'Dansk talentshow med sang. Populær bland 10-14-årige. Præstationskultur og dommerkritik.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:1,language:2,dopamine:6,retention:6,commercialism:4,values:4,sexual:1,fear:2,passive:7,socialpressure:7},
+    ai_analysis:'X Factor er underholdende men indeholder betydeligt præstationspres og hård kritik. Kan skabe urealistiske forventninger til musikkarriere. Til 10+ uproblematisk som underholdning med forbehold for konkurrencekulturen.' },
+
+  { id:413, title:'Nyhederne TV 2', recommended_age:12, platform:'tv2', age_group:'10-12', content_type:'channel',
+    notes:'Dansk TV-avis. Relevant nyhedsformidling men med voksne emner og billeder.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:3,language:1,dopamine:2,retention:3,commercialism:2,values:2,sexual:1,fear:4,passive:7,socialpressure:2},
+    ai_analysis:'TV 2 Nyhederne er professionel nyhedsformidling men med billeder og temaer der kan være skræmmende for yngre børn. Fra 12 år er det et godt supplement til Ultra Nyt. Brug det som udgangspunkt for familiesamtaler.' },
+
+  // ── BØLGE 2: SKYSHOWTIME (UDVIDELSE) ─────────────────────────────────────
+  { id:414, title:'Mission: Impossible – Dead Reckoning', recommended_age:13, platform:'skyshowtime', age_group:'13+', content_type:'channel',
+    notes:'Actionfilm med Tom Cruise. Intense actionscener og spionage. Populær bland teenagere.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:6,language:3,dopamine:6,retention:7,commercialism:3,values:3,sexual:2,fear:4,passive:8,socialpressure:2},
+    ai_analysis:'Mission Impossible er kvalitetsaction med intense scener men uden grafisk vold. Til 13+ er det underholdende og velproduceret actionunderholdning. En af de mere familievenlige actionserier for teenagere.' },
+
+  { id:415, title:'A Quiet Place', recommended_age:14, platform:'skyshowtime', age_group:'13+', content_type:'channel',
+    notes:'Horrorfilm om familieoverlevelse i en verden med lydfølsomme monstre. Psykologisk spænding.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:6,language:2,dopamine:6,retention:8,commercialism:1,values:2,sexual:1,fear:9,passive:8,socialpressure:1},
+    ai_analysis:'A Quiet Place er intelligent og original horrorfilm med intense skrækscener. Psykologisk spænding og vold gør den uegnet for under 14. For ældre teenagere er det fremragende horrorfilmskrivning.' },
+
+  { id:416, title:'Dora and the Lost City of Gold', recommended_age:6, platform:'skyshowtime', age_group:'7-9', content_type:'channel',
+    notes:'Live action eventyrfilm baseret på den animerede serie. Sjov og familievenlig.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:2,language:1,dopamine:4,retention:5,commercialism:3,values:1,sexual:1,fear:2,passive:7,socialpressure:2},
+    ai_analysis:'Dora er en charmerende live action eventyrfilm med positive budskaber om venskab og opdagelse. Til 6-10-årige et trygt og underholdende valg.' },
+
+  // ── BØLGE 2: VIAPLAY (FORTSAT) ───────────────────────────────────────────
+  { id:417, title:'Lilyhammer', recommended_age:14, platform:'viaplay', age_group:'13+', content_type:'channel',
+    notes:'Norsk-amerikansk krimikomedie. Populær nordisk produktion med sort humor og vold.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:6,language:5,dopamine:5,retention:6,commercialism:1,values:4,sexual:3,fear:3,passive:7,socialpressure:2},
+    ai_analysis:'Lilyhammer er en underholdende nordisk krimikomedie med sort humor. Vold og groft sprog gør den uegnet for under 14. For ældre teenagere er det velfungerende Scandi-noir med humor.' },
+
+  { id:418, title:'Beforeigners', recommended_age:14, platform:'viaplay', age_group:'13+', content_type:'channel',
+    notes:'Norsk sci-fi-krimiserie om vikinger der pludselig dukker op i nutiden. Kreativ og original.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:5,language:4,dopamine:5,retention:7,commercialism:1,values:3,sexual:4,fear:3,passive:7,socialpressure:2},
+    ai_analysis:'Beforeigners er en kreativ og original norsk serie der blander vikinger og nutid i en krimikontekst. Vold og seksuelt indhold er til stede. Fra 14 år. Et frisk og nordisk bud på sci-fi-genren.' },
+
+  // ── BØLGE 2: IPAD-APPS (UDVIDELSE) ───────────────────────────────────────
+  { id:422, title:'Candy Crush Saga', recommended_age:14, platform:'ipad', age_group:'13+', content_type:'channel',
+    notes:'Klassisk puzzle-spil. Tilsyneladende harmløst men designet med stærke gambling-mekanikker.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:1,language:1,dopamine:8,retention:8,commercialism:9,values:3,sexual:1,fear:1,passive:7,socialpressure:2},
+    ai_analysis:'Candy Crush er designet med klassiske gambling-mekanikker — variable belønninger, kunstige tidspres og mikrotransaktioner. Tilsyneladende harmløst men er et godt eksempel på vanedannende app-design. Ikke anbefalet til yngre børn.' },
+
+  { id:423, title:'Minecraft Pocket Edition', recommended_age:7, platform:'ipad', age_group:'7-9', content_type:'channel',
+    notes:'Mobilversionen af Minecraft. Samme kreative univers — men med Marketplace og mikrotransaktioner.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-10',
+    ai_scores:{violence:2,language:1,dopamine:6,retention:7,commercialism:5,values:1,sexual:1,fear:1,passive:2,socialpressure:3},
+    ai_analysis:'Minecraft på mobil er funktionelt identisk med pc-versionen men med et mere aggressivt Marketplace. Sæt regler om køb inden barnet går i gang. Fra 7 år med forældreopmærksomhed på Marketplace.' },
+
+  // ── BØLGE 3: SKYSHOWTIME (UDVIDELSE) ─────────────────────────────────────
+  { id:424, title:'Yellowstone', recommended_age:16, platform:'skyshowtime', age_group:'13+', content_type:'channel',
+    notes:'Amerikansk western-drama om en rancherfamilie. Vold, sex og komplekse familiedynamikker.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:7,language:6,dopamine:6,retention:8,commercialism:1,values:4,sexual:6,fear:4,passive:8,socialpressure:3},
+    ai_analysis:'Yellowstone er voksent drama med rå vold og seksuelt indhold. Meget populær bland teenagere på trods af 16+-indhold. Til ældre teenagere kan de komplekse familiedynamikker og moralske dilemmaer give anledning til gode samtaler.' },
+
+  { id:425, title:'Tulsa King', recommended_age:16, platform:'skyshowtime', age_group:'13+', content_type:'channel',
+    notes:'Krimikomedie med Sylvester Stallone. Mafioso der sendes til Oklahoma. Vold og sort humor.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:6,language:6,dopamine:5,retention:6,commercialism:1,values:4,sexual:3,fear:3,passive:7,socialpressure:2},
+    ai_analysis:'Tulsa King er underholdende krimikomedie med moderat vold og groft sprog. Ikke egnet for under 16. Til ældre teenagere er det lettilgængeligt underholdning i krimi-genren.' },
+
+  { id:426, title:'iCarly (reboot)', recommended_age:10, platform:'skyshowtime', age_group:'10-12', content_type:'channel',
+    notes:'Genstart af den klassiske Nickelodeon-serie. Opdateret til 2020erne med sociale medier og influencer-kultur.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:1,language:2,dopamine:5,retention:5,commercialism:4,values:3,sexual:2,fear:1,passive:6,socialpressure:5},
+    ai_analysis:'iCarly-rebooten opdaterer den elskede serie til nutiden med fokus på influencer-kultur og sociale medier. Til 10-12-årige er det uproblematisk underholdning — og kan åbne samtaler om sociale medier.' },
+
+  { id:427, title:'Rugrats (reboot)', recommended_age:4, platform:'skyshowtime', age_group:'4-6', content_type:'channel',
+    notes:'Genstart af den klassiske animationsserie om babyer der udforsker verden. Familievenlig.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:1,language:1,dopamine:3,retention:4,commercialism:3,values:1,sexual:1,fear:1,passive:6,socialpressure:1},
+    ai_analysis:'Rugrats er klassisk familievenlig animation set fra babyernes perspektiv. Rebooten bevarer den originale charme. Ingen bekymringer. Et trygt valg til 4-7-årige.' },
+
+  { id:428, title:'PAW Patrol (serie)', recommended_age:3, platform:'skyshowtime', age_group:'4-6', content_type:'channel',
+    notes:'Den originale PAW Patrol-animationsserie. Ekstremt populær bland 3-6-årige. Massivt merchandise-univers.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:1,language:1,dopamine:4,retention:5,commercialism:9,values:1,sexual:1,fear:1,passive:6,socialpressure:3},
+    ai_analysis:'PAW Patrol er harmløs og venlig animation med gode samarbejdsværdier. Selve serien er uproblematisk men er centrum for et af børne-tv\'s mest aggressive merchandise-universer. Sæt klare grænser for legetøjskøb.' },
+
+  { id:429, title:'Criminal Minds', recommended_age:16, platform:'skyshowtime', age_group:'13+', content_type:'channel',
+    notes:'Populær krimiserie om FBI\'s adfærdsanalyseteam. Psykologisk horror og grov kriminalitet.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:7,language:3,dopamine:6,retention:8,commercialism:1,values:3,sexual:3,fear:8,passive:7,socialpressure:2},
+    ai_analysis:'Criminal Minds er intenst psykologisk krimidrama med grafiske forbrydelsesscener. Meget populær bland 14-17-årige piger. Psykologisk horror og vold gør den uegnet for under 16. Til ældre teenagere er det velproduceret krimiserie.' },
+
+  // ── BØLGE 3: NINTENDO SWITCH (UDVIDELSE) ─────────────────────────────────
+  { id:430, title:'Mario Kart 8 Deluxe', recommended_age:5, platform:'switch', age_group:'4-6', content_type:'channel',
+    notes:'Klassisk familieræserspil. Kan spilles af alle aldre. Perfekt til familieaften.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:1,language:1,dopamine:6,retention:5,commercialism:1,values:1,sexual:1,fear:1,passive:3,socialpressure:3},
+    ai_analysis:'Mario Kart 8 er det perfekte familievideospil. Nem at lære, svær at mestre og sjov for alle aldre. Ingen problematisk indhold. Anbefales varmt som fælles familieaktivitet fra 5 år.' },
+
+  { id:431, title:'Splatoon 3', recommended_age:8, platform:'switch', age_group:'7-9', content_type:'channel',
+    notes:'Online skydespil med maling i stedet for blod. Kreativt og farverigt. Kompetitivt online-miljø.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:3,language:2,dopamine:7,retention:7,commercialism:3,values:2,sexual:1,fear:1,passive:3,socialpressure:5},
+    ai_analysis:'Splatoon 3 er et kreativt og farverigt skydespil der bruger maling i stedet for blod. Kompetitivt men ikke aggressivt. Online-miljøet er relativt venligt. Fra 8 år — et af de bedste online-spil til børn.' },
+
+  { id:432, title:'The Legend of Zelda: Breath of the Wild', recommended_age:9, platform:'switch', age_group:'7-9', content_type:'channel',
+    notes:'Episk eventyrspil i åben verden. Et af tidernes bedste spil. Kreativ problemløsning og udforskning.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:4,language:1,dopamine:6,retention:8,commercialism:1,values:1,sexual:1,fear:3,passive:2,socialpressure:1},
+    ai_analysis:'Breath of the Wild er et mesterværk i åben-verden design. Fremmer kreativ problemløsning og udforskning. Vold er til stede men ikke grafisk. Fra 9 år. Et af de mest anbefalede spil til børn der er klar til mere komplekse eventyr.' },
+
+  { id:433, title:'Super Smash Bros. Ultimate', recommended_age:8, platform:'switch', age_group:'7-9', content_type:'channel',
+    notes:'Kampspil med Nintendo-karakterer. Sjovt og socialt. Ingen blod eller grafisk vold.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:4,language:1,dopamine:7,retention:6,commercialism:2,values:2,sexual:1,fear:1,passive:3,socialpressure:4},
+    ai_analysis:'Super Smash Bros. er et familie-kampspil med ikoniske Nintendo-karakterer. Vold er til stede men cartoon-agtig og uden blod. Fremragende til familieaften og venneskab. Fra 8 år.' },
+
+  { id:434, title:'Minecraft (Nintendo Switch)', recommended_age:7, platform:'switch', age_group:'7-9', content_type:'channel',
+    notes:'Switch-versionen af Minecraft. Samme kreative univers med mulighed for sofa-co-op.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:2,language:1,dopamine:6,retention:7,commercialism:3,values:1,sexual:1,fear:1,passive:2,socialpressure:3},
+    ai_analysis:'Minecraft på Switch tilføjer sofa-co-op som gør det til en fremragende familieaktivitet. Samme kreative og pædagogisk positive oplevelse som pc-versionen. Fra 7 år.' },
+
+  { id:435, title:'Stardew Valley (Switch)', recommended_age:8, platform:'switch', age_group:'7-9', content_type:'channel',
+    notes:'Rolig gårdsimulator. Kreativ, afstressende og uden problematisk indhold. Perfekt til Switch.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:1,language:1,dopamine:5,retention:7,commercialism:1,values:1,sexual:1,fear:1,passive:3,socialpressure:1},
+    ai_analysis:'Stardew Valley er et roligt og kreativt gårdsimuleringsspil uden problematisk indhold. Fremmer planlægning og kreativitet. Switch-versionen understøtter lokal co-op. Fra 8 år — et af de mest afslappende spil til børn.' },
+
+  // ── BØLGE 3: SF KIDS (UDVIDELSE) ──────────────────────────────────────────
+  { id:436, title:'Valhalla', recommended_age:7, platform:'sfkids', age_group:'7-9', content_type:'channel',
+    notes:'Dansk animationsfilm baseret på Rune T. Kiddes tegneserie. Nordisk mytologi og humor.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:3,language:2,dopamine:5,retention:6,commercialism:1,values:2,sexual:1,fear:3,passive:7,socialpressure:2},
+    ai_analysis:'Valhalla er en klassisk dansk animationsfilm med nordisk mytologi og god humor. Vold er til stede men cartoon-agtig. Fra 7 år. En vigtig del af dansk animationsarv der giver børn indblik i nordisk mytologi.' },
+
+  { id:437, title:'Asterix & Obelix-filmene', recommended_age:6, platform:'sfkids', age_group:'7-9', content_type:'channel',
+    notes:'Klassiske animationsfilm baseret på den franske tegneserie. Humor på to niveauer.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:3,language:1,dopamine:4,retention:5,commercialism:1,values:2,sexual:1,fear:1,passive:7,socialpressure:1},
+    ai_analysis:'Asterix-filmene er tidløs familieunderholdning med humor der fungerer for børn og voksne. Cartoon-vold er en del af formlen men ikke bekymrende. Fra 6 år. En del af den europæiske kulturarv.' },
+
+  { id:438, title:'Jungledyret Hugo', recommended_age:4, platform:'sfkids', age_group:'4-6', content_type:'channel',
+    notes:'Klassisk dansk animationsfilm. Hugo er et junglefantasivæsen. Dansk kulturarv.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:2,language:1,dopamine:4,retention:5,commercialism:2,values:1,sexual:1,fear:2,passive:7,socialpressure:1},
+    ai_analysis:'Jungledyret Hugo er en elsket dansk animationsfilm om venskab og frihed. Nostalgisk for forældre og ny oplevelse for børn. Ingen bekymringer. Til 4-8-årige.' },
+
+  { id:439, title:'Biler (Cars)', recommended_age:4, platform:'sfkids', age_group:'4-6', content_type:'channel',
+    notes:'Pixar-klassiker om racerbilen Lightning McQueen. Venskab og ydmyghed i centrum.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:1,language:1,dopamine:4,retention:5,commercialism:5,values:1,sexual:1,fear:1,passive:7,socialpressure:2},
+    ai_analysis:'Biler er en varm Pixar-film med stærke budskaber om fællesskab og ydmyghed. Merchandise-presset er massivt men selve filmen er harmløs. Fra 4 år. Anbefales til hele familien.' },
+
+  { id:440, title:'Kung Fu Panda', recommended_age:6, platform:'sfkids', age_group:'7-9', content_type:'channel',
+    notes:'Animationsfilm om pandaen Po der bliver kung fu-mester. Sjov og med dybe budskaber.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:3,language:1,dopamine:5,retention:6,commercialism:3,values:1,sexual:1,fear:2,passive:7,socialpressure:3},
+    ai_analysis:'Kung Fu Panda er velproduceret animation med budskaber om selvtillid og at tro på sig selv. Kampe og action er til stede men ikke grafisk. Fra 6 år. Anbefales til hele familien.' },
+
+  // ── BØLGE 3: GAMING PC/KONSOL (UDVIDELSE) ────────────────────────────────
+  { id:441, title:'Celeste', recommended_age:10, platform:'gaming', age_group:'10-12', content_type:'channel',
+    notes:'Indie-platformsspil om en pige der bestiger et bjerg. Temaer om angst og mental sundhed.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:1,language:2,dopamine:5,retention:6,commercialism:1,values:1,sexual:1,fear:2,passive:2,socialpressure:2},
+    ai_analysis:'Celeste er et fremragende indie-spil der behandler angst og mental sundhed med respekt og nuance. Svært platformsspil der belønner udholdenhed. Ingen problematisk indhold. Fra 10 år — og åbner vigtige samtaler om mental sundhed.' },
+
+  { id:442, title:'Hollow Knight', recommended_age:10, platform:'gaming', age_group:'10-12', content_type:'channel',
+    notes:'Mørkt eventyrspil i en undergrundsverden af insekter. Udfordrende og atmosfærisk.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:4,language:1,dopamine:5,retention:7,commercialism:1,values:2,sexual:1,fear:4,passive:2,socialpressure:1},
+    ai_analysis:'Hollow Knight er et udfordrende og atmosfærisk eventyrspil med mørk tone. Vold er til stede men stiliseret. Fra 10 år. Fremragende for børn der søger en udfordring og en rig spilleoplevelse.' },
+
+  { id:443, title:'Terraria', recommended_age:8, platform:'gaming', age_group:'7-9', content_type:'channel',
+    notes:'2D sandkassespil med byggeri og eventyr. Minecraft-inspireret men med mere action.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:4,language:1,dopamine:6,retention:7,commercialism:1,values:1,sexual:1,fear:2,passive:2,socialpressure:2},
+    ai_analysis:'Terraria kombinerer kreativ byggeri med eventyr og boss-kampe. Ingen mikrotransaktioner og ekstremt godt indhold for pengene. Fra 8 år. Et godt alternativ til Minecraft for børn der vil have mere action.' },
+
+  { id:444, title:'Valheim', recommended_age:14, platform:'gaming', age_group:'13+', content_type:'channel',
+    notes:'Nordisk viking-overlevelsespil. Populær bland teenagere. Vold og overlevelsesmekanikker.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:6,language:3,dopamine:7,retention:8,commercialism:1,values:2,sexual:1,fear:4,passive:3,socialpressure:3},
+    ai_analysis:'Valheim er et velproduceret nordisk overlevelsespil med fokus på udforskning og håndværk. Vold er til stede men ikke grafisk. Nordisk mytologi giver dansk/nordisk kulturel relevans. Fra 14 år.' },
+
+  { id:445, title:'Unpacking', recommended_age:7, platform:'gaming', age_group:'7-9', content_type:'channel',
+    notes:'Roligt puslespilsspil om at pakke ud efter et flytning. Fortæller en historie uden ord.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:1,language:1,dopamine:4,retention:5,commercialism:1,values:1,sexual:1,fear:1,passive:4,socialpressure:1},
+    ai_analysis:'Unpacking er et unikt og roligt spil der fortæller en menneskelig livshistorie udelukkende gennem genstande. Ingen bekymringer. Fremragende til børn der søger en afslappende oplevelse. Fra 7 år.' },
+
+  { id:446, title:'Among Us (PC)', recommended_age:10, platform:'gaming', age_group:'10-12', content_type:'channel',
+    notes:'PC-versionen af det sociale deduktionsspil. Bedst med kendte venner i privat lobby.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:2,language:3,dopamine:6,retention:5,commercialism:2,values:2,sexual:1,fear:1,passive:3,socialpressure:4},
+    ai_analysis:'Among Us på PC er bedst spillet med kendte venner i privat lobby. Fremmer kommunikation og kritisk tænkning. Online-lobbyer med fremmede frarådes til yngre børn. Fra 10 år.' },
+
+  { id:447, title:'Minecraft Legends', recommended_age:8, platform:'gaming', age_group:'7-9', content_type:'channel',
+    notes:'Strategispil i Minecraft-universet. Forsvar din landsby mod Piglins. Familievenligt.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:3,language:1,dopamine:5,retention:5,commercialism:2,values:1,sexual:1,fear:1,passive:3,socialpressure:2},
+    ai_analysis:'Minecraft Legends er et tilgængeligt strategispil i det kendte Minecraft-univers. Lavt bekymringsniveau. Et godt valg til børn der vil prøve strategi-genren for første gang. Fra 8 år.' },
+
+  { id:448, title:'Cuphead', recommended_age:10, platform:'gaming', age_group:'10-12', content_type:'channel',
+    notes:'Ekstremt udfordrende actionspil med 1930er-animationsstil. Frustrerende men fascinerende.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:3,language:1,dopamine:6,retention:6,commercialism:1,values:2,sexual:1,fear:3,passive:2,socialpressure:2},
+    ai_analysis:'Cuphead er et kunstnerisk mesterværk med 1930er-animation og ekstremt udfordrende gameplay. Frustrationstolerancen sættes på prøve. Fra 10 år — og lærer børn at fejl er en del af læringsprocessen.' },
+
+  // ── BØLGE 3: MAX (UDVIDELSE) ──────────────────────────────────────────────
+  { id:449, title:'Succession', recommended_age:16, platform:'max', age_group:'13+', content_type:'channel',
+    notes:'Emmy-vinder om en mediefamilies magtkampe. Groft sprog, sex og kompleks moral. Kun for voksne.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:4,language:8,dopamine:7,retention:9,commercialism:1,values:5,sexual:5,fear:3,passive:8,socialpressure:5},
+    ai_analysis:'Succession er et af dette årtis bedste tv-serier men absolutt for voksne. Komplekse karakterer, groft sprog og voksne temaer. Til ældre teenagere over 17 kan det åbne vigtige samtaler om magt og familiedynamikker.' },
+
+  { id:450, title:'The White Lotus', recommended_age:16, platform:'max', age_group:'13+', content_type:'channel',
+    notes:'Satirisk drama om velhavende turister på luksushoteller. Seksuelt indhold og social kritik.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:4,language:5,dopamine:6,retention:8,commercialism:1,values:4,sexual:7,fear:4,passive:8,socialpressure:5},
+    ai_analysis:'The White Lotus er intelligent social satire med eksplicit seksuelt indhold. Absolutt 16+. Til ældre teenagere med interesse for samfundskritik er det fremragende tv-skrivning.' },
+
+  { id:451, title:'Cartoon Network – Teen Titans Go!', recommended_age:7, platform:'max', age_group:'7-9', content_type:'channel',
+    notes:'Animeret superhelteserie med humor og action. Tilgængelig via Max. Farverigt og energisk.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:3,language:2,dopamine:6,retention:6,commercialism:4,values:2,sexual:1,fear:1,passive:6,socialpressure:3},
+    ai_analysis:'Teen Titans Go! er farverig og energisk superheltanimation med humor der appellerer til 7-12-årige. Cartoon-action er tilstede men ikke bekymrende. Et uproblematisk underholdningsvalg.' },
+
+  { id:452, title:'Rick and Morty', recommended_age:16, platform:'max', age_group:'13+', content_type:'channel',
+    notes:'Voksen animationsserie med sci-fi og sort humor. Ekstremt populær bland 13-17-årige på trods af voksent indhold.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:6,language:7,dopamine:7,retention:7,commercialism:2,values:6,sexual:4,fear:4,passive:7,socialpressure:3},
+    ai_analysis:'Rick and Morty er intelligent voksen-animation men absolutt ikke for yngre børn. Groft sprog, vold og nihilistiske temaer. Meget populær bland 13-15-årige — åbn samtalen om indholdet fremfor at forbyde.' },
+
+  { id:453, title:'Gravity Falls', recommended_age:8, platform:'max', age_group:'7-9', content_type:'channel',
+    notes:'Animeret mysterieserie om tvillinger på sommerferie hos deres granduncle. Dybe plot og humor.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:3,language:2,dopamine:6,retention:8,commercialism:2,values:1,sexual:1,fear:4,passive:6,socialpressure:2},
+    ai_analysis:'Gravity Falls er en af de bedste animerede serier lavet til børn med dybe plots og veludviklede karakterer. Mysterie og overnaturlige elementer kan være skræmmende for de yngste. Fra 8 år. Kan ses med forældre fra 7.' },
+
+  // ── BØLGE 3: SOCIALE MEDIER (UDVIDELSE) ──────────────────────────────────
+  { id:454, title:'Discord – Generel brug', recommended_age:16, platform:'discord', age_group:'13+', content_type:'channel',
+    notes:'Chat-platform brugt af næsten alle gamende teenagere. Sikkerhed afhænger fuldstændig af hvilke servere barnet er på.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:3,language:6,dopamine:6,retention:7,commercialism:1,values:4,sexual:4,fear:2,passive:5,socialpressure:5},
+    ai_analysis:'Discord er et kraftfuldt kommunikationsværktøj der bruges af næsten alle gamende teenagere. I lukkede vennegruppeservere er det relativt trygt. Åbne servere kan have ufiltreret voksenindhold. Forældre bør kende hvilke servere barnet er på og sætte regler. Fra 16 år officielt men bruges fra 12-13.' },
+
+  { id:455, title:'Snapchat – Snap Map', recommended_age:16, platform:'snapchat', age_group:'13+', content_type:'channel',
+    notes:'Snapchats lokationsdeling i realtid. Kan afsløre barnets præcise placering til alle venner.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:1,language:2,dopamine:5,retention:6,commercialism:2,values:4,sexual:2,fear:3,passive:4,socialpressure:7},
+    ai_analysis:'Snap Map er Snapchats realtidslokationsdeling og er en primær sikkerhedsbekymring for yngre brugere. Barnet deler sin præcise placering med alle Snapchat-venner. Sæt til "Ghost Mode" øjeblikkeligt. Vigtigt samtaleemne om digital sikkerhed.' },
+
+  { id:456, title:'Instagram – Stories & DM', recommended_age:16, platform:'instagram', age_group:'13+', content_type:'channel',
+    notes:'Stories og direkte beskeder på Instagram. Mere privat kommunikation med bekymringer om uopfordret kontakt.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:2,language:3,dopamine:7,retention:8,commercialism:5,values:4,sexual:4,fear:2,passive:6,socialpressure:8},
+    ai_analysis:'Instagram Stories og DM er hvor det sociale pres er allerhøjest — hvem der ser dine stories, hvem der svarer, FOMO ved ikke at følge med. Direkte beskeder kan give uopfordret kontakt fra fremmede. Sæt konto til privat og tal om hvem de accepterer som følgere.' },
+
+  { id:457, title:'Twitch – Just Chatting streams', recommended_age:16, platform:'twitch', age_group:'13+', content_type:'channel',
+    notes:'Talkshow-format på Twitch uden gaming. Indholdet er meget variabelt og kan inkludere voksenindhold.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:3,language:7,dopamine:7,retention:7,commercialism:5,values:5,sexual:5,fear:2,passive:8,socialpressure:5},
+    ai_analysis:'Just Chatting på Twitch er den mest uforudsigelige kategori på platformen. Indholdet varierer enormt og kan inkludere eksplicit indhold, groft sprog og upassende diskussioner. Til 16+ og kun med kendte streamere.' },
+
+  // ── BØLGE 3: DR (FORTSAT) ────────────────────────────────────────────────
+  { id:458, title:'Tidsrejsen', recommended_age:8, platform:'dr', age_group:'7-9', content_type:'channel',
+    notes:'Dansk DR-serie om børn der rejser tilbage i historien. Pædagogisk og underholdende.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:2,language:1,dopamine:4,retention:5,commercialism:1,values:1,sexual:1,fear:2,passive:6,socialpressure:1},
+    ai_analysis:'Tidsrejsen er pædagogisk dansk børne-tv der bringer historien til live. Ingen bekymringer. Kan bruges som supplement til historieundervisning. Anbefales til 8-12-årige.' },
+
+  { id:459, title:'Gepetto', recommended_age:6, platform:'dr', age_group:'7-9', content_type:'channel',
+    notes:'Dansk DR-serie med dukker og eventyr. Kreativ og fantasifuld børneunderholdning.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:1,language:1,dopamine:4,retention:4,commercialism:1,values:1,sexual:1,fear:1,passive:5,socialpressure:1},
+    ai_analysis:'Gepetto er kreativ og fantasifuld dansk børne-tv med dukker og eventyr. Ingen bekymringer. Et trygt og stimulerende valg til 6-9-årige.' },
+
+  { id:460, title:'DR Ramasjang – Bamses Billedbog', recommended_age:2, platform:'dr', age_group:'4-6', content_type:'channel',
+    notes:'Klassisk dansk børneprogram med Bamse. Enkle historier og trygge rammer til de allermindste.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:1,language:1,dopamine:2,retention:3,commercialism:1,values:1,sexual:1,fear:1,passive:5,socialpressure:1},
+    ai_analysis:'Bamses Billedbog er klassisk og tryg dansk børne-tv til de allermindste. Enkle historier i roligt tempo. Ingen bekymringer. En af de bedste anbefalinger til 2-5-årige på dansk tv.' },
+
+  // ── BØLGE 3: TV 2 PLAY (FORTSAT) ─────────────────────────────────────────
+  { id:461, title:'Lærkevej', recommended_age:10, platform:'tv2', age_group:'10-12', content_type:'channel',
+    notes:'Dansk TV 2-serie om en villavej og dens beboere. Familiedrama og hverdagsliv.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:2,language:2,dopamine:4,retention:5,commercialism:1,values:3,sexual:2,fear:1,passive:7,socialpressure:4},
+    ai_analysis:'Lærkevej er populær dansk hverdagsdrama om villalivets op- og nedture. Til 10-12-årige er det uproblematisk underholdning med genkendelige familiesituationer. Kan ses med forældre fra 9 år.' },
+
+  { id:462, title:'Bonusfamilien (dansk)', recommended_age:10, platform:'tv2', age_group:'10-12', content_type:'channel',
+    notes:'Dansk serie om sammenbragte familier. Relevant for mange danske børn med skilsmissebaggrund.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:1,language:2,dopamine:4,retention:5,commercialism:1,values:3,sexual:2,fear:1,passive:7,socialpressure:4},
+    ai_analysis:'Bonusfamilien er relevant dansk drama om sammenbragte familier — en virkelighed mange danske børn kender. Behandler skilsmisse og familiedynamikker nuanceret. Fra 10 år. Kan åbne vigtige familiesamtaler.' },
+
+  { id:463, title:'Ultra Magnus', recommended_age:10, platform:'tv2', age_group:'10-12', content_type:'channel',
+    notes:'Dansk dramakomedie til unge. Populær bland 10-14-årige drenge. Skolelivshumor.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:2,language:3,dopamine:5,retention:5,commercialism:1,values:3,sexual:1,fear:1,passive:6,socialpressure:6},
+    ai_analysis:'Ultra Magnus er dansk skoledrama med humor og genkendelige situationer. Til 10-14-årige drenge er det underholdende og relativt uproblematisk. Sproget er til tider råt. Fra 10 år.' },
+
+  // ── BØLGE 4: TWITCH (UDVIDELSE) ───────────────────────────────────────────
+  { id:464, title:'Twitch – Minecraft streams', recommended_age:10, platform:'twitch', age_group:'10-12', content_type:'channel',
+    notes:'Minecraft-streaming på Twitch. Mere kontrolleret indhold end generelle streams. Stadig live-format med uforudsigeligt chat.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:2,language:4,dopamine:7,retention:7,commercialism:3,values:3,sexual:1,fear:1,passive:8,socialpressure:4},
+    ai_analysis:'Minecraft-streams er generelt mere familievenlige end andre Twitch-kategorier. Indholdet er relativt forudsigeligt men live-chat er ufiltreret. Til 10+ med forældreopmærksomhed på hvilke streamere barnet følger.' },
+
+  { id:465, title:'Twitch – Dansk gaming (f.eks. Spræl)', recommended_age:13, platform:'twitch', age_group:'13+', content_type:'channel',
+    notes:'Danske gaming-streamere på Twitch. Sproget er til tider råt. Mere forudsigeligt end internationale streams.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:4,language:6,dopamine:7,retention:7,commercialism:4,values:3,sexual:2,fear:1,passive:8,socialpressure:4},
+    ai_analysis:'Danske gaming-streamere på Twitch er generelt mere tilgængelige og kulturelt nære end internationale. Sproget er til tider råt og indholdet varierer. Fra 13 år med kendskab til hvilke streamere barnet ser.' },
+
+  { id:466, title:'Twitch – Fortnite/BR streams', recommended_age:13, platform:'twitch', age_group:'13+', content_type:'channel',
+    notes:'Battle royale-streaming på Twitch. Høj energi, konkurrencepræget og med aggressiv chat-kultur.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:5,language:7,dopamine:8,retention:8,commercialism:5,values:4,sexual:2,fear:2,passive:8,socialpressure:6},
+    ai_analysis:'Battle royale-streams er intenst og konkurrencepræget indhold. Chat-kulturen kan være meget aggressiv med groft sprog og toxic adfærd. Til 13+ med opmærksomhed på chat-interaktion og tidsforbrug.' },
+
+  // ── BØLGE 4: YOUTUBE SHORTS (UDVIDELSE) ───────────────────────────────────
+  { id:467, title:'YouTube Shorts – Danske skabere', recommended_age:12, platform:'ytshorts', age_group:'10-12', content_type:'channel',
+    notes:'Kortformat videoer fra danske skabere. Mere kulturelt nært men samme vanedannende algoritme.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:2,language:4,dopamine:8,retention:9,commercialism:4,values:4,sexual:2,fear:1,passive:8,socialpressure:5},
+    ai_analysis:'Danske Shorts-skabere producerer kulturelt nært kortformat indhold men algoritmen er identisk med international YouTube Shorts — ekstremt vanedannende. Indholdstypen er vigtigere end sproget. Fra 12 år med daglige tidsbegrænsninger.' },
+
+  { id:468, title:'YouTube Shorts – Prank & reaction', recommended_age:14, platform:'ytshorts', age_group:'13+', content_type:'channel',
+    notes:'Pranks og reaktionsvideoer er den dominerende genre i Shorts. Kan normalisere grænseoverskridende adfærd.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:4,language:5,dopamine:9,retention:9,commercialism:4,values:5,sexual:3,fear:2,passive:9,socialpressure:5},
+    ai_analysis:'Prank-indhold på YouTube Shorts normaliserer grænseoverskridende og til tider farlig adfærd. Det ekstremt vanedannende kortformat kombineret med problematiske normer gør dette til en af de mere bekymrende indholdskategorier. Fra 14 år.' },
+
+  // ── BØLGE 4: BEREAL (UDVIDELSE) ───────────────────────────────────────────
+  { id:469, title:'BeReal – Teenager-brug', recommended_age:14, platform:'bereal', age_group:'13+', content_type:'channel',
+    notes:'Hvordan BeReal faktisk bruges af teenagere — presset om at poste på det rigtige tidspunkt.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:1,language:2,dopamine:5,retention:5,commercialism:1,values:3,sexual:2,fear:1,passive:4,socialpressure:7},
+    ai_analysis:'BeReal er designet til autenticitet men skaber sit eget sociale pres — presset om at poste et "godt nok" BeReal på det rigtige tidspunkt. Lavere bekymringsniveau end Instagram og TikTok men ikke uden socialt pres. Fra 14 år.' },
+
+  // ── BØLGE 4: VIAPLAY (UDVIDELSE) ─────────────────────────────────────────
+  { id:470, title:'Kampen om Tungetræet', recommended_age:8, platform:'viaplay', age_group:'7-9', content_type:'channel',
+    notes:'Nordisk eventyrfilm baseret på Astrid Lindgrens univers. Nordisk natur og eventyr.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:2,language:1,dopamine:4,retention:5,commercialism:1,values:1,sexual:1,fear:3,passive:7,socialpressure:1},
+    ai_analysis:'Nordisk eventyrfilm i Astrid Lindgren-traditionen med stærke naturscener og eventyr. Kan være let skræmmende for de yngste. Fra 8 år. Et godt bud på nordisk familiefilm.' },
+
+  { id:471, title:'Rita', recommended_age:14, platform:'viaplay', age_group:'13+', content_type:'channel',
+    notes:'Dansk dramaserie om en folkeskolelærer. Populær og velfungerende dansk drama. Voksne temaer.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:2,language:4,dopamine:5,retention:7,commercialism:1,values:3,sexual:5,fear:1,passive:7,socialpressure:3},
+    ai_analysis:'Rita er populær dansk dramaserie med en kompleks og trodsig protagonis. Voksne temaer og seksuelt indhold gør den uegnet for under 14. Til ældre teenagere og voksne er det velfungerende dansk tv-drama.' },
+
+  { id:472, title:'Skins (UK)', recommended_age:16, platform:'viaplay', age_group:'13+', content_type:'channel',
+    notes:'Britisk ungdomsserie om teenagere med dramatisk livsstil. Stoffer, sex og psykiske lidelser.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:4,language:7,dopamine:7,retention:8,commercialism:1,values:6,sexual:8,fear:4,passive:6,socialpressure:7},
+    ai_analysis:'Skins er råt britisk ungdomsdrama med eksplicit indhold om stoffer, seksualitet og psykiske lidelser. Absolutt 16+. Populær bland 14-17-årige — åbn samtalen om indholdet frem for at forbyde.' },
+
+  { id:473, title:'Yellowface', recommended_age:14, platform:'viaplay', age_group:'13+', content_type:'channel',
+    notes:'Nordisk drama med temaer om identitet og kulturel baggrund. Ny nordisk produktion.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:3,language:3,dopamine:5,retention:6,commercialism:1,values:3,sexual:3,fear:2,passive:7,socialpressure:5},
+    ai_analysis:'Ny nordisk produktion der udforsker identitet og kulturel baggrund. Fra 14 år. Kan åbne vigtige samtaler om identitet og tilhørsforhold.' },
+
+  { id:474, title:'Seaside Hotel', recommended_age:10, platform:'viaplay', age_group:'10-12', content_type:'channel',
+    notes:'Dansk periodedrama fra 1920erne. Hyggelig og familievenlig i samme stil som Badehotellet.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:2,language:1,dopamine:3,retention:5,commercialism:1,values:2,sexual:2,fear:1,passive:8,socialpressure:2},
+    ai_analysis:'Seaside Hotel er hyggeligt dansk periodedrama i god tradition. Ingen alvorlige bekymringer. Fra 10 år — og kan ses med forældre fra 8 år.' },
+
+  { id:475, title:'Outlander', recommended_age:16, platform:'viaplay', age_group:'13+', content_type:'channel',
+    notes:'Romantisk historisk drama med tidsrejse. Eksplicit seksuelt indhold og historisk vold. 16+.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:7,language:4,dopamine:6,retention:8,commercialism:1,values:4,sexual:8,fear:5,passive:8,socialpressure:2},
+    ai_analysis:'Outlander er romantisk historisk drama med eksplicit seksuelt indhold og grafisk historisk vold. Absolutt 16+. Meget populær bland voksne kvinder og teenagepiger — åbn samtalen om det eksplicitte indhold.' },
+
+  // ── BØLGE 4: NETFLIX (FORTSAT) ────────────────────────────────────────────
+  { id:476, title:'The Witcher', recommended_age:16, platform:'netflix', age_group:'13+', content_type:'channel',
+    notes:'Mørkt fantasy-drama baseret på spil og bøger. Grafisk vold og seksuelt indhold.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:8,language:5,dopamine:6,retention:7,commercialism:2,values:4,sexual:6,fear:6,passive:7,socialpressure:2},
+    ai_analysis:'The Witcher er mørkt fantasy med grafisk vold og seksuelt indhold. Meget populær bland teenagere der kender spilserien. Fra 16 år. Til yngre teenagere der kender universet — åbn samtalen om de voksne elementer.' },
+
+  { id:477, title:'Emily i Paris (sæson 3-4)', recommended_age:14, platform:'netflix', age_group:'13+', content_type:'channel',
+    notes:'Romantisk komedie om en amerikansk kvinde i Paris. Lettilgængeligt men med seksuelt indhold.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:1,language:3,dopamine:6,retention:6,commercialism:5,values:4,sexual:5,fear:1,passive:8,socialpressure:6},
+    ai_analysis:'Emily i Paris er lettilgængelig romantisk komedie. De senere sæsoner har mere eksplicit indhold. Livsstilsfokus og forbrug er fremtrædende. Fra 14 år.' },
+
+  { id:478, title:'Outer Banks', recommended_age:14, platform:'netflix', age_group:'13+', content_type:'channel',
+    notes:'Ungdomsadventure-drama om en gruppe teenagers skatjagt. Populær bland 13-17-årige.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:5,language:4,dopamine:8,retention:9,commercialism:2,values:4,sexual:4,fear:4,passive:7,socialpressure:5},
+    ai_analysis:'Outer Banks er ekstremt populær ungdomsserie med eventyr, romance og action. Intenst bingeworthy format. Vold og seksuelt indhold gør den uegnet for under 14. Til 14+ er det underholdende og engagerende.' },
+
+  { id:479, title:'Never Have I Ever', recommended_age:13, platform:'netflix', age_group:'13+', content_type:'channel',
+    notes:'Amerikansk ungdomskomedie om en indisk-amerikansk teenager. Temaer om sorg, identitet og romance.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:1,language:3,dopamine:6,retention:7,commercialism:2,values:3,sexual:3,fear:2,passive:7,socialpressure:6},
+    ai_analysis:'Never Have I Ever er en varm og humoristisk ungdomsserie med stærke temaer om sorg og identitet. Fra 13 år. Kulturelt mangfoldig og med positiv repræsentation. Kan ses med forældre fra 12 år.' },
+
+  { id:480, title:'Money Heist (La Casa de Papel)', recommended_age:16, platform:'netflix', age_group:'13+', content_type:'channel',
+    notes:'Spansk bank-røveri-thriller. Ekstremt populær bland 14-17-årige. Vold og komplekse temaer.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:7,language:5,dopamine:8,retention:9,commercialism:1,values:5,sexual:5,fear:5,passive:7,socialpressure:4},
+    ai_analysis:'Money Heist er intenst og velproduceret spansk thriller med grafisk vold og komplekse moralske dilemmaer. Meget populær bland teenagere. Fra 16 år. Til yngre teenagere der ser den — åbn samtalen om vold og moral.' },
+
+  { id:481, title:'Anne with an E', recommended_age:10, platform:'netflix', age_group:'10-12', content_type:'channel',
+    notes:'Canadisk dramaserier baseret på Anne fra Grønnebakke. Dybde, empati og historisk setting.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:2,language:1,dopamine:4,retention:7,commercialism:1,values:1,sexual:1,fear:2,passive:7,socialpressure:4},
+    ai_analysis:'Anne with an E er en smuk og empatisk genfortælling af den elskede klassiker. Dybe temaer om at høre til og finde sin stemme. Fra 10 år. Særligt anbefalet til piger men appellerer til alle.' },
+
+  { id:482, title:'Atypical', recommended_age:13, platform:'netflix', age_group:'13+', content_type:'channel',
+    notes:'Amerikansk serie om en teenager med autismespektrumforstyrrelse. Positiv repræsentation.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:1,language:3,dopamine:5,retention:6,commercialism:1,values:2,sexual:3,fear:1,passive:7,socialpressure:4},
+    ai_analysis:'Atypical behandler autismespektrumforstyrrelse med varme og humor. Positiv repræsentation og kan fremme forståelse og empati. Fra 13 år. Seksuelt indhold er til stede men ikke eksplicit.' },
+
+  // ── BØLGE 4: DISNEY+ (FORTSAT) ────────────────────────────────────────────
+  { id:483, title:'The Bear', recommended_age:16, platform:'disney', age_group:'13+', content_type:'channel',
+    notes:'Intenst restaurantdrama. Groft sprog og psykologisk pres. Kun for voksne og ældre teenagere.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:3,language:8,dopamine:7,retention:9,commercialism:1,values:3,sexual:2,fear:5,passive:7,socialpressure:6},
+    ai_analysis:'The Bear er et mesterstykke af tv-skrivning og -instruktion men er absolut voksent indhold. Ekstremt groft sprog og intense psykologiske pres-scener. Fra 16 år. Til ældre teenagere er det fremragende drama.' },
+
+  { id:484, title:'Iwájú', recommended_age:7, platform:'disney', age_group:'7-9', content_type:'channel',
+    notes:'Afrikansk-inspireret animationsserie set i fremtidens Lagos. Første afrikanske Disney-original.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:3,language:1,dopamine:5,retention:6,commercialism:2,values:1,sexual:1,fear:2,passive:6,socialpressure:2},
+    ai_analysis:'Iwájú er en kulturelt vigtig og visuelt smuk animationsserie — Disneys første afrikansk-inspirerede original. Fremmer kulturforståelse og mangfoldighed. Fra 7 år. Anbefales til hele familien.' },
+
+  { id:485, title:'Bluey – Specielle episoder', recommended_age:2, platform:'disney', age_group:'4-6', content_type:'channel',
+    notes:'De bedste og mest omtalte Bluey-episoder. "The Sleepytime", "Baby Race" m.fl. er kulturelle fænomener.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:1,language:1,dopamine:3,retention:4,commercialism:1,values:1,sexual:1,fear:1,passive:5,socialpressure:1},
+    ai_analysis:'De ikoniske Bluey-episoder som "The Sleepytime" og "Baby Race" er bemærkelsesværdige børne-tv på verdensklasse. Dybe emotionelle lag og perfekt forældreskabsskildring. Ingen bekymringer. Til hele familien.' },
+
+  { id:486, title:'National Geographic – Vilde dyr', recommended_age:6, platform:'disney', age_group:'7-9', content_type:'channel',
+    notes:'Naturaldokumentarer fra National Geographic tilgængelige på Disney+. Pædagogisk og visuelt storslået.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:3,language:1,dopamine:3,retention:5,commercialism:1,values:1,sexual:1,fear:2,passive:7,socialpressure:1},
+    ai_analysis:'National Geographic-dokumentarerne på Disney+ er fremragende pædagogisk indhold med storslåede naturbilleder. Visse scener med rovdyr der jager kan være intense. Fra 6 år. Anbefales som supplement til naturfag.' },
+
+  // ── BØLGE 4: DR (FORTSAT) ────────────────────────────────────────────────
+  { id:487, title:'Huset på Christianshavn', recommended_age:10, platform:'dr', age_group:'10-12', content_type:'channel',
+    notes:'Klassisk dansk komedieserie fra 1970erne. Dansk kulturarv og humor.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:1,language:2,dopamine:4,retention:5,commercialism:1,values:2,sexual:2,fear:1,passive:8,socialpressure:2},
+    ai_analysis:'Huset på Christianshavn er et stykke dansk tv-historie og kulturarv. Humoren er tidsbundet men stadig charmerende. Til 10+ er det en fin introduktion til dansk tv-tradition. Kan ses med bedsteforældre.' },
+
+  { id:488, title:'Dicte', recommended_age:14, platform:'dr', age_group:'13+', content_type:'channel',
+    notes:'Dansk krimiserie om en journalist i Aarhus. Velfungerende dansk krimi med mørke temaer.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:6,language:3,dopamine:5,retention:7,commercialism:1,values:3,sexual:3,fear:6,passive:7,socialpressure:2},
+    ai_analysis:'Dicte er solid dansk krimiserie med psykologisk dybde. Mørke kriminalitetsscener gør den uegnet for under 14. Til ældre teenagere og voksne er det velfungerende dansk krimi-drama.' },
+
+  { id:489, title:'Regitze', recommended_age:10, platform:'dr', age_group:'10-12', content_type:'channel',
+    notes:'Dansk DR-serie om en pige der vokser op i 1940erne. Historisk og menneskeligt drama.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:3,language:1,dopamine:4,retention:6,commercialism:1,values:1,sexual:1,fear:3,passive:7,socialpressure:3},
+    ai_analysis:'Regitze er et fint stykke dansk historisk børnedrama. Krigen og de historiske omstændigheder kan være tunge emner. Fra 10 år. Kan bruges som udgangspunkt for samtaler om dansk besættelseshistorie.' },
+
+  // ── BØLGE 4: SF KIDS (FORTSAT) ────────────────────────────────────────────
+  { id:490, title:'Vildheks', recommended_age:10, platform:'sfkids', age_group:'10-12', content_type:'channel',
+    notes:'Dansk filmadaptation af Lene Kaaberbøls populære bøger. Magi og eventyr i dansk naturmiljø.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:3,language:1,dopamine:5,retention:6,commercialism:1,values:1,sexual:1,fear:4,passive:7,socialpressure:2},
+    ai_analysis:'Vildheks er en solid dansk fantasyfilm baseret på de populære bøger. Overnaturlige elementer og let skræmmende scener. Fra 10 år — og kan inspirere til at læse bøgerne.' },
+
+  { id:491, title:'Nisser', recommended_age:5, platform:'sfkids', age_group:'4-6', content_type:'channel',
+    notes:'Dansk julefilm om nisser. Klassisk dansk julestemning til de yngste.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:1,language:1,dopamine:4,retention:4,commercialism:2,values:1,sexual:1,fear:1,passive:7,socialpressure:1},
+    ai_analysis:'Nisser er klassisk dansk julehygge til de yngste. Ingen bekymringer. Et sæsonbestemt trygt valg til familieaftenen i december.' },
+
+  // ── BØLGE 4: MAX (FORTSAT) ────────────────────────────────────────────────
+  { id:492, title:'Scooby-Doo', recommended_age:5, platform:'max', age_group:'4-6', content_type:'channel',
+    notes:'Klassisk animationsserie om en bande der løser mysterier. Tidløs familieunderholdning.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:2,language:1,dopamine:5,retention:5,commercialism:3,values:1,sexual:1,fear:3,passive:6,socialpressure:1},
+    ai_analysis:'Scooby-Doo er klassisk og tidløs animation med milde mysterier og slapstick-humor. Skræmme-elementer er til stede men cartoon-agtige. Fra 5 år. Et trygt familievalg der fungerer på tværs af generationer.' },
+
+  { id:493, title:'Westworld', recommended_age:18, platform:'max', age_group:'13+', content_type:'channel',
+    notes:'Sci-fi-drama om en robotpark der vågner op. Ekstremt voldsomt og seksuelt. Kun for voksne.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:9,language:5,dopamine:6,retention:8,commercialism:1,values:4,sexual:8,fear:7,passive:7,socialpressure:1},
+    ai_analysis:'Westworld er filosofisk og visuelt imponerende men med ekstremt grafisk vold og seksuelt indhold. Absolutt 18+. Til ældre teenagere der ser det — åbn samtalen om AI og menneskelig natur.' },
+
+  { id:494, title:'His Dark Materials', recommended_age:11, platform:'max', age_group:'10-12', content_type:'channel',
+    notes:'Britisk fantasyserie baseret på Philip Pullmans trilogi. Dybe filosofiske temaer og eventyr.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:5,language:2,dopamine:6,retention:7,commercialism:1,values:2,sexual:1,fear:5,passive:7,socialpressure:2},
+    ai_analysis:'His Dark Materials er en ambitiøs og velproduceret fantasyserie med dybe filosofiske lag. Fra 11 år. Kan inspirere til at læse Pullmans bøger og åbne samtaler om religion, frihed og ansvar.' },
+
+  { id:495, title:'Euphoria (HBO)', recommended_age:18, platform:'max', age_group:'13+', content_type:'channel',
+    notes:'Rå serie om teenageres liv med stoffer, sex og traumer. Kulturelt allestedsnærværende bland 15-18-årige.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:7,language:7,dopamine:7,retention:9,commercialism:2,values:7,sexual:9,fear:7,passive:7,socialpressure:8},
+    ai_analysis:'Euphoria indeholder ekstremt eksplicit indhold om narkotikamisbrug, seksualitet og psykiske lidelser. Absolutt 18+. Mange 14-16-årige ser den — åbn samtalen fremfor at forbyde og brug det som udgangspunkt for vigtige snakke.' },
+
+  // ── BØLGE 4: GAMING (FORTSAT) ─────────────────────────────────────────────
+  { id:496, title:'Palworld', recommended_age:12, platform:'gaming', age_group:'10-12', content_type:'channel',
+    notes:'Pokémon-inspireret overlevelsesspil med skydemekanikker. Kontroversielt men populært bland 10-15-årige.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:6,language:2,dopamine:7,retention:7,commercialism:2,values:3,sexual:1,fear:2,passive:3,socialpressure:4},
+    ai_analysis:'Palworld kombinerer Pokémon-æstetik med skydespiludvikling — et uventet mix. Vold er til stede i form af skydning og kamp. Fra 12 år. Populær bland 10-15-årige — forældre bør se gameplay inden de godkender.' },
+
+  { id:497, title:'Helldivers 2', recommended_age:16, platform:'gaming', age_group:'13+', content_type:'channel',
+    notes:'Co-op skydespil med mørk humor og intenst gameplay. PEGI 18 men populær bland 14-17-årige.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:8,language:5,dopamine:8,retention:7,commercialism:3,values:4,sexual:1,fear:3,passive:3,socialpressure:5},
+    ai_analysis:'Helldivers 2 er intenst co-op skydespil med grafisk vold og sort militærhumor. PEGI 18 men reelt bedst egnet fra 16. Til ældre teenagere der spiller med venner er det underholdende teamwork-gameplay.' },
+
+  { id:498, title:'Baldur\'s Gate 3', recommended_age:18, platform:'gaming', age_group:'13+', content_type:'channel',
+    notes:'Episk rollespil. Vundet alle priser i 2023. Voksent indhold med vold og seksualitet. Kun for voksne.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:7,language:5,dopamine:6,retention:9,commercialism:1,values:3,sexual:7,fear:5,passive:4,socialpressure:2},
+    ai_analysis:'Baldur\'s Gate 3 er et mesterværk i rollespil men med eksplicit vold og seksuelt indhold. PEGI 18. Det dybe rollespilssystem og den komplekse fortælling er for voksne. Til ældre teenagere over 17 med interesse for rollespil.' },
+
+  { id:499, title:'Minecraft – Creative Mode', recommended_age:5, platform:'gaming', age_group:'4-6', content_type:'channel',
+    notes:'Minecraft i ren kreativ tilstand — ingen fjender, ingen vold, bare byggeri og udfoldelse.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:1,language:1,dopamine:4,retention:6,commercialism:2,values:1,sexual:1,fear:1,passive:1,socialpressure:1},
+    ai_analysis:'Minecraft Creative Mode er digital LEGO — fri udfoldelse uden fjender eller vold. En af de mest kreativt stimulerende digitale oplevelser til yngre børn. Fra 5 år med forældredeltagelse. Anbefales varmt.' },
+
+  { id:500, title:'Pokémon Scarlet & Violet', recommended_age:7, platform:'gaming', age_group:'7-9', content_type:'channel',
+    notes:'Nyeste mainline Pokémon-spil i åben verden. Klassisk gameplay med online-elementer.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:2,language:1,dopamine:6,retention:7,commercialism:4,values:2,sexual:1,fear:1,passive:3,socialpressure:4},
+    ai_analysis:'Pokémon Scarlet og Violet er klassiske rollespil i en åben verden. Ingen lootboxes. Den kompetitive online-del kan skabe socialt pres. Anbefales fra 7 år som et af de mere børnevenlige spil på markedet.' },
+
+  // ── BØLGE 5: IPAD-APPS (UDVIDELSE) ───────────────────────────────────────
+  { id:501, title:'Garageband', recommended_age:7, platform:'ipad', age_group:'7-9', content_type:'channel',
+    notes:'Apples gratis musikproduktionsapp. Kreativ, reklamefri og pædagogisk. En af AppStores bedste gratis apps.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:1,language:1,dopamine:4,retention:5,commercialism:1,values:1,sexual:1,fear:1,passive:1,socialpressure:1},
+    ai_analysis:'GarageBand er en af de bedste gratis kreative apps til børn. Musikproduktion gjort tilgængeligt — børn kan lave egne beats og melodier. Ingen reklamer, ingen køb. Fremmer kreativitet og musikalsk forståelse. Fra 7 år.' },
+
+  { id:502, title:'Procreate Pocket', recommended_age:9, platform:'ipad', age_group:'7-9', content_type:'channel',
+    notes:'Professionel tegneapp til iPad. Engangsbeløb uden abonnement. Bruges af professionelle illustratorer.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:1,language:1,dopamine:4,retention:6,commercialism:1,values:1,sexual:1,fear:1,passive:1,socialpressure:1},
+    ai_analysis:'Procreate er verdens bedste tegneapp og et engangsbeløb uden abonnement eller reklamer. Fremmer kreativitet og kunstnerisk udtryk. Fra 9 år. Et af de bedste kreative investeringer for tegneinteresserede børn.' },
+
+  { id:503, title:'Scratch (MIT)', recommended_age:8, platform:'ipad', age_group:'7-9', content_type:'channel',
+    notes:'Gratis programmeringsplatform fra MIT. Børn lærer kode ved at lave egne spil og animationer.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:1,language:1,dopamine:4,retention:5,commercialism:1,values:1,sexual:1,fear:1,passive:1,socialpressure:1},
+    ai_analysis:'Scratch er den bedste introduktion til programmering for børn. Gratis, reklamefri og pædagogisk gennemtænkt af MIT. Børn lærer logisk tænkning ved at bygge egne projekter. Anbefales varmt fra 8 år.' },
+
+  { id:504, title:'Monument Valley', recommended_age:7, platform:'ipad', age_group:'7-9', content_type:'channel',
+    notes:'Kunstnerisk puslespilsspil med optiske illusioner. Smuk, rolig og uden reklamer.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:1,language:1,dopamine:4,retention:5,commercialism:1,values:1,sexual:1,fear:1,passive:3,socialpressure:1},
+    ai_analysis:'Monument Valley er et af mobilspilhistoriens smukkeste og mest originale titler. Optiske illusioner og rolig musik skaber en meditativ oplevelse. Ingen reklamer eller køb-i-spil. Fra 7 år.' },
+
+  { id:505, title:'Heads Up! (Ellen)', recommended_age:8, platform:'ipad', age_group:'7-9', content_type:'channel',
+    notes:'Socialt gæt-spil der spilles med familien eller venner. Sjovt og aktivt — ingen skærm-zombie-fare.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:1,language:1,dopamine:5,retention:2,commercialism:2,values:1,sexual:1,fear:1,passive:1,socialpressure:2},
+    ai_analysis:'Heads Up! er et socialt spil der kræver interaktion med andre mennesker — det modsatte af passiv skærmtid. Fremragende til familiehygge og fester. Fra 8 år. Et af de sjoveste ikke-vanedannende mobilspil.' },
+
+  { id:506, title:'Alto\'s Odyssey', recommended_age:7, platform:'ipad', age_group:'7-9', content_type:'channel',
+    notes:'Roligt og smukt sandboarding-spil. Meditativ og uden aggressive mekanikker.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:1,language:1,dopamine:4,retention:4,commercialism:2,values:1,sexual:1,fear:1,passive:5,socialpressure:1},
+    ai_analysis:'Alto\'s Odyssey er et smukt og roligt mobilspil med meditativ kvalitet. Ingen aggressive monetiseringsmekanikker. Lavt bekymringsniveau. Et af de mere afslappende og børnevenlige mobilspil. Fra 7 år.' },
+
+  { id:507, title:'Photomath', recommended_age:10, platform:'ipad', age_group:'10-12', content_type:'channel',
+    notes:'Matematik-app der løser opgaver ved at scanne dem. Pædagogisk hjælpeværktøj — men kan misbruges.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:1,language:1,dopamine:3,retention:3,commercialism:3,values:2,sexual:1,fear:1,passive:4,socialpressure:2},
+    ai_analysis:'Photomath er et nyttigt matematikværktøj der viser løsningsmetoder trin for trin. Pædagogisk brugt kan det hjælpe børn til at forstå matematik bedre. Risikoen er at børn bruger det til at snyde med lektier. Forældre bør sætte rammer for brugen.' },
+
+  { id:508, title:'Duolingo Max', recommended_age:10, platform:'ipad', age_group:'10-12', content_type:'channel',
+    notes:'Den betalte version af Duolingo med AI-samtaleøvelser. Stærkere streak-mekanik og push-notifikationer.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:1,language:1,dopamine:7,retention:8,commercialism:6,values:1,sexual:1,fear:1,passive:3,socialpressure:5},
+    ai_analysis:'Duolingo Max er den betalte version med aggressive streak-mekanikker og daglige push-notifikationer. Den pædagogiske værdi er høj men vanedannelsesrisikoen er tilsvarende. Sæt daglige tidsbegrænsninger.' },
+
+  // ── BØLGE 5: SOCIALE MEDIER – INSTAGRAM (UDVIDELSE) ─────────────────────
+  { id:509, title:'Instagram – Fitnessinhold', recommended_age:16, platform:'instagram', age_group:'13+', content_type:'channel',
+    notes:'Fitnesskontoen på Instagram. Kropsidealer, ekstreme diæter og usunde skønhedsidealer.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:1,language:2,dopamine:7,retention:8,commercialism:7,values:6,sexual:5,fear:2,passive:7,socialpressure:10},
+    ai_analysis:'Fitnesindhold på Instagram er en af de mest dokumenteret skadelige indholdskategorier for unge — særligt piger. Kropsidealer, ekstreme diæter og usunde skønhedsidealer formidles som inspiration. Algoritmen forstærker eksponeringen. Fra 16 år med aktiv forældredialog.' },
+
+  { id:510, title:'Instagram – Influencer-livsstil', recommended_age:14, platform:'instagram', age_group:'13+', content_type:'channel',
+    notes:'Influenceres livsstilsbilleder. Luksusforbrug, rejser og perfekte hverdage der skaber sammenligning.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:1,language:2,dopamine:7,retention:8,commercialism:9,values:5,sexual:3,fear:1,passive:8,socialpressure:9},
+    ai_analysis:'Influencer-livsstilsindhold på Instagram skaber systematisk sammenligning og utilfredshed. Forskning viser direkte sammenhæng med lavere selvværd hos unge. Kommercielt pres er massivt — produktanbefalinger er primær indholdtype. Fra 14 år med aktiv medieforståelsesdialog.' },
+
+  // ── BØLGE 5: SNAPCHAT (UDVIDELSE) ────────────────────────────────────────
+  { id:511, title:'Snapchat – Spotlight', recommended_age:15, platform:'snapchat', age_group:'13+', content_type:'channel',
+    notes:'Snapchats TikTok-konkurrent med kortformat videoer. Samme vanedannende algoritme som TikTok.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:3,language:5,dopamine:9,retention:9,commercialism:5,values:5,sexual:5,fear:2,passive:8,socialpressure:6},
+    ai_analysis:'Snapchat Spotlight er Snapchats svar på TikTok og er ligeså vanedannende. Kortformat videoer med uendelig scroll og algoritmisk indholdsoptimering. Indholdet er mere ufiltreret end TikTok. Fra 15 år med daglige tidsbegrænsninger.' },
+
+  { id:512, title:'Snapchat – Streaks & vennelister', recommended_age:13, platform:'snapchat', age_group:'13+', content_type:'channel',
+    notes:'Streak-mekanikken og vennelisten er kernen i Snapchats sociale pres. Daglig angst ved tabte streaks.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:1,language:3,dopamine:7,retention:10,commercialism:3,values:4,sexual:2,fear:2,passive:5,socialpressure:10},
+    ai_analysis:'Streaks er Snapchats mest effektive fastholdelsesvåben — børn og unge føler reel angst ved at miste en streak. Socialt pres fra vennelisten og "best friends"-funktionen er konstant. Vigtigt at tale med børn om at dette er designet til at skabe afhængighed.' },
+
+  // ── BØLGE 5: DISCORD (UDVIDELSE) ─────────────────────────────────────────
+  { id:513, title:'Discord – Vennegruppeserver', recommended_age:13, platform:'discord', age_group:'13+', content_type:'channel',
+    notes:'Private Discord-servere med klassekammerater eller gamingvenner. Den sikreste Discord-brug.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:1,language:4,dopamine:5,retention:6,commercialism:1,values:3,sexual:2,fear:1,passive:4,socialpressure:4},
+    ai_analysis:'Private Discord-servere med kendte venner er den klart sikreste måde at bruge Discord på. Indholdet er selvreguleret af gruppen. Sproget kan være råt men risikoen for eksponering for voksenindhold er lav. Fra 13 år med forældreopmærksomhed.' },
+
+  // ── BØLGE 5: TV 2 PLAY (FORTSAT) ─────────────────────────────────────────
+  { id:514, title:'Midsommer Mord', recommended_age:14, platform:'tv2', age_group:'13+', content_type:'channel',
+    notes:'Britisk krimiserie der sendes på TV 2. Let krimistemning i det engelske landside. Populær bland alle aldre.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:4,language:2,dopamine:4,retention:6,commercialism:1,values:2,sexual:2,fear:4,passive:8,socialpressure:1},
+    ai_analysis:'Midsommer Mord er let britisk krimiserie med mordmysterie i idylliske omgivelser. Vold er til stede men ikke grafisk. Fra 14 år. Populær familieserie der kan ses fra 12 år med forældre.' },
+
+  { id:515, title:'Sygeplejerskerne', recommended_age:14, platform:'tv2', age_group:'13+', content_type:'channel',
+    notes:'Dansk hospitaldrama. Medicinske temaer og følelsesmæssigt tungt indhold. Populær dansk serie.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:4,language:3,dopamine:5,retention:7,commercialism:1,values:2,sexual:3,fear:4,passive:7,socialpressure:3},
+    ai_analysis:'Sygeplejerskerne er solid dansk hospitaldrama med menneskelige og følelsesmæssigt tunge temaer. Medicinsk vold og emotionelt indhold gør den bedst egnet fra 14 år. Kan åbne samtaler om sundhed og omsorg.' },
+
+  { id:516, title:'Druk (film, TV 2)', recommended_age:16, platform:'tv2', age_group:'13+', content_type:'channel',
+    notes:'Thomas Vinterbergs Oscar-vinder om fire læreres eksperiment med alkohol. Dansk kulturarv.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:3,language:5,dopamine:5,retention:7,commercialism:1,values:4,sexual:3,fear:3,passive:8,socialpressure:5},
+    ai_analysis:'Druk er Thomas Vinterbergs Oscar-vindende danske film om alkohol og midtlivskrise. Fra 16 år. Til ældre teenagere er det fremragende udgangspunkt for samtaler om alkohol, venskab og livets mening.' },
+
+  { id:517, title:'Gift ved første blik', recommended_age:14, platform:'tv2', age_group:'13+', content_type:'channel',
+    notes:'Dansk realityshow om par der gifter sig med fremmede. Drama og relationsindhold. Populær bland unge.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:1,language:3,dopamine:6,retention:7,commercialism:3,values:5,sexual:3,fear:1,passive:8,socialpressure:5},
+    ai_analysis:'Gift ved første Blik er populær dansk realityserie om kærlighed og relationer. Skaber urealistiske forventninger til parforhold. Fra 14 år. Kan bruges som udgangspunkt for samtaler om kærlighed og relationer.' },
+
+  { id:518, title:'Hammerslag', recommended_age:8, platform:'tv2', age_group:'7-9', content_type:'channel',
+    notes:'Dansk auktionsprogram om antikviteter og genstande. Overraskende populær bland børn og unge.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:1,language:1,dopamine:3,retention:4,commercialism:2,values:1,sexual:1,fear:1,passive:8,socialpressure:1},
+    ai_analysis:'Hammerslag er hyggeligt dansk auktionsprogram der kan vække interesse for historie og antikviteter. Ingen bekymringer. Et uventet positivt valg for nysgerrige børn.' },
+
+  // ── BØLGE 5: DR (FORTSAT) ────────────────────────────────────────────────
+  { id:519, title:'Danskernes Akademi', recommended_age:12, platform:'dr', age_group:'10-12', content_type:'channel',
+    notes:'DR-program med korte forelæsninger om alt fra historie til videnskab. Pædagogisk og engagerende.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:1,language:1,dopamine:3,retention:4,commercialism:1,values:1,sexual:1,fear:1,passive:7,socialpressure:1},
+    ai_analysis:'Danskernes Akademi er pædagogisk tv på højeste niveau. Korte engagerende forelæsninger om alle tænkelige emner. Ingen bekymringer. Fremragende supplement til skolefag og til at vække nysgerrighed. Fra 12 år.' },
+
+  { id:520, title:'Den blå planet (dokumentar)', recommended_age:6, platform:'dr', age_group:'7-9', content_type:'channel',
+    notes:'DR-dokumentar om havets dyr og undervandsliv. Storslået og pædagogisk naturindhold.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:2,language:1,dopamine:3,retention:5,commercialism:1,values:1,sexual:1,fear:2,passive:7,socialpressure:1},
+    ai_analysis:'Den Blå Planet er storslået naturformidling om havets verden. Visse scener med rovdyr der jager kan være intense. Fra 6 år. Fremragende pædagogisk indhold der vækker kærlighed til naturen.' },
+
+  { id:521, title:'Frank Hvam: Personlig trainer', recommended_age:16, platform:'dr', age_group:'13+', content_type:'channel',
+    notes:'Dansk komedie med Frank Hvam. Sort humor og pinlig komedie. Voksent indhold.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:2,language:6,dopamine:5,retention:5,commercialism:1,values:5,sexual:4,fear:1,passive:7,socialpressure:3},
+    ai_analysis:'Frank Hvams komedier er voksent dansk humor med pinlig komedie og sort tone. Uegnet for under 16. Til ældre teenagere er det dansk underholdning i god tradition.' },
+
+  // ── BØLGE 5: SKYSHOWTIME (FORTSAT) ───────────────────────────────────────
+  { id:522, title:'Peppa Pig – Verdens end', recommended_age:2, platform:'skyshowtime', age_group:'4-6', content_type:'channel',
+    notes:'Peppa Pig-specialepisoder og film. Klassisk britisk animation til de alleryngste.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:1,language:1,dopamine:3,retention:4,commercialism:6,values:1,sexual:1,fear:1,passive:6,socialpressure:1},
+    ai_analysis:'Peppa Pig-specialerne er harmløse og velkendte for familier med småbørn. Merchandise-presset er fortsat massivt. Selve indholdet er ufarligt. Til 2-5-årige.' },
+
+  { id:523, title:'Star Trek: Strange New Worlds', recommended_age:12, platform:'skyshowtime', age_group:'10-12', content_type:'channel',
+    notes:'Ny Star Trek-serie med klassisk episodisk format. Optimistisk sci-fi med mangfoldighed i fokus.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:4,language:2,dopamine:5,retention:6,commercialism:1,values:1,sexual:2,fear:3,passive:7,socialpressure:1},
+    ai_analysis:'Star Trek: Strange New Worlds er et af de bedste eksempler på optimistisk og mangfoldig sci-fi. Positive budskaber om samarbejde og videnskab. Fra 12 år. Fremragende for børn der interesserer sig for rummet og fremtiden.' },
+
+  { id:524, title:'Halo (serie)', recommended_age:16, platform:'skyshowtime', age_group:'13+', content_type:'channel',
+    notes:'Live action-adaptation af det populære spil. Grafisk sci-fi-vold. Populær bland gamende teenagere.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:8,language:4,dopamine:6,retention:7,commercialism:2,values:3,sexual:3,fear:5,passive:7,socialpressure:3},
+    ai_analysis:'Halo-serien er mere voldelig end spilserien og indeholder grafiske kampscener. Fra 16 år. Til gamende teenagere der kender universet — forvent mere voksenindhold end i spillet.' },
+
+  // ── BØLGE 5: VIAPLAY (FORTSAT) ───────────────────────────────────────────
+  { id:525, title:'Trapped (Ófærð)', recommended_age:14, platform:'viaplay', age_group:'13+', content_type:'channel',
+    notes:'Islandsk krimiserie om en politibetjent i et isoleret samfund. Nordisk noir i verdensklasse.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:6,language:3,dopamine:5,retention:7,commercialism:1,values:3,sexual:3,fear:6,passive:7,socialpressure:2},
+    ai_analysis:'Trapped er islandsk noir-krimiserie med storslået naturscenografi og psykologisk dybde. Mørke temaer og vold gør den uegnet for under 14. Til krimi-interesserede teenagere er det nordisk tv på højeste niveau.' },
+
+  { id:526, title:'Deadwind (Katakomben)', recommended_age:14, platform:'viaplay', age_group:'13+', content_type:'channel',
+    notes:'Finsk krimiserie om en kvindelig detektiv. Mørk og atmosfærisk nordisk noir.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:6,language:3,dopamine:5,retention:7,commercialism:1,values:3,sexual:2,fear:6,passive:7,socialpressure:2},
+    ai_analysis:'Deadwind er finsk nordisk noir med mørke kriminalitetstemaer. Solid krimiserie til ældre teenagere fra 14 år med interesse for genren.' },
+
+  // ── BØLGE 5: MAX (FORTSAT) ────────────────────────────────────────────────
+  { id:527, title:'Gremlins: Secrets of the Mogwai', recommended_age:7, platform:'max', age_group:'7-9', content_type:'channel',
+    notes:'Animeret prequel til den klassiske Gremlins-film. Eventyr og let skræk i animationsformat.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:3,language:1,dopamine:5,retention:6,commercialism:2,values:2,sexual:1,fear:4,passive:6,socialpressure:1},
+    ai_analysis:'Gremlins-animationsserien er et tilgængeligt eventyr med let skræk. Mildere end den originale film. Fra 7 år — og kan vække interesse for klassikeren hos ældre børn.' },
+
+  { id:528, title:'Dune: Prophecy', recommended_age:16, platform:'max', age_group:'13+', content_type:'channel',
+    notes:'Prequel-serie til Dune-filmene. Voksent sci-fi med politiske intriger, vold og komplekse temaer.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:7,language:4,dopamine:5,retention:7,commercialism:1,values:3,sexual:5,fear:5,passive:7,socialpressure:2},
+    ai_analysis:'Dune: Prophecy er voksent sci-fi med politiske intriger og eksplicit indhold. Fra 16 år. Til Dune-fans over 16 er det et værdigt supplement til filmene.' },
+
+  { id:529, title:'Raised by Wolves', recommended_age:16, platform:'max', age_group:'13+', content_type:'channel',
+    notes:'Ambitiøs sci-fi-serie om androider der opdrager børn på en fremmed planet. Filosofisk og voldelig.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:7,language:3,dopamine:5,retention:7,commercialism:1,values:4,sexual:4,fear:6,passive:7,socialpressure:1},
+    ai_analysis:'Raised by Wolves er ambitiøs og filosofisk sci-fi med grafisk vold. Fra 16 år. Til ældre teenagere med interesse for filosofiske spørgsmål om kunstig intelligens og menneskelig natur.' },
+
+  // ── BØLGE 5: NETFLIX (FORTSAT) ────────────────────────────────────────────
+  { id:530, title:'The Good Place', recommended_age:11, platform:'netflix', age_group:'10-12', content_type:'channel',
+    notes:'Amerikansk komedie om livet efter døden. Filosofisk, varm og familievenlig. Perfekt til alle aldre.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:1,language:2,dopamine:5,retention:7,commercialism:1,values:1,sexual:2,fear:1,passive:7,socialpressure:2},
+    ai_analysis:'The Good Place er en sjælden perle — en komedie der lærer etik og filosofi på en underholdende og tilgængelig måde. Fra 11 år. Anbefales varmt til hele familien som udgangspunkt for samtaler om hvad der er rigtigt og forkert.' },
+
+  { id:531, title:'Cobra Kai', recommended_age:12, platform:'netflix', age_group:'10-12', content_type:'channel',
+    notes:'Sequel-serie til Karate Kid. Kamp og teenagekonflikter. Populær bland 11-15-årige.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:6,language:4,dopamine:7,retention:8,commercialism:2,values:4,sexual:2,fear:2,passive:7,socialpressure:6},
+    ai_analysis:'Cobra Kai er velproduceret fortsættelse af Karate Kid med komplekse karakterer og karatekampe. Fra 12 år. Temaer om mobning, hævn og tilgivelse giver gode samtaleemner. Til 10-12-årige med forbehold for kampscener.' },
+
+  { id:532, title:'Floor is Lava', recommended_age:7, platform:'netflix', age_group:'7-9', content_type:'channel',
+    notes:'Reality-gameshow baseret på det klassiske børnespil. Sjovt og familievenligt konkurrencentformat.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:1,language:1,dopamine:6,retention:5,commercialism:2,values:2,sexual:1,fear:1,passive:8,socialpressure:2},
+    ai_analysis:'Floor is Lava er et sjovt og harmløst realityprogram baseret på et klassisk børnespil. Lavt bekymringsniveau. Kan inspirere børn til at lege det samme derhjemme. Fra 7 år.' },
+
+  { id:533, title:'Our Planet', recommended_age:7, platform:'netflix', age_group:'7-9', content_type:'channel',
+    notes:'David Attenborough-naturaldokumentar produceret af Netflix. Storslået naturformidling.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:2,language:1,dopamine:3,retention:5,commercialism:1,values:1,sexual:1,fear:2,passive:7,socialpressure:1},
+    ai_analysis:'Our Planet er storslået naturformidling med David Attenborough som fortæller. Klimatemaer og visse scener med jagt kan være intense. Fra 7 år. Fremragende pædagogisk indhold der vækker kærlighed til naturen og klimabevidsthed.' },
+
+  { id:534, title:'Mindhunter', recommended_age:16, platform:'netflix', age_group:'13+', content_type:'channel',
+    notes:'Krimidrama om FBI-agenter der interviewer seriekillere i 1970erne. Psykologisk og mørkt.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:5,language:5,dopamine:6,retention:8,commercialism:1,values:4,sexual:3,fear:7,passive:7,socialpressure:1},
+    ai_analysis:'Mindhunter er psykologisk krimidrama af høj kvalitet. Psykologisk horror og mørkekriminelle temaer gør den uegnet for under 16. Til ældre teenagere med interesse for kriminologi og psykologi er det fremragende tv.' },
+
+  // ── BØLGE 5: GAMING (FORTSAT) ─────────────────────────────────────────────
+  { id:535, title:'Elden Ring', recommended_age:16, platform:'gaming', age_group:'13+', content_type:'channel',
+    notes:'Episk fantasy-action i åben verden. GOTY 2022. Meget udfordrende og med grafisk vold.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:8,language:2,dopamine:6,retention:8,commercialism:1,values:2,sexual:2,fear:6,passive:3,socialpressure:2},
+    ai_analysis:'Elden Ring er et mesterværk i åben-verden design men med grafisk vold og brutal sværhedsgrad. Fra 16 år. Lærer udholdenhed og kreativ problemløsning. Til ældre teenagere med tålmodighed er det en uforglemmelig oplevelse.' },
+
+  { id:536, title:'Apex Legends', recommended_age:16, platform:'gaming', age_group:'13+', content_type:'channel',
+    notes:'Gratis battle royale-skydespil. Populær bland 14-18-årige. Online-miljø med groft sprog.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:6,language:5,dopamine:8,retention:8,commercialism:6,values:3,sexual:2,fear:2,passive:4,socialpressure:6},
+    ai_analysis:'Apex Legends er veldesignet battle royale med stærkt teamwork-fokus. Online-miljøet kan have groft sprog og toxic adfærd. Kosmetiske køb er ikke pay-to-win men er aggressive. Fra 16 år.' },
+
+  { id:537, title:'Minecraft – Survival Mode', recommended_age:8, platform:'gaming', age_group:'7-9', content_type:'channel',
+    notes:'Minecraft i overlevelsestilstand med fjender og ressourceindsamling. Mere udfordrende end Creative Mode.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:3,language:1,dopamine:6,retention:7,commercialism:2,values:1,sexual:1,fear:2,passive:2,socialpressure:2},
+    ai_analysis:'Minecraft Survival Mode tilføjer fjender og udfordringer til det kreative univers. Creepers og andre monstre kan være lidt skræmmende for de yngste. Fra 8 år. Fremmer ressourcestyring og strategisk tænkning.' },
+
+  { id:538, title:'The Sims 4 – Høj skole', recommended_age:12, platform:'gaming', age_group:'10-12', content_type:'channel',
+    notes:'Sims 4-udvidelsespakke med gymnasieliv. Temaer om venskab, kærlighed og identitet.',
+    votes:0,parent_votes:0,parent_score:null,created_at:'2026-04-12',
+    ai_scores:{violence:1,language:2,dopamine:6,retention:6,commercialism:7,values:3,sexual:3,fear:1,passive:4,socialpressure:6},
+    ai_analysis:'Sims 4 Høj skole er en af de mere relevante udvidelsespakker for 12-15-årige med temaer om gymnasieliv og identitet. DLC-prisen er høj. Seksuelt indhold kan optræde afhængigt af spillerens valg. Fra 12 år.' },
 ];
 
 let db = null;
