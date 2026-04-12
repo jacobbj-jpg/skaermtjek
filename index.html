@@ -3428,8 +3428,11 @@ input.autofilled, textarea.autofilled {
           <span class="filter-pill" onclick="setPlatform(this,'netflix')">Netflix</span>
           <span class="filter-pill" onclick="setPlatform(this,'disney')">Disney+</span>
           <span class="filter-pill" onclick="setPlatform(this,'dr')">DR</span>
+          <span class="filter-pill" onclick="setPlatform(this,'tv2')">TV 2 Play</span>
           <span class="filter-pill" onclick="setPlatform(this,'viaplay')">Viaplay</span>
-          <span class="filter-pill" onclick="setPlatform(this,'hbo')">HBO Max</span>
+          <span class="filter-pill" onclick="setPlatform(this,'max')">Max</span>
+          <span class="filter-pill" onclick="setPlatform(this,'skyshowtime')">SkyShowtime</span>
+          <span class="filter-pill" onclick="setPlatform(this,'sfkids')">SF Kids</span>
         </div>
       </div>
       <div class="filter-platform-group">
@@ -3446,6 +3449,8 @@ input.autofilled, textarea.autofilled {
           <span class="filter-pill" onclick="setPlatform(this,'tiktok')">TikTok</span>
           <span class="filter-pill" onclick="setPlatform(this,'instagram')">Instagram</span>
           <span class="filter-pill" onclick="setPlatform(this,'snapchat')">Snapchat</span>
+          <span class="filter-pill" onclick="setPlatform(this,'ytshorts')">YouTube Shorts</span>
+          <span class="filter-pill" onclick="setPlatform(this,'bereal')">BeReal</span>
         </div>
       </div>
       <div class="filter-platform-group">
@@ -3568,8 +3573,11 @@ input.autofilled, textarea.autofilled {
                   <option value="netflix">Netflix</option>
                   <option value="disney">Disney+</option>
                   <option value="dr">DR / Ramasjang</option>
+                  <option value="tv2">TV 2 Play</option>
                   <option value="viaplay">Viaplay</option>
-                  <option value="hbo">HBO Max</option>
+                  <option value="max">Max</option>
+                  <option value="skyshowtime">SkyShowtime</option>
+                  <option value="sfkids">SF Kids</option>
                 </optgroup>
                 <optgroup label="🎮 Spil">
                   <option value="gaming">Konsol & PC</option>
@@ -3580,6 +3588,8 @@ input.autofilled, textarea.autofilled {
                   <option value="tiktok">TikTok</option>
                   <option value="instagram">Instagram</option>
                   <option value="snapchat">Snapchat</option>
+                  <option value="ytshorts">YouTube Shorts</option>
+                  <option value="bereal">BeReal</option>
                 </optgroup>
                 <optgroup label="💬 Chat & fællesskaber">
                   <option value="discord">Discord</option>
@@ -4391,26 +4401,26 @@ const CATEGORIES = [
   { id:'values',       icon:'💡',  name:'Rollemodel',          desc:'Værdier og adfærd' },
   { id:'sexual',       icon:'🔞',  name:'Seksuelt indhold',    desc:'Antydninger eller eksplicit' },
   { id:'fear',         icon:'😨',  name:'Skræmmende',          desc:'Horror, jump-scares, angst' },
-  { id:'passive',      icon:'🧠',  name:'Passivt vs. aktivt',  desc:'Stimulerer eller sløver hjernen?' },
+  { id:'passive',      icon:'🧠',  name:'Aktivt vs. passivt',  desc:'1 = aktivt engagerende · 10 = rent passivt forbrug' },
   { id:'socialpressure',icon:'👥', name:'Socialt pres',        desc:'Kropsidealer, livsstil, gruppepress' },
 ];
 
 const PLATFORM_EMOJI = {
-  youtube:'📺', netflix:'🎬', disney:'✨', dr:'🇩🇰', viaplay:'🎭', hbo:'🎪',
+  youtube:'📺', netflix:'🎬', disney:'✨', dr:'🇩🇰', tv2:'📡', viaplay:'🎭', max:'🎪', hbo:'🎪', skyshowtime:'🌟', sfkids:'🎥',
   gaming:'🎮', switch:'🕹️', ipad:'📱',
-  tiktok:'🎵', instagram:'📸', snapchat:'👻',
+  tiktok:'🎵', instagram:'📸', snapchat:'👻', ytshorts:'⚡', bereal:'📷',
   discord:'💬', twitch:'🟣'
 };
 const PLATFORM_LABEL = {
-  youtube:'YouTube', netflix:'Netflix', disney:'Disney+', dr:'DR / Ramasjang', viaplay:'Viaplay', hbo:'HBO Max',
+  youtube:'YouTube', netflix:'Netflix', disney:'Disney+', dr:'DR / Ramasjang', tv2:'TV 2 Play', viaplay:'Viaplay', max:'Max', hbo:'Max', skyshowtime:'SkyShowtime', sfkids:'SF Kids',
   gaming:'Konsol & PC', switch:'Nintendo Switch', ipad:'iPad-apps',
-  tiktok:'TikTok', instagram:'Instagram', snapchat:'Snapchat',
+  tiktok:'TikTok', instagram:'Instagram', snapchat:'Snapchat', ytshorts:'YouTube Shorts', bereal:'BeReal',
   discord:'Discord', twitch:'Twitch'
 };
 const PLATFORM_CATEGORY = {
-  youtube:'streaming', netflix:'streaming', disney:'streaming', dr:'streaming', viaplay:'streaming', hbo:'streaming',
+  youtube:'streaming', netflix:'streaming', disney:'streaming', dr:'streaming', tv2:'streaming', viaplay:'streaming', max:'streaming', hbo:'streaming', skyshowtime:'streaming', sfkids:'streaming',
   gaming:'spil', switch:'spil', ipad:'spil',
-  tiktok:'socialt', instagram:'socialt', snapchat:'socialt',
+  tiktok:'socialt', instagram:'socialt', snapchat:'socialt', ytshorts:'socialt', bereal:'socialt',
   discord:'chat', twitch:'chat'
 };
 
