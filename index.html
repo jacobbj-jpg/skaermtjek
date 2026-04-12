@@ -244,6 +244,46 @@ nav {
   .hero-step-sep { display: none; }
 }
 
+.hero-sources {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.hero-sources-label {
+  font-size: 11px;
+  color: rgba(250,247,242,0.4);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.hero-sources-logos {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.source-pill {
+  font-size: 11px;
+  color: rgba(250,247,242,0.55);
+  background: rgba(250,247,242,0.07);
+  border: 1px solid rgba(250,247,242,0.12);
+  border-radius: 20px;
+  padding: 3px 10px;
+  text-decoration: none;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.source-pill:hover {
+  color: rgba(250,247,242,0.9);
+  background: rgba(250,247,242,0.12);
+  border-color: rgba(250,247,242,0.25);
+}
+
 .hero-age-row {
   display: flex;
   align-items: center;
@@ -3400,6 +3440,16 @@ input.autofilled, textarea.autofilled {
       <div class="stat"><strong id="statCount">—</strong>Vurderinger</div>
       <div class="stat"><strong id="statPlatforms">14</strong>Platforme</div>
       <div class="stat"><strong>Gratis</strong>Altid</div>
+    </div>
+    <div class="hero-sources">
+      <span class="hero-sources-label">Baseret på viden fra</span>
+      <div class="hero-sources-logos">
+        <a href="https://medieraadet.dk" target="_blank" rel="noopener" class="source-pill">Medierådet</a>
+        <a href="https://www.sst.dk" target="_blank" rel="noopener" class="source-pill">Sundhedsstyrelsen</a>
+        <a href="https://bornsvilkaar.dk" target="_blank" rel="noopener" class="source-pill">Børns Vilkår</a>
+        <a href="https://iris.who.int" target="_blank" rel="noopener" class="source-pill">WHO</a>
+        <a href="https://taenk.dk" target="_blank" rel="noopener" class="source-pill">Tænk</a>
+      </div>
     </div>
   </div>
 </div>
