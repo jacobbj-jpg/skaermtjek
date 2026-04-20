@@ -3466,6 +3466,39 @@ input.autofilled, textarea.autofilled {
   <!-- Collapsible filter panel -->
   <div class="filter-panel" id="filterPanel">
     <div class="filter-section">
+      <div class="filter-section-title">Barnets alder</div>
+      <div class="filter-pills-wrap">
+        <span class="filter-pill active" id="age-all" onclick="setAgeFilter(this,'all')">Alle</span>
+        <span class="filter-pill" onclick="setAgeFilter(this,'0-2')">👶 0–2 år</span>
+        <span class="filter-pill" onclick="setAgeFilter(this,'2-4')">🧒 2–4 år</span>
+        <span class="filter-pill" onclick="setAgeFilter(this,'4-6')">4–6 år</span>
+        <span class="filter-pill" onclick="setAgeFilter(this,'7-9')">7–9 år</span>
+        <span class="filter-pill" onclick="setAgeFilter(this,'10-12')">10–12 år</span>
+        <span class="filter-pill" onclick="setAgeFilter(this,'13+')">13+ år</span>
+      </div>
+    </div>
+    <div class="filter-section">
+      <div class="filter-section-title">Sikkerhed</div>
+      <div class="filter-pills-wrap">
+        <span class="safety-btn s-active" id="saf-all" onclick="setSafety(this,'all')">Alle</span>
+        <span class="safety-btn s-green" onclick="setSafety(this,'safe')">🟢 Trygt</span>
+        <span class="safety-btn s-yellow" onclick="setSafety(this,'caution')">🟡 Med forbehold</span>
+        <span class="safety-btn s-red" onclick="setSafety(this,'mature')">🔴 Til de ældre</span>
+        <span class="safety-btn s-darkred" id="saf-notrec" onclick="setSafety(this,'notrec')" style="background:#FCEBEB;color:#791F1F;border-color:#F7C1C1">🚫 Frarådes til denne alder</span>
+      </div>
+    </div>
+    <div class="filter-section">
+      <div class="filter-section-title">Bekymringstype</div>
+      <div class="filter-pills-wrap">
+        <span class="filter-pill active" id="conc-all" onclick="setConcern(this,'all')">Alle</span>
+        <span class="filter-pill" onclick="setConcern(this,'violence')">⚔️ Vold</span>
+        <span class="filter-pill" onclick="setConcern(this,'retention')">🔔 Vanedannelse</span>
+        <span class="filter-pill" onclick="setConcern(this,'commercialism')">💰 Kommercielt pres</span>
+        <span class="filter-pill" onclick="setConcern(this,'socialpressure')">👥 Socialt pres</span>
+        <span class="filter-pill" onclick="setConcern(this,'sexual')">🔞 Seksuelt indhold</span>
+      </div>
+    </div>
+    <div class="filter-section">
       <div class="filter-section">
       <div class="filter-section-title">Platform</div>
       <div class="filter-pills-wrap">
@@ -3511,25 +3544,6 @@ input.autofilled, textarea.autofilled {
         </div>
       </div>
     </div>
-      <div class="filter-section-title">Barnets alder</div>
-      <div class="filter-pills-wrap">
-        <span class="filter-pill active" id="age-all" onclick="setAgeFilter(this,'all')">Alle</span>
-        <span class="filter-pill" onclick="setAgeFilter(this,'0-2')">👶 0–2 år</span>
-        <span class="filter-pill" onclick="setAgeFilter(this,'2-4')">🧒 2–4 år</span>
-        <span class="filter-pill" onclick="setAgeFilter(this,'4-6')">4–6 år</span>
-        <span class="filter-pill" onclick="setAgeFilter(this,'7-9')">7–9 år</span>
-        <span class="filter-pill" onclick="setAgeFilter(this,'10-12')">10–12 år</span>
-        <span class="filter-pill" onclick="setAgeFilter(this,'13+')">13+ år</span>
-      </div>
-    </div>
-    <div class="filter-section">
-      <div class="filter-section-title">Sikkerhed</div>
-      <div class="filter-pills-wrap">
-        <span class="safety-btn s-active" id="saf-all" onclick="setSafety(this,'all')">Alle</span>
-        <span class="safety-btn s-green" onclick="setSafety(this,'safe')">🟢 Trygt</span>
-        <span class="safety-btn s-yellow" onclick="setSafety(this,'caution')">🟡 Med forbehold</span>
-        <span class="safety-btn s-red" onclick="setSafety(this,'mature')">🔴 Til de ældre</span>
-      </div>
     </div>
     <div class="filter-section">
       <div class="filter-section-title">Maks. score: <span id="scoreSliderVal" style="color:var(--accent);font-family:'Fraunces',serif;font-weight:800">Alle</span></div>
@@ -3876,7 +3890,7 @@ input.autofilled, textarea.autofilled {
         </div>
         <div class="om-faq-item">
           <strong>Hvem laver AI-vurderingerne?</strong>
-          <p>Vi bruger Claude (Anthropic) til at generere en indledende vurdering baseret på offentligt tilgængelig information om kanalen eller serien. Det er et kvalificeret udgangspunkt — ikke en facit. Forældrenes egne erfaringer vejer tungere.</p>
+          <p>Vi bruger Claude (Anthropic) til at generere en indledende vurdering baseret på offentligt tilgængelig information om kanalen eller serien. Det er et kvalificeret udgangspunkt — ikke en facit. AI og forældrenes egne erfaringer er to ligeværdige og komplementerende kilder.</p>
         </div>
         <div class="om-faq-item">
           <strong>Kan jeg stole på vurderingerne?</strong>
@@ -4239,6 +4253,7 @@ input.autofilled, textarea.autofilled {
     <div class="detail-header">
       <button class="detail-close" onclick="closeDetailBtn()">✕</button>
     <button class="detail-share" onclick="shareDetail()" id="shareBtn">Del 🔗</button>
+    <button class="detail-share" onclick="openFullPage()" id="fullPageBtn" style="margin-right:4px">📄 Se fuld side</button>
     <button class="detail-rate-btn" onclick="closeDetailBtn();smartPrefill(currentDetailId)" id="rateBtn">✏️ Vurder</button>
       <div class="detail-platform" id="d_platform"></div>
       <div class="detail-title" id="d_title"></div>
@@ -7312,6 +7327,7 @@ let currentFilter = 'all';
 let currentAgeFilter = 'all';
 let currentSafety = 'all';
 let currentScoreMax = 10;
+let currentConcern = 'all';
 let currentSearch = '';
 let selectedAge = '7-9';
 let formScores = {};
@@ -7524,6 +7540,20 @@ function shareDetail() {
       }, 2000);
     });
   }
+}
+
+function makeSlug(title) {
+  return title.toLowerCase()
+    .replace(/æ/g,'ae').replace(/ø/g,'oe').replace(/å/g,'aa')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+function openFullPage() {
+  const item = allData.find(d => d.id === currentDetailId);
+  if (!item) return;
+  const slug = makeSlug(item.title);
+  window.location.href = '/vurdering/' + slug;
 }
 
 function showPage(page) {
@@ -7889,7 +7919,7 @@ function cardHTML(item) {
         ? '<div class="card-disclaimer disclaimer-low">⚠️ Kun AI-vurdering — baseret på offentlig tilgængelig information om kanalen. Ingen forældreanmeldelser endnu.</div>'
         : parentVotes < 5
           ? `<div class="card-disclaimer disclaimer-mid">📊 ${parentVotes} forældreanmeldelse${parentVotes > 1 ? 'r' : ''} — AI-vurderingen vejer stadig med. Jo flere forældre bidrager, jo mere præcist.</div>`
-          : `<div class="card-disclaimer disclaimer-ok">✓ Stærkt datagrundlag — ${parentVotes} forældreanmeldelser. Forældrenes scores vejer tungest.</div>`);
+          : `<div class="card-disclaimer disclaimer-ok">✓ Stærkt datagrundlag — ${parentVotes} forældreanmeldelser. AI og forældre supplerer hinanden ligeværdigt.</div>`);
 
   return `<div class="${cardClass}" onclick="openDetail(${item.id})">
     ${isEpisode ? `
@@ -8003,6 +8033,15 @@ function setSafety(el, safety) {
   filterAndRender();
 }
 
+function setConcern(el, concern) {
+  document.querySelectorAll('.filter-pill').forEach(p => {
+    if (p.onclick && p.onclick.toString().includes('setConcern')) p.classList.remove('active');
+  });
+  el.classList.add('active');
+  currentConcern = concern;
+  filterAndRender();
+}
+
 function setScoreMax(val) {
   currentScoreMax = parseInt(val);
   const label = document.getElementById('scoreSliderVal');
@@ -8050,6 +8089,19 @@ function filterAndRender() {
     data = data.filter(d => { const a = getScore(d); return a > 3 && a <= 6; });
   } else if (currentSafety === 'mature') {
     data = data.filter(d => getScore(d) > 6);
+  } else if (currentSafety === 'notrec') {
+    // Frarådes til valgt alder: recommended_age er højere end den valgte alder
+    const ageMap = {'0-2':2, '2-4':4, '4-6':6, '7-9':9, '10-12':12, '13+':17};
+    const chosenAge = currentAgeFilter !== 'all' ? (ageMap[currentAgeFilter] || 99) : 99;
+    data = data.filter(d => (d.recommended_age || 0) > chosenAge);
+  }
+
+  // Bekymringstype — vis kun vurderinger hvor den valgte kategori scorer 6+
+  if (currentConcern !== 'all') {
+    data = data.filter(d => {
+      const scores = d.ai_scores || d.scores || {};
+      return (scores[currentConcern] || 0) >= 6;
+    });
   }
 
   // Score max slider
@@ -8226,7 +8278,7 @@ async function openDetail(id) {
       <span class="dd-icon">✓</span>
       <div>
         <strong>${dVotes} forældreanmeldelser${dIsEp ? ' af dette specifikke afsnit' : ''}</strong><br>
-        ${dIsEp ? 'Afsnittet er verificeret — forældrenes egne observationer vejer tungest i vurderingen.' : 'Solid datakilde — forældrenes scores vejer tungest. AI-vurderingen bruges kun som supplement.'}
+        ${dIsEp ? 'Afsnittet er verificeret — AI og forældrenes observationer supplerer hinanden ligeværdigt.' : 'Solid datakilde — AI-research og forældreerfaringer er to ligeværdige kilder der supplerer hinanden.'}
       </div>
     </div>`;
   }
