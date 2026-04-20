@@ -1,7 +1,9 @@
-[build]
-  functions = "netlify/functions"
+[[redirects]]
+  from = "/vurdering/*"
+  to = "/vurdering.html"
+  status = 200
 
-[[headers]]
-  for = "/*"
-  [headers.values]
-    Access-Control-Allow-Origin = "*"
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
