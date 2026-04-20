@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="pageTitle">SkærmTjek — Vurdering</title>
+<meta name="description" id="pageDesc" content="Dansk forældreguide til digitalt børneindhold.">
+<link rel="canonical" id="pageCanonical" href="https://skaermtjek.dk/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="SkærmTjek">
+<meta property="og:title" id="ogTitle" content="SkærmTjek">
+<meta property="og:description" id="ogDesc" content="">
+<script type="application/ld+json" id="faqSchema"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,800;1,9..144,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #faf7f2;
+  --warm: #f0ead8;
+  --ink: #1a1714;
+  --ink2: #3d3830;
+  --muted: #9a9186;
+  --border: #e0d8cc;
+  --accent: #c85a2a;
+  --ai-color: #185FA5;
+  --ai-light: #E6F1FB;
+  --parent-color: #0F6E56;
+  --parent-light: #E1F5EE;
+  --good: #2a7a5c;
+  --mid: #c8882a;
+  --bad: #c83a2a;
+  --shadow: rgba(26,23,20,0.08);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+nav {
+  background: var(--ink);
+  padding: 0 5vw;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.nav-logo {
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--cream);
+  text-decoration: none;
+  letter-spacing: -0.5px;
+}
+
+.nav-logo span { color: var(--accent); }
+
+.nav-links { display: flex; gap: 4px; }
+
+.nav-btn {
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: rgba(250,247,242,0.6);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  padding: 7px 14px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s;
+}
+
+.nav-btn:hover {
+  color: var(--cream);
+  border-color: rgba(250,247,242,0.2);
+  background: rgba(250,247,242,0.07);
+}
+
+.nav-btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+  font-weight: 500;
+}
+
+.breadcrumb {
+  padding: 12px 5vw;
+  font-size: 12px;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+  background: var(--cream);
+}
+
+.breadcrumb a { color: var(--muted); text-decoration: none; }
+.breadcrumb a:hover { color: var(--accent); }
+.breadcrumb span { margin: 0 6px; }
+
+.page { max-width: 780px; margin: 0 auto; padding: 0 5vw 4rem; }
+
+/* HEADER */
+.rating-header {
+  padding: 2rem 0 1.5rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0;
+}
+
+.platform-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: var(--warm);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 3px 12px;
+  margin-bottom: 10px;
+}
+
+.rating-header h1 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(28px, 5vw, 42px);
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+  margin-bottom: 6px;
+}
+
+.rating-subtitle {
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 1.5rem;
+}
+
+/* SCORES ROW */
+.scores-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.score-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px 18px;
+  min-width: 130px;
+}
+
+.score-block-label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.score-block-label.ai { color: var(--ai-color); }
+.score-block-label.parent { color: var(--parent-color); }
+
+.score-block-num {
+  font-family: 'Fraunces', serif;
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.score-block-num.ai { color: var(--ai-color); }
+.score-block-num.parent { color: var(--parent-color); }
+
+.score-block-sub {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.verdict-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 20px;
+  padding: 6px 14px;
+  border: 1px solid;
+}
+
+.verdict-badge.green { background: #E1F5EE; color: #085041; border-color: #9FE1CB; }
+.verdict-badge.amber { background: #FAEEDA; color: #633806; border-color: #FAC775; }
+.verdict-badge.orange { background: #FAECE7; color: #712B13; border-color: #F0997B; }
+.verdict-badge.red { background: #FCEBEB; color: #791F1F; border-color: #F7C1C1; }
+
+.age-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--ink2);
+  background: var(--warm);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 6px 14px;
+}
+
+/* TABS */
+.tabs-bar {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid var(--border);
+  margin-bottom: 2rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.tabs-bar::-webkit-scrollbar { display: none; }
+
+.tab-btn {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  padding: 14px 20px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+
+.tab-btn:hover { color: var(--ink); }
+
+.tab-btn.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+  font-weight: 500;
+}
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* OVERBLIK TAB */
+.ai-analyse-box {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.ai-analyse-label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ai-color);
+  margin-bottom: 6px;
+}
+
+.ai-analyse-source {
+  font-size: 11px;
+  color: var(--muted);
+  font-style: italic;
+  margin-bottom: 10px;
+}
+
+.ai-analyse-text {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--ink2);
+}
+
+/* DUAL SCORES */
+.scores-header-row {
+  display: grid;
+  grid-template-columns: 32px 1fr 60px 60px;
+  gap: 8px;
+  align-items: center;
+  padding-bottom: 10px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+}
+
+.scores-col-label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: right;
+}
+
+.scores-col-label.ai { color: var(--ai-color); }
+.scores-col-label.parent { color: var(--parent-color); }
+
+.score-row {
+  display: grid;
+  grid-template-columns: 32px 1fr 60px 60px;
+  gap: 8px;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(224,216,204,0.5);
+}
+
+.score-row:last-child { border-bottom: none; }
+
+.score-icon { font-size: 18px; text-align: center; }
+
+.score-info { display: flex; flex-direction: column; gap: 4px; }
+
+.score-name { font-size: 13px; font-weight: 500; color: var(--ink); }
+.score-desc { font-size: 11px; color: var(--muted); }
+
+.dual-bars { display: flex; flex-direction: column; gap: 3px; }
+
+.bar-line { display: flex; align-items: center; gap: 5px; }
+
+.bar-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.bar-track {
+  flex: 1;
+  height: 5px;
+  background: var(--warm);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.bar-fill { height: 100%; border-radius: 3px; transition: width 0.6s ease; }
+
+.score-val {
+  font-size: 14px;
+  font-weight: 500;
+  text-align: right;
+  line-height: 1;
+}
+
+.score-val.ai { color: var(--ai-color); }
+.score-val.parent { color: var(--parent-color); }
+
+.score-val-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-end;
+}
+
+/* No parent scores yet */
+.parent-placeholder {
+  font-size: 11px;
+  color: var(--muted);
+  text-align: right;
+  font-style: italic;
+}
+
+/* ANALYSE TAB */
+.analyse-category {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.analyse-cat-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.analyse-cat-icon { font-size: 20px; }
+
+.analyse-cat-name {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.analyse-scores-mini {
+  display: flex;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.mini-score {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+.mini-score.ai { background: var(--ai-light); color: var(--ai-color); }
+.mini-score.parent { background: var(--parent-light); color: var(--parent-color); }
+
+.analyse-cat-text {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--ink2);
+}
+
+.analyse-loading {
+  text-align: center;
+  padding: 3rem;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* FAQ TAB */
+.faq-item {
+  border-bottom: 1px solid var(--border);
+  padding: 1.25rem 0;
+}
+
+.faq-item:first-child { padding-top: 0; }
+.faq-item:last-child { border-bottom: none; }
+
+.faq-q {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 8px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.faq-chevron {
+  font-size: 12px;
+  color: var(--muted);
+  flex-shrink: 0;
+  margin-top: 3px;
+  transition: transform 0.2s;
+}
+
+.faq-item.open .faq-chevron { transform: rotate(180deg); }
+
+.faq-a {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--ink2);
+  display: none;
+}
+
+.faq-item.open .faq-a { display: block; }
+
+/* SAMTALEN TAB */
+.samtalen-intro {
+  font-size: 14px;
+  color: var(--ink2);
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+  padding: 1rem 1.25rem;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+
+.dialog-questions { margin-bottom: 1.5rem; }
+
+.dialog-q {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(224,216,204,0.5);
+}
+
+.dialog-q:last-child { border-bottom: none; }
+
+.dialog-num {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--warm);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.dialog-text {
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.6;
+}
+
+.agreement-box {
+  background: var(--warm);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.25rem;
+}
+
+.agreement-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+
+.agreement-item {
+  display: flex;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--ink2);
+  margin-bottom: 6px;
+  line-height: 1.5;
+}
+
+.agreement-item:last-child { margin-bottom: 0; }
+
+.agreement-dash { color: var(--muted); flex-shrink: 0; }
+
+/* SE OGSÅ TAB */
+.related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.related-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1rem;
+  text-decoration: none;
+  transition: all 0.15s;
+  display: block;
+}
+
+.related-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.related-platform { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+.related-name { font-size: 15px; font-weight: 500; color: var(--ink); margin-bottom: 6px; }
+
+.related-scores {
+  display: flex;
+  gap: 8px;
+}
+
+.related-score {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+.related-score.ai { background: var(--ai-light); color: var(--ai-color); }
+.related-score.parent { background: var(--parent-light); color: var(--parent-color); }
+
+/* LOADING & ERROR */
+.loading-state {
+  text-align: center;
+  padding: 5rem 2rem;
+  color: var(--muted);
+}
+
+.loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.error-state {
+  text-align: center;
+  padding: 5rem 2rem;
+}
+
+.error-state h2 {
+  font-family: 'Fraunces', serif;
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  .scores-row { gap: 8px; }
+  .score-block { min-width: 110px; padding: 10px 14px; }
+  .score-block-num { font-size: 28px; }
+  .tab-btn { padding: 12px 14px; font-size: 13px; }
+  .scores-header-row,
+  .score-row { grid-template-columns: 26px 1fr 48px 48px; }
+}
+
+/* PARENT VOTES PROGRESS */
+.parent-progress {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.progress-track {
+  flex: 1;
+  height: 6px;
+  background: var(--warm);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--parent-color);
+  border-radius: 3px;
+  transition: width 0.6s ease;
+}
+
+.progress-label {
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">Skærm<span>Tjek</span></a>
+  <div class="nav-links">
+    <a href="/" class="nav-btn">🔍 Søg</a>
+    <a href="/#viden" class="nav-btn">📚 Viden</a>
+    <a href="/#blog" class="nav-btn">✍️ Blog</a>
+    <a href="/#om" class="nav-btn">💬 Om</a>
+    <a href="/#submit" class="nav-btn primary">✏️ Tilføj vurdering</a>
+  </div>
+</nav>
+
+<div class="breadcrumb" id="breadcrumb">
+  <a href="/">Forsiden</a>
+  <span>/</span>
+  <span id="breadcrumbPlatform">...</span>
+  <span>/</span>
+  <span id="breadcrumbTitle">...</span>
+</div>
+
+<div id="loadingState" class="loading-state">
+  <div class="loading-spinner"></div>
+  <p>Henter vurdering...</p>
+</div>
+
+<div id="errorState" class="error-state" style="display:none">
+  <h2>Vurdering ikke fundet</h2>
+  <p style="color:var(--muted);margin-bottom:1.5rem">Vi kunne ikke finde denne vurdering. Prøv at søge på forsiden.</p>
+  <a href="/" class="nav-btn primary" style="display:inline-block;text-decoration:none">Gå til forsiden</a>
+</div>
+
+<div id="mainContent" class="page" style="display:none">
+
+  <div class="rating-header">
+    <div class="platform-pill" id="platformPill"></div>
+    <h1 id="ratingTitle"></h1>
+    <div class="rating-subtitle" id="ratingSubtitle"></div>
+
+    <div class="scores-row">
+      <div class="score-block" id="aiScoreBlock">
+        <div class="score-block-label ai">AI-vurdering</div>
+        <div class="score-block-num ai" id="aiScoreNum">—</div>
+        <div class="score-block-sub">baseret på research</div>
+      </div>
+      <div class="score-block" id="parentScoreBlock" style="display:none">
+        <div class="score-block-label parent">Forældresnit</div>
+        <div class="score-block-num parent" id="parentScoreNum">—</div>
+        <div class="score-block-sub" id="parentScoreSub"></div>
+      </div>
+      <div id="verdictBadge" class="verdict-badge"></div>
+      <div id="ageBadge" class="age-badge"></div>
+    </div>
+  </div>
+
+  <div class="tabs-bar" id="tabsBar">
+    <button class="tab-btn active" onclick="switchTab('overblik')">Overblik</button>
+    <button class="tab-btn" onclick="switchTab('analyse')">Analyse</button>
+    <button class="tab-btn" onclick="switchTab('faq')">FAQ</button>
+    <button class="tab-btn" id="samtaleTab" onclick="switchTab('samtalen')" style="display:none">Til samtalen</button>
+    <button class="tab-btn" onclick="switchTab('seogsa')">Se også</button>
+  </div>
+
+  <!-- OVERBLIK -->
+  <div class="tab-panel active" id="panel-overblik">
+    <div class="ai-analyse-box">
+      <div class="ai-analyse-label">✦ AI-analyse</div>
+      <div class="ai-analyse-source" id="aiSource"></div>
+      <div class="ai-analyse-text" id="aiAnalyseText">Genererer analyse...</div>
+    </div>
+
+    <div id="parentProgress" style="display:none" class="parent-progress">
+      <div style="font-size:13px;color:var(--ink2);white-space:nowrap" id="progressText"></div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-label" id="progressLabel"></div>
+    </div>
+
+    <div class="scores-header-row">
+      <div></div>
+      <div></div>
+      <div class="scores-col-label ai">AI</div>
+      <div class="scores-col-label parent" id="parentColLabel">Forældre</div>
+    </div>
+    <div id="scoresContainer"></div>
+  </div>
+
+  <!-- ANALYSE -->
+  <div class="tab-panel" id="panel-analyse">
+    <div class="analyse-loading" id="analyseLoading">
+      <div class="loading-spinner" style="margin-bottom:1rem"></div>
+      Genererer dybdegående analyse via AI...
+    </div>
+    <div id="analyseContainer"></div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="tab-panel" id="panel-faq">
+    <div id="faqContainer"></div>
+  </div>
+
+  <!-- SAMTALEN -->
+  <div class="tab-panel" id="panel-samtalen">
+    <div class="samtalen-intro" id="samtaleIntro"></div>
+    <div class="dialog-questions" id="dialogQuestions"></div>
+    <div class="agreement-box" id="agreementBox" style="display:none">
+      <div class="agreement-title">Forslag til familieaftale</div>
+      <div id="agreementItems"></div>
+    </div>
+  </div>
+
+  <!-- SE OGSÅ -->
+  <div class="tab-panel" id="panel-seogsa">
+    <div class="related-grid" id="relatedGrid"></div>
+  </div>
+
+</div>
+
+<script>
+const SUPABASE_URL = 'https://numlafmwxgffshqcjxuc.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im51bWxhZm13eGdmZnNocWNqeHVjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUyMjU0NTgsImV4cCI6MjA5MDgwMTQ1OH0.WojLfL2iz1ZDt6PeRqeGbC8BvJwwPdk4pzxZM390xbI';
+
+const CATEGORIES = [
+  { id:'violence',      icon:'⚔️',  name:'Voldsomt indhold',    desc:'Kamp, blod, aggression',                low:'Ingen vold',              high:'Meget grafisk vold' },
+  { id:'language',      icon:'🗣️',  name:'Sprog & tone',        desc:'Bandeord, hårdt ordvalg',               low:'Rent og venligt sprog',    high:'Meget groft sprog' },
+  { id:'dopamine',      icon:'🎰',  name:'Dopamin & belønning', desc:'Loot, level-ups, hurtige rewards',       low:'Ingen belønningsmekanik',  high:'Stærk afhængighedsmekanik' },
+  { id:'retention',     icon:'🔔',  name:'Fastholdelse',        desc:'FOMO, streaks, daglige bonusser',        low:'Ingen fastholdelsesdesign', high:'Aggressiv fastholdelsesstrategi' },
+  { id:'commercialism', icon:'💰',  name:'Kommercielt pres',    desc:'Skjult reklame, køb-i-spil',            low:'Ingen reklame eller køb',  high:'Massivt kommercielt pres' },
+  { id:'values',        icon:'💡',  name:'Rollemodel',          desc:'Værdier og adfærd',                     low:'Fremragende forbillede',   high:'Problematisk adfærd og værdier' },
+  { id:'sexual',        icon:'🔞',  name:'Seksuelt indhold',    desc:'Antydninger eller eksplicit',           low:'Intet seksuelt indhold',   high:'Eksplicit seksuelt indhold' },
+  { id:'fear',          icon:'😨',  name:'Skræmmende',          desc:'Horror, jump-scares, angst',            low:'Intet skræmmende',         high:'Meget skræmmende og angstfremkaldende' },
+  { id:'passive',       icon:'🧠',  name:'Aktivt vs. passivt',  desc:'1 = aktivt engagerende · 10 = rent passivt forbrug', low:'Meget aktivt og engagerende', high:'Rent passivt forbrug' },
+  { id:'socialpressure',icon:'👥',  name:'Socialt pres',        desc:'Kropsidealer, livsstil, gruppepress',   low:'Intet socialt pres',       high:'Meget højt socialt pres' },
+];
+
+const PLATFORM_LABEL = {
+  youtube:'YouTube', netflix:'Netflix', disney:'Disney+', dr:'DR / Ramasjang', tv2:'TV 2 Play',
+  viaplay:'Viaplay', max:'Max', hbo:'Max', skyshowtime:'SkyShowtime', sfkids:'SF Kids',
+  gaming:'Konsol & PC', switch:'Nintendo Switch', ipad:'iPad-apps',
+  tiktok:'TikTok', instagram:'Instagram', snapchat:'Snapchat', ytshorts:'YouTube Shorts', bereal:'BeReal',
+  discord:'Discord', twitch:'Twitch'
+};
+
+const PLATFORM_CATEGORY = {
+  youtube:'Streaming', netflix:'Streaming', disney:'Streaming', dr:'Streaming', tv2:'Streaming',
+  viaplay:'Streaming', max:'Streaming', skyshowtime:'Streaming', sfkids:'Streaming',
+  gaming:'Spil', switch:'Spil', ipad:'Spil',
+  tiktok:'Sociale medier', instagram:'Sociale medier', snapchat:'Sociale medier',
+  ytshorts:'Sociale medier', bereal:'Sociale medier',
+  discord:'Chat & fællesskaber', twitch:'Chat & fællesskaber'
+};
+
+function scoreColor(v) {
+  if (v <= 3) return '#2a7a5c';
+  if (v <= 6) return '#c8882a';
+  return '#c83a2a';
+}
+
+function calcAvg(scores) {
+  if (!scores) return null;
+  const vals = Object.values(scores).filter(v => typeof v === 'number');
+  if (!vals.length) return null;
+  return vals.reduce((a,b) => a+b, 0) / vals.length;
+}
+
+function getVerdict(avg) {
+  if (avg <= 2.5) return { icon:'✅', label:'Anbefalet', cls:'green' };
+  if (avg <= 4.5) return { icon:'⚠️', label:'Se det med dit barn', cls:'amber' };
+  if (avg <= 6.5) return { icon:'🔶', label:'Forældreopmærksomhed', cls:'orange' };
+  return { icon:'🚫', label:'Frarådes', cls:'red' };
+}
+
+function makeSlug(title) {
+  return title.toLowerCase()
+    .replace(/æ/g,'ae').replace(/ø/g,'oe').replace(/å/g,'aa')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('panel-' + name).classList.add('active');
+  if (name === 'analyse' && !window.analyseGenerated) generateAnalyse();
+}
+
+let currentItem = null;
+let window_analyseGenerated = false;
+
+async function loadRating() {
+  const slug = location.pathname.replace('/vurdering/', '').replace(/\//g, '');
+  if (!slug) { showError(); return; }
+
+  const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  // Hent alle approved ratings og find match
+  const { data, error } = await db.from('ratings')
+    .select('*')
+    .eq('status', 'approved')
+    .order('created_at', { ascending: false });
+
+  if (error || !data) { showError(); return; }
+
+  // Find rating der matcher slug
+  const item = data.find(r => makeSlug(r.title) === slug);
+  if (!item) { showError(); return; }
+
+  currentItem = item;
+  renderPage(item, data);
+}
+
+function renderPage(item, allData) {
+  document.getElementById('loadingState').style.display = 'none';
+  document.getElementById('mainContent').style.display = 'block';
+
+  const platLabel = PLATFORM_LABEL[item.platform] || item.platform;
+  const platCat = PLATFORM_CATEGORY[item.platform] || 'Indhold';
+
+  // Meta
+  document.getElementById('pageTitle').textContent = `${item.title} — SkærmTjek`;
+  document.getElementById('pageDesc').content = `Er ${item.title} egnet til børn? Se AI-vurdering og forældreanmeldelser på SkærmTjek.`;
+  document.getElementById('ogTitle').content = `${item.title} — SkærmTjek`;
+  document.getElementById('ogDesc').content = item.ai_analysis || '';
+  document.getElementById('pageCanonical').href = `https://skaermtjek.dk/vurdering/${makeSlug(item.title)}`;
+
+  // Breadcrumb
+  document.getElementById('breadcrumbPlatform').textContent = platLabel;
+  document.getElementById('breadcrumbTitle').textContent = item.title;
+
+  // Header
+  document.getElementById('platformPill').textContent = `${platCat} · ${platLabel}`;
+  document.getElementById('ratingTitle').textContent = item.title;
+  document.getElementById('ratingSubtitle').textContent = item.episode || item.notes?.substring(0, 80) + '...' || '';
+
+  // AI score
+  const aiScores = item.ai_scores;
+  const aiAvg = calcAvg(aiScores);
+  if (aiAvg) document.getElementById('aiScoreNum').textContent = aiAvg.toFixed(1);
+
+  // Parent score
+  const parentVotes = item.parent_votes || 0;
+  if (parentVotes > 0 && item.parent_score) {
+    document.getElementById('parentScoreBlock').style.display = 'flex';
+    document.getElementById('parentScoreNum').textContent = item.parent_score.toFixed(1);
+    document.getElementById('parentScoreSub').textContent = `${parentVotes} ${parentVotes === 1 ? 'vurdering' : 'vurderinger'}`;
+  }
+
+  // Verdict
+  const scoreForVerdict = (item.parent_score && parentVotes >= 5) ? item.parent_score : (aiAvg || 5);
+  const verdict = getVerdict(scoreForVerdict);
+  const vb = document.getElementById('verdictBadge');
+  vb.textContent = `${verdict.icon} ${verdict.label}`;
+  vb.className = `verdict-badge ${verdict.cls}`;
+
+  // Age
+  const ab = document.getElementById('ageBadge');
+  ab.textContent = item.recommended_age ? `✓ Egnet fra ${item.recommended_age} år` : `✓ ${item.age_group || ''}`;
+
+  // AI analyse
+  document.getElementById('aiSource').textContent = 'Baseret på offentlig tilgængelig information om kanalen, mediepædagogisk vurdering';
+  document.getElementById('aiAnalyseText').textContent = item.ai_analysis || 'Ingen AI-analyse endnu.';
+
+  // Parent progress (hvis under 5)
+  if (parentVotes < 5) {
+    document.getElementById('parentProgress').style.display = 'flex';
+    document.getElementById('progressText').textContent = `${parentVotes} af 5 forældreanmeldelser`;
+    document.getElementById('progressFill').style.width = `${(parentVotes/5*100)}%`;
+    document.getElementById('progressLabel').textContent = `${5 - parentVotes} mangler`;
+  }
+
+  // Scores
+  renderScores(item, parentVotes);
+
+  // FAQ
+  renderFAQ(item);
+
+  // Samtalen
+  const avgScore = aiAvg || 0;
+  if (avgScore >= 4) {
+    document.getElementById('samtaleTab').style.display = 'block';
+    renderSamtalen(item, avgScore);
+  }
+
+  // Se også
+  renderRelated(item, allData);
+
+  // FAQ Schema
+  buildFAQSchema(item);
+}
+
+function renderScores(item, parentVotes) {
+  const aiScores = item.ai_scores || {};
+  const hasParent = parentVotes >= 5 && item.parent_score;
+  const container = document.getElementById('scoresContainer');
+
+  if (!hasParent) {
+    document.getElementById('parentColLabel').style.opacity = '0.3';
+  }
+
+  container.innerHTML = CATEGORIES.map(cat => {
+    const aiVal = aiScores[cat.id] || 1;
+    const aiPct = ((aiVal-1)/9*100).toFixed(0);
+    const aiCol = scoreColor(aiVal);
+
+    let parentHTML = '';
+    let parentValHTML = '';
+
+    if (hasParent) {
+      // Approximate per-category from overall — we show AI scores with parent overlay
+      const pVal = aiVal; // placeholder — will be real when parent_scores field added
+      const pPct = ((pVal-1)/9*100).toFixed(0);
+      const pCol = scoreColor(pVal);
+      parentHTML = `<div class="bar-line">
+        <div class="bar-dot" style="background:var(--parent-color)"></div>
+        <div class="bar-track"><div class="bar-fill" style="width:${pPct}%;background:var(--parent-color)"></div></div>
+      </div>`;
+      parentValHTML = `<div class="score-val parent">${item.parent_score?.toFixed(1) || '—'}</div>`;
+    } else {
+      parentHTML = `<div class="bar-line" style="opacity:0.25">
+        <div class="bar-dot" style="background:var(--parent-color)"></div>
+        <div class="bar-track"><div class="bar-fill" style="width:0%"></div></div>
+      </div>`;
+      parentValHTML = `<div class="parent-placeholder">—</div>`;
+    }
+
+    return `<div class="score-row">
+      <div class="score-icon">${cat.icon}</div>
+      <div class="score-info">
+        <div class="score-name">${cat.name}</div>
+        <div class="dual-bars">
+          <div class="bar-line">
+            <div class="bar-dot" style="background:var(--ai-color)"></div>
+            <div class="bar-track"><div class="bar-fill" style="width:${aiPct}%;background:${aiCol}"></div></div>
+          </div>
+          ${parentHTML}
+        </div>
+        <div class="score-desc">${cat.desc}</div>
+      </div>
+      <div class="score-val-wrap">
+        <div class="score-val ai" style="color:${aiCol}">${aiVal}</div>
+        ${parentValHTML}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function generateAnalyse() {
+  if (window.analyseGenerated) return;
+  window.analyseGenerated = true;
+
+  const item = currentItem;
+  const aiScores = item.ai_scores || {};
+  const container = document.getElementById('analyseContainer');
+  document.getElementById('analyseLoading').style.display = 'block';
+
+  try {
+    const categoriesText = CATEGORIES.map(cat => {
+      const val = aiScores[cat.id] || 1;
+      return `${cat.name}: ${val}/10`;
+    }).join(', ');
+
+    const prompt = `Du er en mediepædagogisk ekspert der skriver til danske forældre på skaermtjek.dk.
+
+Skriv en dybdegående analyse af "${item.title}" (${PLATFORM_LABEL[item.platform] || item.platform}) for forældre.
+
+AI-scores: ${categoriesText}
+
+For HVER af de 10 kategorier skal du skrive 2-3 sætninger der forklarer HVORFOR indholdet har fået den pågældende score. Vær konkret og faktabaseret.
+
+Svar KUN med JSON uden markdown-formatering:
+{
+  "categories": [
+    {"id": "violence", "text": "..."},
+    {"id": "language", "text": "..."},
+    {"id": "dopamine", "text": "..."},
+    {"id": "retention", "text": "..."},
+    {"id": "commercialism", "text": "..."},
+    {"id": "values", "text": "..."},
+    {"id": "sexual", "text": "..."},
+    {"id": "fear", "text": "..."},
+    {"id": "passive", "text": "..."},
+    {"id": "socialpressure", "text": "..."}
+  ]
+}`;
+
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-opus-4-7',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    const data = await response.json();
+    const text = data.content?.map(c => c.text || '').join('') || '';
+    const clean = text.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(clean);
+
+    document.getElementById('analyseLoading').style.display = 'none';
+
+    const aiScoresMap = {};
+    (item.ai_scores || {}) && Object.entries(item.ai_scores || {}).forEach(([k,v]) => aiScoresMap[k] = v);
+
+    container.innerHTML = parsed.categories.map(c => {
+      const cat = CATEGORIES.find(cat => cat.id === c.id);
+      if (!cat) return '';
+      const aiVal = aiScoresMap[c.id] || 1;
+      const col = scoreColor(aiVal);
+      return `<div class="analyse-category">
+        <div class="analyse-cat-header">
+          <div class="analyse-cat-icon">${cat.icon}</div>
+          <div class="analyse-cat-name">${cat.name}</div>
+          <div class="analyse-scores-mini">
+            <span class="mini-score ai" style="color:${col};background:${aiVal<=3?'#E1F5EE':aiVal<=6?'#FAEEDA':'#FCEBEB'}">${aiVal}/10</span>
+          </div>
+        </div>
+        <div class="analyse-cat-text">${c.text}</div>
+      </div>`;
+    }).join('');
+
+  } catch(e) {
+    document.getElementById('analyseLoading').innerHTML = '<p style="color:var(--muted);text-align:center">Analysen kunne ikke genereres. Prøv igen senere.</p>';
+  }
+}
+
+function renderFAQ(item) {
+  const title = item.title;
+  const platform = PLATFORM_LABEL[item.platform] || item.platform;
+  const age = item.recommended_age || '??';
+  const aiScores = item.ai_scores || {};
+
+  const questions = [
+    {
+      q: `Er ${title} egnet til børn?`,
+      a: item.ai_analysis ? item.ai_analysis.substring(0, 200) + '...' : `${title} er vurderet til egnet fra ${age} år. Se den fulde AI-analyse og forældreanmeldelser ovenfor.`
+    },
+    {
+      q: `Hvad er aldersgrænsen for ${title}?`,
+      a: `SkærmTjek anbefaler ${title} fra ${age} år baseret på indholdsanalyse. Den officielle PEGI-grænse kan variere. Tjek altid den specifikke titel på pegi.info for officiel aldersklassificering.`
+    },
+    {
+      q: `Er der problematisk indhold i ${title}?`,
+      a: generateFAQAnswer(item)
+    },
+    {
+      q: `Hvor ser man ${title}?`,
+      a: `${title} er tilgængeligt på ${platform}. Tjek den pågældende platform for aktuel tilgængelighed i Danmark.`
+    },
+    {
+      q: `Hvad mener andre forældre om ${title}?`,
+      a: item.parent_votes > 0
+        ? `${item.parent_votes} danske forældre har vurderet ${title} på SkærmTjek med en gennemsnitsscore på ${item.parent_score?.toFixed(1) || '—'}. Tilføj gerne din egen vurdering.`
+        : `Der er endnu ingen forældreanmeldelser af ${title}. Vær den første til at vurdere det på SkærmTjek.`
+    }
+  ];
+
+  document.getElementById('faqContainer').innerHTML = questions.map((q, i) => `
+    <div class="faq-item" onclick="toggleFAQ(this)">
+      <div class="faq-q">${q.q}<span class="faq-chevron">▼</span></div>
+      <div class="faq-a">${q.a}</div>
+    </div>
+  `).join('');
+}
+
+function generateFAQAnswer(item) {
+  const scores = item.ai_scores || {};
+  const concerns = [];
+  if ((scores.violence || 0) >= 6) concerns.push('voldsomt indhold');
+  if ((scores.language || 0) >= 6) concerns.push('groft sprog');
+  if ((scores.retention || 0) >= 7) concerns.push('vanedannende design');
+  if ((scores.commercialism || 0) >= 7) concerns.push('aggressivt kommercielt pres');
+  if ((scores.socialpressure || 0) >= 7) concerns.push('socialt pres');
+  if ((scores.sexual || 0) >= 5) concerns.push('seksuelt indhold');
+
+  if (!concerns.length) return `${item.title} scorer lavt på de fleste bekymringsparametre og er generelt uproblematisk indhold.`;
+  return `${item.title} scorer højt på: ${concerns.join(', ')}. Se de specifikke scorekategorier ovenfor for detaljer.`;
+}
+
+function toggleFAQ(el) {
+  el.classList.toggle('open');
+}
+
+function renderSamtalen(item, avgScore) {
+  const title = item.title;
+  const scores = item.ai_scores || {};
+
+  let intro = '';
+  let questions = [];
+  let agreements = [];
+
+  if (avgScore >= 7) {
+    intro = `${title} scorer højt på flere bekymringsparametre. Her er nogle åbne spørgsmål der kan hjælpe dig med at have en god samtale med dit barn — uden at det føles som et forbud.`;
+  } else {
+    intro = `${title} indeholder nogle elementer det kan være godt at tale med dit barn om. Her er et par spørgsmål der kan åbne for en god samtale.`;
+  }
+
+  // Generer spørgsmål baseret på høje scores
+  if ((scores.retention || 0) >= 6) {
+    questions.push(`Hvor lang tid bruger du typisk på ${title} ad gangen — og hvordan har du det bagefter?`);
+    agreements.push(`Sæt en daglig tidsbegrænsning på ${title}`);
+  }
+  if ((scores.socialpressure || 0) >= 6) {
+    questions.push(`Føler du dig nogensinde presset til at bruge ${title} fordi dine venner gør det?`);
+    agreements.push(`Tal åbent hvis det sociale pres fra ${title} bliver for meget`);
+  }
+  if ((scores.commercialism || 0) >= 6) {
+    questions.push(`Hvad synes du om de reklamer og køb-muligheder der er i ${title}?`);
+    agreements.push(`Ingen køb i ${title} uden aftale med forældre`);
+  }
+  if ((scores.violence || 0) >= 5) {
+    questions.push(`Hvad tænker du om den vold der er i ${title} — er det noget der påvirker dig?`);
+  }
+
+  // Altid et åbent spørgsmål
+  questions.push(`Hvad er det du bedst kan lide ved ${title} — og hvad ville du ændre hvis du kunne?`);
+
+  agreements.push(`Se ${title} åbent med barnet indimellem`);
+
+  document.getElementById('samtaleIntro').textContent = intro;
+  document.getElementById('dialogQuestions').innerHTML = questions.map((q, i) => `
+    <div class="dialog-q">
+      <div class="dialog-num">${i+1}</div>
+      <div class="dialog-text">${q}</div>
+    </div>
+  `).join('');
+
+  if (agreements.length) {
+    document.getElementById('agreementBox').style.display = 'block';
+    document.getElementById('agreementItems').innerHTML = agreements.map(a => `
+      <div class="agreement-item">
+        <span class="agreement-dash">—</span>
+        <span>${a}</span>
+      </div>
+    `).join('');
+  }
+}
+
+function renderRelated(item, allData) {
+  const platform = item.platform;
+  const related = allData
+    .filter(r => r.id !== item.id && (r.platform === platform || r.age_group === item.age_group))
+    .slice(0, 6);
+
+  document.getElementById('relatedGrid').innerHTML = related.map(r => {
+    const aiAvg = calcAvg(r.ai_scores);
+    const slug = makeSlug(r.title);
+    return `<a href="/vurdering/${slug}" class="related-card">
+      <div class="related-platform">${PLATFORM_LABEL[r.platform] || r.platform}</div>
+      <div class="related-name">${r.title}</div>
+      <div class="related-scores">
+        ${aiAvg ? `<span class="related-score ai">AI ${aiAvg.toFixed(1)}</span>` : ''}
+        ${r.parent_score ? `<span class="related-score parent">${r.parent_score.toFixed(1)}</span>` : ''}
+      </div>
+    </a>`;
+  }).join('');
+}
+
+function buildFAQSchema(item) {
+  const faqs = [
+    { q: `Er ${item.title} egnet til børn?`, a: item.ai_analysis?.substring(0, 200) || '' },
+    { q: `Hvad er aldersgrænsen for ${item.title}?`, a: `SkærmTjek anbefaler ${item.title} fra ${item.recommended_age || '??'} år.` },
+    { q: `Er der problematisk indhold i ${item.title}?`, a: generateFAQAnswer(item) }
+  ];
+
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map(f => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a }
+    }))
+  };
+
+  document.getElementById('faqSchema').textContent = JSON.stringify(schema);
+}
+
+function showError() {
+  document.getElementById('loadingState').style.display = 'none';
+  document.getElementById('errorState').style.display = 'block';
+}
+
+loadRating();
+</script>
+</body>
+</html>
