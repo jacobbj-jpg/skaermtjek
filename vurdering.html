@@ -822,9 +822,9 @@ function calcAvg(scores) {
 }
 
 function getVerdict(avg) {
-  if (avg <= 2.5) return { icon:'✅', label:'Anbefalet', cls:'green' };
-  if (avg <= 4.5) return { icon:'⚠️', label:'Se det med dit barn', cls:'amber' };
-  if (avg <= 6.5) return { icon:'🔶', label:'Forældreopmærksomhed', cls:'orange' };
+  if (avg <= 4) return { icon:'✅', label:'Egnet', cls:'green' };
+  if (avg <= 6) return { icon:'⚠️', label:'Med forbehold', cls:'amber' };
+  if (avg <= 7.5) return { icon:'🔶', label:'Til de ældre', cls:'orange' };
   return { icon:'🚫', label:'Frarådes', cls:'red' };
 }
 
