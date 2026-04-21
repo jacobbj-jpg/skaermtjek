@@ -8343,7 +8343,8 @@ async function openDetail(id) {
       <div class="bars-header-spacer"></div>
       <div class="bars-header-col">🤖 AI</div>
       <div class="bars-header-col">👨‍👩‍👧 Forældre</div>
-    </div>`;
+    </div>
+    <div style="font-size:11px;color:var(--muted);font-style:italic;padding:4px 0 10px;margin-bottom:6px;border-bottom:1px solid rgba(0,0,0,0.05)">Forældre-søjlen viser samlet snit på tværs af kategorier — individuelle per-kategori scores kommer snart</div>`;
   } else {
     barsHTML += `<div class="bars-single-label">🤖 AI-scores <span class="bars-hint">(forældreparametre synlige ved 5+ vurderinger — ${item.parent_votes || 0} nu)</span></div>`;
   }
@@ -8354,8 +8355,10 @@ async function openDetail(id) {
     const aiColor = scoreColor(aiVal);
 
     if (hasEnoughParent) {
-      // We don't have per-parameter parent scores yet — show parent overall
-      // Use ai scores as placeholder for now, show avg indicator
+      // Forældre-linjen bruger samlet forældrescore (parent_score) indtil vi har individuelle per-kategori scores
+      const pVal = item.parent_score;
+      const pPct = ((pVal-1)/9*100).toFixed(0);
+      const pColor = scoreColor(pVal);
       return `<div class="detail-bar-row score-tooltip" data-tip="${scoreTip(cat, aiVal)}" tabindex="0">
         <div class="detail-bar-icon">${cat.icon}</div>
         <div class="detail-bar-info">
@@ -8363,8 +8366,8 @@ async function openDetail(id) {
           <div class="detail-bars-dual">
             <div class="detail-bar-track"><div class="detail-bar-fill" style="width:${aiPct}%;background:${aiColor}"></div></div>
             <div class="detail-bar-val-sm" style="color:${aiColor}">${aiVal}</div>
-            <div class="detail-bar-track" style="opacity:0.4"><div class="detail-bar-fill" style="width:${aiPct}%;background:${aiColor}"></div></div>
-            <div class="detail-bar-val-sm" style="color:var(--muted)">~</div>
+            <div class="detail-bar-track"><div class="detail-bar-fill" style="width:${pPct}%;background:${pColor}"></div></div>
+            <div class="detail-bar-val-sm" style="color:${pColor};font-size:10px">snit ${pVal.toFixed(1)}</div>
           </div>
           <div class="detail-note">${cat.desc}</div>
         </div>
