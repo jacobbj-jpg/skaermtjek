@@ -4280,12 +4280,10 @@ input.autofilled, textarea.autofilled {
   <div class="detail-panel" id="detailPanel">
     <div class="detail-header">
     <button class="detail-close" onclick="closeDetailBtn()">✕</button>
-    <button class="detail-share" onclick="openFullPage()" id="fullPageBtn" style="right: 230px">📄 Se fuld side</button>
     <button class="detail-share" onclick="shareDetail()" id="shareBtn">Del 🔗</button>
     <button class="detail-rate-btn" onclick="closeDetailBtn();smartPrefill(currentDetailId)" id="rateBtn">✏️ Vurder</button>
       <div class="detail-platform" id="d_platform"></div>
       <div class="detail-title" id="d_title"></div>
-      <a class="fullpage-mobile-link" onclick="openFullPage()">📄 Se fuld side →</a>
       <div class="detail-score-row">
         <div class="detail-score" id="d_score"></div>
         <div class="detail-verdict" id="d_verdict"></div>
@@ -7386,13 +7384,10 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => prefillAndGo(decodeURIComponent(rateParam), null, ratePlatform || null), 500);
   }
   if (kanalParam) {
-    setTimeout(() => {
-      const slug = kanalParam.toLowerCase();
-      const item = allData.find(d =>
-        d.content_type !== 'episode' && makeSlug(d.title) === slug
-      );
-      if (item) openDetail(item.id);
-    }, 400);
+    // Redirect gamle URLs til pæne /vurdering/slug URLs
+    const slug = kanalParam.toLowerCase();
+    window.location.replace('/vurdering/' + slug);
+    return;
   }
   if (afsnilParam) {
     setTimeout(() => {
@@ -7950,7 +7945,7 @@ function cardHTML(item) {
           ? `<div class="card-disclaimer disclaimer-mid">📊 ${parentVotes} forældreanmeldelse${parentVotes > 1 ? 'r' : ''} — AI-vurderingen vejer stadig med. Jo flere forældre bidrager, jo mere præcist.</div>`
           : `<div class="card-disclaimer disclaimer-ok">✓ Stærkt datagrundlag — ${parentVotes} forældreanmeldelser. AI og forældre supplerer hinanden ligeværdigt.</div>`);
 
-  return `<div class="${cardClass}" onclick="openDetail(${item.id})">
+  return `<div class="${cardClass}" onclick="location.href='/vurdering/' + makeSlug('${item.title.replace(/'/g, "\\'")}')">
     ${isEpisode ? `
     <div class="episode-card-header">
       <div class="episode-card-channel-wrap">
@@ -8209,6 +8204,18 @@ function filterAndRender() {
 
 // ---- DETAIL VIEW ----
 async function openDetail(id) {
+  // Legacy funktion - nu redirecter vi til den fulde vurderingsside
+  const item = allData.find(d => d.id === id);
+  if (!item) return;
+  const slug = makeSlug(item.title);
+  // Episoder har stadig behov for modal visning indtil vi bygger episode-sider
+  if (item.content_type === 'episode') {
+    return openDetailModal(id);
+  }
+  window.location.href = '/vurdering/' + slug;
+}
+
+async function openDetailModal(id) {
   const item = allData.find(d => d.id === id);
   if (!item) return;
   currentReportId = item.id;
