@@ -280,6 +280,31 @@ nav {
   flex-wrap: wrap;
 }
 
+.hero-age-help {
+  margin-top: 10px;
+  font-size: 12px;
+  color: rgba(250,247,242,0.55);
+  font-style: italic;
+  line-height: 1.5;
+  max-width: 600px;
+}
+
+.hero-sources-subtle {
+  margin-top: 24px;
+  opacity: 0.7;
+}
+
+.hero-sources-subtle .hero-sources-label {
+  font-size: 10px;
+  opacity: 0.75;
+}
+
+.hero-sources-subtle .source-pill {
+  font-size: 10px;
+  padding: 2px 8px;
+  opacity: 0.85;
+}
+
 .hero-sources-label {
   font-size: 11px;
   color: rgba(250,247,242,0.4);
@@ -3519,12 +3544,13 @@ input.autofilled, textarea.autofilled {
       <span class="hero-age-chip" onclick="quickAge(this,'10-12')">10–12 år</span>
       <span class="hero-age-chip" onclick="quickAge(this,'13+')">13+ år</span>
     </div>
+    <div class="hero-age-help">Klik på en aldersgruppe — vi viser indhold der er egnet, og skjuler det der er vurderet til ældre børn.</div>
     <div class="hero-stats">
       <div class="stat"><strong id="statCount">—</strong>Vurderinger</div>
       <div class="stat"><strong id="statPlatforms">14</strong>Platforme</div>
       <div class="stat"><strong>Gratis</strong>Altid</div>
     </div>
-    <div class="hero-sources">
+    <div class="hero-sources hero-sources-subtle">
       <span class="hero-sources-label">Baseret på viden fra</span>
       <div class="hero-sources-logos">
         <a href="https://medieraadet.dk" target="_blank" rel="noopener" class="source-pill">Medierådet</a>
@@ -7494,9 +7520,6 @@ function quickAge(el, age) {
     el.classList.remove('active');
     currentAgeFilter = 'all';
     currentSafety = 'all';
-    // Skjul info-boks
-    const ageInfo = document.getElementById('ageInfoBanner');
-    if (ageInfo) ageInfo.style.display = 'none';
     // Deselect in filter panel
     document.querySelectorAll('#filterPanel .filter-pill').forEach(p => {
       if (p.onclick && p.onclick.toString().includes('setAgeFilter')) {
@@ -7527,9 +7550,6 @@ function quickAge(el, age) {
       }
     });
 
-    // Vis info-boks
-    showAgeInfoBanner(el.textContent.trim());
-
     // Opdater safetyHint
     const hint = document.getElementById('safetyHint');
     if (hint) {
@@ -7540,27 +7560,6 @@ function quickAge(el, age) {
   filterAndRender();
   // Scroll to results
   document.getElementById('page-browse').scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-function showAgeInfoBanner(ageLabel) {
-  let banner = document.getElementById('ageInfoBanner');
-  if (!banner) {
-    banner = document.createElement('div');
-    banner.id = 'ageInfoBanner';
-    banner.className = 'age-info-banner';
-    const browseSection = document.getElementById('page-browse');
-    if (browseSection) browseSection.insertBefore(banner, browseSection.firstChild);
-  }
-  banner.style.display = 'flex';
-  banner.innerHTML = `
-    <div class="age-info-content">
-      <span class="age-info-icon">📍</span>
-      <div class="age-info-text">
-        <strong>Viser indhold egnet til ${ageLabel}</strong>
-        <span>Vi har skjult indhold der er vurderet til ældre børn. <a href="#" onclick="clearAgeFilter(event)">Vis alle aldre</a></span>
-      </div>
-    </div>
-  `;
 }
 
 function clearAgeFilter(e) {
