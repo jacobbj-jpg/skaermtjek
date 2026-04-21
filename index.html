@@ -242,6 +242,13 @@ nav {
 @media (max-width: 500px) {
   .hero-steps { flex-direction: column; align-items: flex-start; gap: 6px; }
   .hero-step-sep { display: none; }
+  #fullPageBtn { display: none !important; }
+  .detail-rate-btn { right: 110px !important; font-size: 11px !important; padding: 5px 10px !important; }
+  .detail-share { font-size: 11px !important; padding: 5px 10px !important; }
+}
+
+@media (max-width: 700px) and (min-width: 501px) {
+  #fullPageBtn { right: 200px !important; font-size: 11px !important; }
 }
 
 .hero-sources {
@@ -4251,9 +4258,9 @@ input.autofilled, textarea.autofilled {
 <div class="detail-overlay" id="detailOverlay" onclick="closeDetail(event)">
   <div class="detail-panel" id="detailPanel">
     <div class="detail-header">
-      <button class="detail-close" onclick="closeDetailBtn()">✕</button>
+    <button class="detail-close" onclick="closeDetailBtn()">✕</button>
+    <button class="detail-share" onclick="openFullPage()" id="fullPageBtn" style="right: 230px">📄 Se fuld side</button>
     <button class="detail-share" onclick="shareDetail()" id="shareBtn">Del 🔗</button>
-    <button class="detail-share" onclick="openFullPage()" id="fullPageBtn" style="margin-right:4px">📄 Se fuld side</button>
     <button class="detail-rate-btn" onclick="closeDetailBtn();smartPrefill(currentDetailId)" id="rateBtn">✏️ Vurder</button>
       <div class="detail-platform" id="d_platform"></div>
       <div class="detail-title" id="d_title"></div>
