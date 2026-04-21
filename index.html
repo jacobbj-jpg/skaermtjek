@@ -3506,7 +3506,7 @@ input.autofilled, textarea.autofilled {
       </div>
     </div>
     <div class="filter-section">
-      <div class="filter-section-title">Sikkerhed</div>
+      <div class="filter-section-title">Sikkerhed <span style="font-size:11px;color:var(--muted);font-weight:400;font-style:italic" id="safetyHint">— vælg barnets alder først for bedst resultat</span></div>
       <div class="filter-pills-wrap">
         <span class="safety-btn s-active" id="saf-all" onclick="setSafety(this,'all')">Alle</span>
         <span class="safety-btn s-green" onclick="setSafety(this,'safe')">🟢 Trygt</span>
@@ -3516,14 +3516,19 @@ input.autofilled, textarea.autofilled {
       </div>
     </div>
     <div class="filter-section">
-      <div class="filter-section-title">Bekymringstype</div>
+      <div class="filter-section-title">Bekymringstyper <span style="font-size:11px;color:var(--muted);font-weight:400;font-style:italic">(vælg flere)</span></div>
       <div class="filter-pills-wrap">
         <span class="filter-pill active" id="conc-all" onclick="setConcern(this,'all')">Alle</span>
         <span class="filter-pill" onclick="setConcern(this,'violence')">⚔️ Vold</span>
+        <span class="filter-pill" onclick="setConcern(this,'language')">🗣️ Sprog</span>
+        <span class="filter-pill" onclick="setConcern(this,'dopamine')">🎰 Dopamin</span>
         <span class="filter-pill" onclick="setConcern(this,'retention')">🔔 Vanedannelse</span>
         <span class="filter-pill" onclick="setConcern(this,'commercialism')">💰 Kommercielt pres</span>
-        <span class="filter-pill" onclick="setConcern(this,'socialpressure')">👥 Socialt pres</span>
+        <span class="filter-pill" onclick="setConcern(this,'values')">💡 Rollemodel</span>
         <span class="filter-pill" onclick="setConcern(this,'sexual')">🔞 Seksuelt indhold</span>
+        <span class="filter-pill" onclick="setConcern(this,'fear')">😨 Skræmmende</span>
+        <span class="filter-pill" onclick="setConcern(this,'passive')">🧠 Passivt forbrug</span>
+        <span class="filter-pill" onclick="setConcern(this,'socialpressure')">👥 Socialt pres</span>
       </div>
     </div>
     <div class="filter-section">
@@ -7354,7 +7359,7 @@ let currentFilter = 'all';
 let currentAgeFilter = 'all';
 let currentSafety = 'all';
 let currentScoreMax = 10;
-let currentConcern = 'all';
+let currentConcerns = new Set(); // multi-select
 let currentSearch = '';
 let selectedAge = '7-9';
 let formScores = {};
@@ -8045,6 +8050,14 @@ function setAgeFilter(el, age) {
   });
   el.classList.add('active');
   currentAgeFilter = age;
+
+  // Skjul/vis sikkerhedshint
+  const hint = document.getElementById('safetyHint');
+  if (hint) {
+    hint.textContent = age === 'all' ? '— vælg barnets alder først for bedst resultat' : `— relativt til ${el.textContent.trim()}`;
+    hint.style.opacity = age === 'all' ? '1' : '0.7';
+  }
+
   filterAndRender();
 }
 
@@ -8058,11 +8071,32 @@ function setSafety(el, safety) {
 }
 
 function setConcern(el, concern) {
-  document.querySelectorAll('.filter-pill').forEach(p => {
-    if (p.onclick && p.onclick.toString().includes('setConcern')) p.classList.remove('active');
-  });
-  el.classList.add('active');
-  currentConcern = concern;
+  if (concern === 'all') {
+    // "Alle" fjerner alle aktive valg
+    document.querySelectorAll('.filter-pill').forEach(p => {
+      if (p.onclick && p.onclick.toString().includes('setConcern')) p.classList.remove('active');
+    });
+    el.classList.add('active');
+    currentConcerns.clear();
+  } else {
+    // Fjern "Alle"
+    const allBtn = document.getElementById('conc-all');
+    if (allBtn) allBtn.classList.remove('active');
+
+    // Toggle denne
+    if (currentConcerns.has(concern)) {
+      currentConcerns.delete(concern);
+      el.classList.remove('active');
+    } else {
+      currentConcerns.add(concern);
+      el.classList.add('active');
+    }
+
+    // Hvis ingen valgt, gå tilbage til "Alle"
+    if (currentConcerns.size === 0) {
+      if (allBtn) allBtn.classList.add('active');
+    }
+  }
   filterAndRender();
 }
 
@@ -8105,26 +8139,48 @@ function filterAndRender() {
     });
   }
 
-  // Safety / score threshold — prefer parent_score if available
+  // Safety — aldersrelativ logik når alder er valgt
   const getScore = d => (d.parent_votes > 0 && d.parent_score) ? d.parent_score : calcAvg(d.ai_scores || d.scores);
+  const ageMaxMap = {'0-2':2, '2-4':4, '4-6':6, '7-9':9, '10-12':12, '13+':17};
+  const chosenMaxAge = currentAgeFilter !== 'all' ? (ageMaxMap[currentAgeFilter] || 99) : null;
+
   if (currentSafety === 'safe') {
-    data = data.filter(d => getScore(d) <= 3);
+    // Egnet: recommended_age <= valgt alder OG score <= 4
+    data = data.filter(d => {
+      if (chosenMaxAge && d.recommended_age && d.recommended_age > chosenMaxAge) return false;
+      return getScore(d) <= 4;
+    });
   } else if (currentSafety === 'caution') {
-    data = data.filter(d => { const a = getScore(d); return a > 3 && a <= 6; });
+    // Med forbehold: grænsetilfælde eller score 4-6
+    data = data.filter(d => {
+      const score = getScore(d);
+      if (chosenMaxAge && d.recommended_age) {
+        // Grænsetilfælde: recommended_age = valgt alder ± 1
+        if (d.recommended_age >= chosenMaxAge - 1 && d.recommended_age <= chosenMaxAge + 1) return true;
+      }
+      return score > 4 && score <= 6;
+    });
   } else if (currentSafety === 'mature') {
-    data = data.filter(d => getScore(d) > 6);
+    // Til de ældre: recommended_age > valgt alder eller score > 6
+    data = data.filter(d => {
+      if (chosenMaxAge && d.recommended_age && d.recommended_age > chosenMaxAge + 1) return true;
+      return getScore(d) > 6;
+    });
   } else if (currentSafety === 'notrec') {
-    // Frarådes til valgt alder: recommended_age er højere end den valgte alder
-    const ageMap = {'0-2':2, '2-4':4, '4-6':6, '7-9':9, '10-12':12, '13+':17};
-    const chosenAge = currentAgeFilter !== 'all' ? (ageMap[currentAgeFilter] || 99) : 99;
-    data = data.filter(d => (d.recommended_age || 0) > chosenAge);
+    // Frarådes til denne alder
+    const chosenAge = chosenMaxAge || 99;
+    data = data.filter(d => (d.recommended_age || 0) > chosenAge + 2);
   }
 
-  // Bekymringstype — vis kun vurderinger hvor den valgte kategori scorer 6+
-  if (currentConcern !== 'all') {
+  // Bekymringstyper — multi-select, vis vurderinger hvor MINDST ÉN af de valgte scorer 6+
+  if (currentConcerns.size > 0) {
     data = data.filter(d => {
       const scores = d.ai_scores || d.scores || {};
-      return (scores[currentConcern] || 0) >= 6;
+      // OR-logik: mindst én valgt kategori skal være høj
+      for (const concern of currentConcerns) {
+        if ((scores[concern] || 0) >= 6) return true;
+      }
+      return false;
     });
   }
 
