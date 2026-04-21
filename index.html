@@ -3509,10 +3509,10 @@ input.autofilled, textarea.autofilled {
       <div class="filter-section-title">Sikkerhed <span style="font-size:11px;color:var(--muted);font-weight:400;font-style:italic" id="safetyHint">— vælg barnets alder først for bedst resultat</span></div>
       <div class="filter-pills-wrap">
         <span class="safety-btn s-active" id="saf-all" onclick="setSafety(this,'all')">Alle</span>
-        <span class="safety-btn s-green" onclick="setSafety(this,'safe')">🟢 Trygt</span>
-        <span class="safety-btn s-yellow" onclick="setSafety(this,'caution')">🟡 Med forbehold</span>
-        <span class="safety-btn s-red" onclick="setSafety(this,'mature')">🔴 Til de ældre</span>
-        <span class="safety-btn s-darkred" id="saf-notrec" onclick="setSafety(this,'notrec')" style="background:#FCEBEB;color:#791F1F;border-color:#F7C1C1">🚫 Frarådes til denne alder</span>
+        <span class="safety-btn s-green" onclick="setSafety(this,'safe')">✅ Egnet</span>
+        <span class="safety-btn s-yellow" onclick="setSafety(this,'caution')">⚠️ Med forbehold</span>
+        <span class="safety-btn s-red" onclick="setSafety(this,'mature')">🔶 Til de ældre</span>
+        <span class="safety-btn s-darkred" id="saf-notrec" onclick="setSafety(this,'notrec')" style="background:#FCEBEB;color:#791F1F;border-color:#F7C1C1">🚫 Frarådes</span>
       </div>
     </div>
     <div class="filter-section">
@@ -7926,7 +7926,7 @@ function cardHTML(item) {
   const parentAvg = hasParent ? item.parent_score : null;
   const displayAvg = hasParent ? parentAvg : aiAvg;
   const color = scoreColor(displayAvg);
-  const verdict = getVerdict(displayAvg);
+  const verdict = getVerdict(displayAvg, item);
   const topCats = CATEGORIES.slice(0, 5);
   const pEmoji = PLATFORM_EMOJI[item.platform] || '📱';
   const pLabel = PLATFORM_LABEL[item.platform] || item.platform;
@@ -8284,7 +8284,7 @@ async function openDetailModal(id) {
   history.pushState({ detailId: item.id }, '', newUrl);
   const avg = calcAvg(item.scores);
   const color = scoreColor(avg);
-  const verdict = getVerdict(avg);
+  const verdict = getVerdict(avg, item);
 
   const aiAvgD = calcAvg(item.ai_scores || item.scores);
   const hasParentD = item.parent_votes && item.parent_votes > 0;
@@ -9230,10 +9230,29 @@ function scoreColor(v) {
   return '#c83a2a';
 }
 
-function getVerdict(avg) {
-  if (avg <= 2.5) return { icon:'✅', label:'Anbefalet' };
-  if (avg <= 4.5) return { icon:'⚠️', label:'Se det med dit barn' };
-  if (avg <= 6.5) return { icon:'🔶', label:'Forældreopmærksomhed' };
+function getVerdict(avg, item) {
+  // Aldersrelativ vurdering hvis bruger har valgt alder OG vi har recommended_age
+  const ageMaxMap = {'0-2':2, '2-4':4, '4-6':6, '7-9':9, '10-12':12, '13+':17};
+  const chosenMaxAge = currentAgeFilter !== 'all' ? (ageMaxMap[currentAgeFilter] || null) : null;
+  const recAge = item?.recommended_age;
+
+  if (chosenMaxAge && recAge) {
+    // Aldersrelativ logik — samme som sikkerhedsfilter
+    if (recAge > chosenMaxAge + 2) return { icon:'🚫', label:'Frarådes' };
+    if (recAge > chosenMaxAge + 1) return { icon:'🔶', label:'Til de ældre' };
+    if (recAge >= chosenMaxAge - 1 && recAge <= chosenMaxAge + 1) {
+      // Grænsetilfælde - også kig på score
+      if (avg > 6) return { icon:'🔶', label:'Til de ældre' };
+      if (avg > 4) return { icon:'⚠️', label:'Med forbehold' };
+      return { icon:'✅', label:'Egnet' };
+    }
+    // recAge < chosenMaxAge - 1: for yngre end valgt alder, brug score
+  }
+
+  // Generel vurdering (ingen alder valgt eller ingen recommended_age)
+  if (avg <= 4) return { icon:'✅', label:'Egnet' };
+  if (avg <= 6) return { icon:'⚠️', label:'Med forbehold' };
+  if (avg <= 7.5) return { icon:'🔶', label:'Til de ældre' };
   return { icon:'🚫', label:'Frarådes' };
 }
 
