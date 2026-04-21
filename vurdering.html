@@ -736,7 +736,7 @@ nav {
 
     <div class="scores-header-row">
       <div></div>
-      <div></div>
+      <div style="font-size:11px;color:var(--muted);font-style:italic">Forældrenes søjle viser samlet snit — individuel per-kategori score kommer når vi har nok data</div>
       <div class="scores-col-label ai">AI</div>
       <div class="scores-col-label parent" id="parentColLabel">Forældre</div>
     </div>
@@ -965,15 +965,16 @@ function renderScores(item, parentVotes) {
     let parentValHTML = '';
 
     if (hasParent) {
-      // Approximate per-category from overall — we show AI scores with parent overlay
-      const pVal = aiVal; // placeholder — will be real when parent_scores field added
-      const pPct = ((pVal-1)/9*100).toFixed(0);
-      const pCol = scoreColor(pVal);
+      // Vi har kun samlet parent_score, ikke per kategori endnu
+      // Vis samlet forældrescore som én linje på tværs med tydelig label
+      const pAvg = item.parent_score;
+      const pPct = ((pAvg-1)/9*100).toFixed(0);
+      const pCol = scoreColor(pAvg);
       parentHTML = `<div class="bar-line">
         <div class="bar-dot" style="background:var(--parent-color)"></div>
-        <div class="bar-track"><div class="bar-fill" style="width:${pPct}%;background:var(--parent-color)"></div></div>
+        <div class="bar-track"><div class="bar-fill" style="width:${pPct}%;background:${pCol}"></div></div>
       </div>`;
-      parentValHTML = `<div class="score-val parent">${item.parent_score?.toFixed(1) || '—'}</div>`;
+      parentValHTML = `<div class="score-val parent" style="color:${pCol};font-size:11px;font-weight:400">snit ${pAvg.toFixed(1)}</div>`;
     } else {
       parentHTML = `<div class="bar-line" style="opacity:0.25">
         <div class="bar-dot" style="background:var(--parent-color)"></div>
@@ -1010,78 +1011,153 @@ async function generateAnalyse() {
   const item = currentItem;
   const aiScores = item.ai_scores || {};
   const container = document.getElementById('analyseContainer');
-  document.getElementById('analyseLoading').style.display = 'block';
+  document.getElementById('analyseLoading').style.display = 'none';
 
-  try {
-    const categoriesText = CATEGORIES.map(cat => {
-      const val = aiScores[cat.id] || 1;
-      return `${cat.name}: ${val}/10`;
-    }).join(', ');
+  // Generer analyse lokalt baseret på scores og titlen
+  // Ingen API-kald — undgår CORS og er gratis
+  const categoryTexts = {
+    violence: {
+      1: `${item.title} indeholder intet voldeligt indhold — det er fuldstændig trygt på denne parameter.`,
+      2: `${item.title} har minimal vold — eventuelle konfliktsituationer er harmløse og løses fredeligt.`,
+      3: `${item.title} har let cartoon-vold som falder, slag eller forfølgelse i en harmløs kontekst.`,
+      4: `${item.title} indeholder mild vold eller kampscener, men uden grafiske skildringer eller alvorlige konsekvenser.`,
+      5: `${item.title} har moderat vold med kampe eller action, som kan kræve forældresamtale.`,
+      6: `${item.title} indeholder tydelig vold som kan være urovækkende for yngre seere.`,
+      7: `${item.title} har betydelig vold og action-scener der kræver modenhed at bearbejde.`,
+      8: `${item.title} indeholder markant vold med realistiske konsekvenser — kun for ældre seere.`,
+      9: `${item.title} har grafisk vold som kan være traumatiserende — kun for meget modne seere.`,
+      10:`${item.title} indeholder ekstrem grafisk vold og er kun egnet for voksne seere.`
+    },
+    language: {
+      1: `Sproget i ${item.title} er fuldstændig rent og venligt — ingen bandeord eller hårdt sprog.`,
+      2: `Sproget er næsten altid pænt, med sjældne milde udtryk.`,
+      3: `Der forekommer lette sprogbekymringer som "dumt" eller "øv", men intet problematisk.`,
+      4: `Nogle personer bruger hårdt sprog indimellem — værd at være opmærksom på for yngre børn.`,
+      5: `Moderat brug af bandeord og skarpt sprog — passer til ældre børn.`,
+      6: `Regelmæssig brug af bandeord og hårdt sprog — kræver modenhed hos seeren.`,
+      7: `Hyppige bandeord og groft sprog er en stor del af tonen i ${item.title}.`,
+      8: `Meget groft sprog dominerer — ikke egnet til børn og unge teens.`,
+      9: `Ekstremt groft og potentielt stødende sprog — kun for voksne seere.`,
+      10:`Konstant brug af det groveste sprog — tydeligt voksent indhold.`
+    },
+    dopamine: {
+      1: `${item.title} har ingen belønningsmekanik — indholdet fungerer uden kunstig stimulation.`,
+      2: `Meget lav belønningsmekanik — indholdet står på egne ben uden at afhænge af kick.`,
+      3: `Milde belønninger som level-ups eller bonusser, men uden aggressiv stimulation.`,
+      4: `Nogle dopamin-mekanikker som point eller freebies — kræver forældreopmærksomhed.`,
+      5: `Moderat dopamin-design med hurtige belønninger — kan påvirke koncentrationen.`,
+      6: `Tydelig brug af belønningsmekanik med loot, level-ups og hurtige gevinster.`,
+      7: `Stærk brug af dopamin-udløsere som tilfældige belønninger og "næsten-gevinster".`,
+      8: `Massiv dopamin-stimulation — designet som kasino-mekanik for at holde barnet fast.`,
+      9: `Ekstrem dopamin-design med systematisk udnyttelse af belønningssystemer.`,
+      10:`Total dopamin-oversvømmelse — barnet kan have svært ved at stoppe selv.`
+    },
+    retention: {
+      1: `${item.title} har ingen fastholdelsesmekanik — barnet kan nemt lægge det fra sig.`,
+      2: `Næsten ingen fastholdelsesdesign — korte og afsluttede oplevelser.`,
+      3: `Milde fastholdelseselementer som cliffhangers, men uden aggressivt design.`,
+      4: `Nogle FOMO-elementer eller daglige bonusser, men begrænset i omfang.`,
+      5: `Moderat brug af streaks, daglige bonusser eller autoplay.`,
+      6: `Tydelig FOMO-design med streaks, push-notifikationer eller daglige missioner.`,
+      7: `Stærk fastholdelsesstrategi der straffer barnet for at holde pause.`,
+      8: `Meget aggressiv fastholdelsesdesign — barnet føler pres for at være aktiv dagligt.`,
+      9: `Ekstrem brug af vanedannende mekanikker — svært for barnet at slippe.`,
+      10:`Total fastholdelsesdesign — platformen er designet til at aldrig lade barnet gå.`
+    },
+    commercialism: {
+      1: `${item.title} har intet kommercielt pres — ingen reklamer eller køb.`,
+      2: `Næsten ingen reklame — oplevelsen er stort set ren fra kommercielt pres.`,
+      3: `Milde reklameelementer eller sponseret indhold, men ikke påtrængende.`,
+      4: `Nogle køb-muligheder eller reklamer, men begrænset pres.`,
+      5: `Moderat kommercielt pres med reklamer og køb-i-app muligheder.`,
+      6: `Tydelig kommerciel tilstedeværelse med skjulte reklamer og køb-opfordringer.`,
+      7: `Stærkt kommercielt pres — reklamer og køb er en central del af oplevelsen.`,
+      8: `Meget aggressivt kommercielt design med konstant pres om at købe.`,
+      9: `Ekstremt kommercielt pres med mikrotransaktioner og loot-box-mekanik.`,
+      10:`Total kommerciel oversvømmelse — barnet udsættes for konstant købspres.`
+    },
+    values: {
+      1: `${item.title} formidler fremragende værdier og er et stærkt forbillede.`,
+      2: `Gode værdier dominerer — positive rollemodeller og sunde budskaber.`,
+      3: `Overvejende positive værdier, med enkelte neutrale elementer.`,
+      4: `Blandet: nogle gode værdier, nogle neutrale — fint som familieunderholdning.`,
+      5: `Moderate værdier uden stærke positive eller negative budskaber.`,
+      6: `Nogle problematiske rollemodeller eller adfærd der kræver forældresamtale.`,
+      7: `Tydeligt problematiske værdier — karakterer kan opføre sig respektløst eller overfladisk.`,
+      8: `Stærkt problematiske rollemodeller — påvirker barnets opfattelse af normal adfærd.`,
+      9: `Meget bekymrende værdier — kan normalisere uønsket eller skadelig adfærd.`,
+      10:`Ekstremt problematiske værdier — tydeligt uegnet for børn og unge.`
+    },
+    sexual: {
+      1: `${item.title} indeholder intet seksuelt indhold — fuldstændig trygt på denne parameter.`,
+      2: `Ingen seksuelle elementer — uskyldigt indhold på dette område.`,
+      3: `Meget milde antydninger som kys, men intet eksplicit.`,
+      4: `Nogle seksuelle antydninger eller let flirteri — kræver modenhed hos yngre.`,
+      5: `Moderat seksuelt indhold med antydninger og romantiske situationer.`,
+      6: `Tydeligt seksuelt indhold med mere direkte referencer og scener.`,
+      7: `Stærke seksuelle elementer — ikke egnet til yngre teenagere.`,
+      8: `Meget eksplicit seksuelt indhold — kun for ældre teens eller voksne.`,
+      9: `Ekstremt eksplicit seksuelt indhold — kun voksent indhold.`,
+      10:`Total seksuel eksplicit — tydeligt voksent indhold.`
+    },
+    fear: {
+      1: `${item.title} indeholder intet skræmmende — helt trygt for alle aldre.`,
+      2: `Næsten intet skræmmende — milde spændingsmomenter på børnenesniveau.`,
+      3: `Lette spændingsmomenter som kan være ubehagelige for sarte børn.`,
+      4: `Nogle skræmmende scener eller jump-scares — kræver modenhed.`,
+      5: `Moderat skræmmende med enkelte intense scener.`,
+      6: `Tydeligt skræmmende indhold med horror-elementer eller intense scener.`,
+      7: `Stærk skræmmende atmosfære — kan give mareridt eller angst hos følsomme børn.`,
+      8: `Meget skræmmende indhold — kun for modne seere der kan håndtere horror.`,
+      9: `Ekstremt skræmmende med grafisk horror og psykologisk intens indhold.`,
+      10:`Total horror-oplevelse — kan være traumatiserende for mange.`
+    },
+    passive: {
+      1: `${item.title} er meget aktivt og engagerende — kræver fokus, tænkning eller handling.`,
+      2: `Overvejende aktivt indhold der stimulerer hjernen og kreativiteten.`,
+      3: `Balanceret mellem aktivt og passivt — kræver noget engagement.`,
+      4: `Moderat engagement — barnet tager stilling men forbruget er mest passivt.`,
+      5: `Halvt passivt — noget engagement men primært passivt forbrug.`,
+      6: `Overvejende passivt forbrug med begrænset aktiv deltagelse.`,
+      7: `Meget passivt indhold — barnet er primært tilskuer.`,
+      8: `Næsten rent passivt forbrug — barnet bliver underholdt uden at engagere sig.`,
+      9: `Rent passivt forbrug — ingen aktiv deltagelse krævet.`,
+      10:`Total passivitet — algoritmen styrer alt, barnet konsumerer uden tanke.`
+    },
+    socialpressure: {
+      1: `${item.title} har intet socialt pres — fri fra sammenligning og gruppepress.`,
+      2: `Næsten intet socialt pres — trygt rum uden kropsidealer eller livsstilsdruk.`,
+      3: `Milde elementer der kan skabe sammenligning, men ikke problematisk.`,
+      4: `Nogle elementer af socialt pres — kropsidealer eller livsstilsmomenter forekommer.`,
+      5: `Moderat socialt pres — sammenligningspotentiale og livsstilsfokus til stede.`,
+      6: `Tydeligt socialt pres med kropsidealer, populær-dynamikker og gruppepress.`,
+      7: `Stærkt socialt pres — markant risiko for sammenligning og lavt selvværd.`,
+      8: `Meget højt socialt pres — dominerende fokus på udseende, status og gruppefitness.`,
+      9: `Ekstremt socialt pres — barnet udsættes for konstant sammenligning.`,
+      10:`Total socialt pres-miljø — skadelig påvirkning på selvværd og identitet.`
+    }
+  };
 
-    const prompt = `Du er en mediepædagogisk ekspert der skriver til danske forældre på skaermtjek.dk.
+  container.innerHTML = CATEGORIES.map(cat => {
+    const aiVal = aiScores[cat.id] || 1;
+    const col = scoreColor(aiVal);
+    const text = categoryTexts[cat.id]?.[aiVal] || `AI-scoren for ${cat.name} er ${aiVal} ud af 10.`;
+    const bgCol = aiVal<=3 ? '#E1F5EE' : aiVal<=6 ? '#FAEEDA' : '#FCEBEB';
 
-Skriv en dybdegående analyse af "${item.title}" (${PLATFORM_LABEL[item.platform] || item.platform}) for forældre.
-
-AI-scores: ${categoriesText}
-
-For HVER af de 10 kategorier skal du skrive 2-3 sætninger der forklarer HVORFOR indholdet har fået den pågældende score. Vær konkret og faktabaseret.
-
-Svar KUN med JSON uden markdown-formatering:
-{
-  "categories": [
-    {"id": "violence", "text": "..."},
-    {"id": "language", "text": "..."},
-    {"id": "dopamine", "text": "..."},
-    {"id": "retention", "text": "..."},
-    {"id": "commercialism", "text": "..."},
-    {"id": "values", "text": "..."},
-    {"id": "sexual", "text": "..."},
-    {"id": "fear", "text": "..."},
-    {"id": "passive", "text": "..."},
-    {"id": "socialpressure", "text": "..."}
-  ]
-}`;
-
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-opus-4-7',
-        max_tokens: 1000,
-        messages: [{ role: 'user', content: prompt }]
-      })
-    });
-
-    const data = await response.json();
-    const text = data.content?.map(c => c.text || '').join('') || '';
-    const clean = text.replace(/```json|```/g, '').trim();
-    const parsed = JSON.parse(clean);
-
-    document.getElementById('analyseLoading').style.display = 'none';
-
-    const aiScoresMap = {};
-    (item.ai_scores || {}) && Object.entries(item.ai_scores || {}).forEach(([k,v]) => aiScoresMap[k] = v);
-
-    container.innerHTML = parsed.categories.map(c => {
-      const cat = CATEGORIES.find(cat => cat.id === c.id);
-      if (!cat) return '';
-      const aiVal = aiScoresMap[c.id] || 1;
-      const col = scoreColor(aiVal);
-      return `<div class="analyse-category">
-        <div class="analyse-cat-header">
-          <div class="analyse-cat-icon">${cat.icon}</div>
-          <div class="analyse-cat-name">${cat.name}</div>
-          <div class="analyse-scores-mini">
-            <span class="mini-score ai" style="color:${col};background:${aiVal<=3?'#E1F5EE':aiVal<=6?'#FAEEDA':'#FCEBEB'}">${aiVal}/10</span>
-          </div>
+    return `<div class="analyse-category">
+      <div class="analyse-cat-header">
+        <div class="analyse-cat-icon">${cat.icon}</div>
+        <div class="analyse-cat-name">${cat.name}</div>
+        <div class="analyse-scores-mini">
+          <span class="mini-score ai" style="color:${col};background:${bgCol}">${aiVal}/10</span>
         </div>
-        <div class="analyse-cat-text">${c.text}</div>
-      </div>`;
-    }).join('');
-
-  } catch(e) {
-    document.getElementById('analyseLoading').innerHTML = '<p style="color:var(--muted);text-align:center">Analysen kunne ikke genereres. Prøv igen senere.</p>';
-  }
+      </div>
+      <div class="analyse-cat-text">${text}</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:8px">
+        <strong style="font-weight:500">Skala:</strong> 1 = ${cat.low} · 10 = ${cat.high}
+      </div>
+    </div>`;
+  }).join('');
 }
 
 function renderFAQ(item) {
