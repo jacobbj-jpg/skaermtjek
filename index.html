@@ -1666,6 +1666,61 @@ input[type="range"]::-webkit-slider-thumb {
 .setup-banner p { font-size: 13px; color: #8a5820; line-height: 1.5; }
 .setup-banner code { background: rgba(0,0,0,0.06); padding: 1px 6px; border-radius: 4px; font-size: 12px; font-family: monospace; }
 
+/* AGE INFO BANNER */
+.age-info-banner {
+  background: linear-gradient(135deg, #e6f1fb, #f0f7fd);
+  border: 1px solid #b5d4f4;
+  border-radius: 14px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.age-info-content {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex: 1;
+}
+
+.age-info-icon { font-size: 22px; flex-shrink: 0; }
+
+.age-info-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.age-info-text strong {
+  font-family: 'Fraunces', serif;
+  font-size: 15px;
+  color: #0C447C;
+  font-weight: 600;
+}
+
+.age-info-text span {
+  font-size: 13px;
+  color: #185FA5;
+  line-height: 1.5;
+}
+
+.age-info-text a {
+  color: var(--accent);
+  text-decoration: underline;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.age-info-text a:hover { opacity: 0.8; }
+
+@media (max-width: 600px) {
+  .age-info-banner { padding: 12px 16px; }
+  .age-info-text strong { font-size: 14px; }
+  .age-info-text span { font-size: 12px; }
+}
+
 /* AI LOADING */
 .ai-loading {
   display: flex;
@@ -7438,17 +7493,31 @@ function quickAge(el, age) {
   if (el.classList.contains('active')) {
     el.classList.remove('active');
     currentAgeFilter = 'all';
-    // Also deselect in filter panel
+    currentSafety = 'all';
+    // Skjul info-boks
+    const ageInfo = document.getElementById('ageInfoBanner');
+    if (ageInfo) ageInfo.style.display = 'none';
+    // Deselect in filter panel
     document.querySelectorAll('#filterPanel .filter-pill').forEach(p => {
       if (p.onclick && p.onclick.toString().includes('setAgeFilter')) {
         p.classList.remove('active');
         if (p.textContent.trim() === 'Alle') p.classList.add('active');
       }
     });
+    // Reset safety buttons til "Alle"
+    document.querySelectorAll('.safety-btn').forEach(b => b.classList.remove('s-active'));
+    const safAll = document.getElementById('saf-all');
+    if (safAll) safAll.classList.add('s-active');
   } else {
     document.querySelectorAll('.hero-age-chip').forEach(c => c.classList.remove('active'));
     el.classList.add('active');
     currentAgeFilter = age;
+
+    // Auto-sæt sikkerhed til "egnet" + "med forbehold" ved alders-valg
+    // Vi laver en speciel 'ageappropriate' mode
+    currentSafety = 'ageappropriate';
+    document.querySelectorAll('.safety-btn').forEach(b => b.classList.remove('s-active'));
+
     // Sync filter panel
     document.querySelectorAll('#filterPanel .filter-pill').forEach(p => {
       if (p.onclick && p.onclick.toString().includes('setAgeFilter')) {
@@ -7457,10 +7526,47 @@ function quickAge(el, age) {
         if (p.textContent.trim() === ageLabel || p.textContent.trim() === age + ' år') p.classList.add('active');
       }
     });
+
+    // Vis info-boks
+    showAgeInfoBanner(el.textContent.trim());
+
+    // Opdater safetyHint
+    const hint = document.getElementById('safetyHint');
+    if (hint) {
+      hint.textContent = `— relativt til ${el.textContent.trim()}`;
+      hint.style.opacity = '0.7';
+    }
   }
   filterAndRender();
   // Scroll to results
   document.getElementById('page-browse').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function showAgeInfoBanner(ageLabel) {
+  let banner = document.getElementById('ageInfoBanner');
+  if (!banner) {
+    banner = document.createElement('div');
+    banner.id = 'ageInfoBanner';
+    banner.className = 'age-info-banner';
+    const browseSection = document.getElementById('page-browse');
+    if (browseSection) browseSection.insertBefore(banner, browseSection.firstChild);
+  }
+  banner.style.display = 'flex';
+  banner.innerHTML = `
+    <div class="age-info-content">
+      <span class="age-info-icon">📍</span>
+      <div class="age-info-text">
+        <strong>Viser indhold egnet til ${ageLabel}</strong>
+        <span>Vi har skjult indhold der er vurderet til ældre børn. <a href="#" onclick="clearAgeFilter(event)">Vis alle aldre</a></span>
+      </div>
+    </div>
+  `;
+}
+
+function clearAgeFilter(e) {
+  if (e) e.preventDefault();
+  const activeAgeChip = document.querySelector('.hero-age-chip.active');
+  if (activeAgeChip) quickAge(activeAgeChip, currentAgeFilter);
 }
 
 // ---- PREFILL FORM & NAVIGATE ----
@@ -8144,7 +8250,17 @@ function filterAndRender() {
   const ageMaxMap = {'0-2':2, '2-4':4, '4-6':6, '7-9':9, '10-12':12, '13+':17};
   const chosenMaxAge = currentAgeFilter !== 'all' ? (ageMaxMap[currentAgeFilter] || 99) : null;
 
-  if (currentSafety === 'safe') {
+  if (currentSafety === 'ageappropriate') {
+    // Auto-mode når alder er valgt fra hero: vis kun egnet + med forbehold
+    data = data.filter(d => {
+      if (chosenMaxAge && d.recommended_age) {
+        // Inkludér hvis recommended_age <= valgt alder + 1 (lidt ældre er OK som "med forbehold")
+        return d.recommended_age <= chosenMaxAge + 1;
+      }
+      // Fallback hvis ingen recommended_age: brug score
+      return getScore(d) <= 6;
+    });
+  } else if (currentSafety === 'safe') {
     // Egnet: recommended_age <= valgt alder OG score <= 4
     data = data.filter(d => {
       if (chosenMaxAge && d.recommended_age && d.recommended_age > chosenMaxAge) return false;
