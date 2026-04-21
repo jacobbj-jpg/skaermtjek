@@ -608,6 +608,8 @@ nav {
 .s-green.s-active, .s-green:hover { background: rgba(42,122,92,0.12); border-color: var(--good); color: var(--good); }
 .s-yellow.s-active, .s-yellow:hover { background: rgba(200,136,42,0.12); border-color: var(--mid); color: var(--mid); }
 .s-red.s-active, .s-red:hover { background: rgba(200,58,42,0.12); border-color: var(--bad); color: var(--bad); }
+.s-darkred { background: #FCEBEB; color: #791F1F; border-color: #F7C1C1; }
+.s-darkred.s-active, .s-darkred:hover { background: #F7C1C1; color: #791F1F; border-color: #791F1F; }
 
 .score-slider-wrap {
   display: flex;
@@ -3593,7 +3595,7 @@ input.autofilled, textarea.autofilled {
         <span class="safety-btn s-green" onclick="setSafety(this,'safe')">✅ Egnet</span>
         <span class="safety-btn s-yellow" onclick="setSafety(this,'caution')">⚠️ Med forbehold</span>
         <span class="safety-btn s-red" onclick="setSafety(this,'mature')">🔶 Til de ældre</span>
-        <span class="safety-btn s-darkred" id="saf-notrec" onclick="setSafety(this,'notrec')" style="background:#FCEBEB;color:#791F1F;border-color:#F7C1C1">🚫 Frarådes</span>
+        <span class="safety-btn s-darkred" id="saf-notrec" onclick="setSafety(this,'notrec')">🚫 Frarådes</span>
       </div>
     </div>
     <div class="filter-section">
@@ -8282,9 +8284,17 @@ function filterAndRender() {
       return getScore(d) > 6;
     });
   } else if (currentSafety === 'notrec') {
-    // Frarådes til denne alder
-    const chosenAge = chosenMaxAge || 99;
-    data = data.filter(d => (d.recommended_age || 0) > chosenAge + 2);
+    // Frarådes
+    if (chosenMaxAge) {
+      // Med alder: vis kun indhold der er klart frarådet til denne aldersgruppe
+      data = data.filter(d => (d.recommended_age || 0) > chosenMaxAge + 2);
+    } else {
+      // Uden alder: vis indhold med høj score (>7) som generelt frarådes til børn
+      data = data.filter(d => {
+        const score = getScore(d);
+        return score > 7 || (d.recommended_age && d.recommended_age >= 16);
+      });
+    }
   }
 
   // Bekymringstyper — multi-select, vis vurderinger hvor MINDST ÉN af de valgte scorer 6+
