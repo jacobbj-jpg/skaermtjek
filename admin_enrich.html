@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SkærmTjek Admin — Batch AI-berigelse</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #faf7f2;
+  color: #1a1714;
+  padding: 2rem 1rem;
+  max-width: 900px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-bottom: 8px; }
+p.intro { color: #666; margin-bottom: 1.5rem; font-size: 14px; }
+
+.panel {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid #e0d8cc;
+  margin-bottom: 1rem;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 1.5rem;
+}
+.stat {
+  background: #f5f2ed;
+  padding: 12px;
+  border-radius: 8px;
+  text-align: center;
+}
+.stat-num {
+  font-size: 28px;
+  font-weight: 700;
+  color: #185FA5;
+  line-height: 1;
+}
+.stat-label {
+  font-size: 11px;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 4px;
+}
+
+label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 4px; margin-top: 12px; }
+input, select {
+  padding: 10px 12px;
+  border: 1px solid #e0d8cc;
+  border-radius: 8px;
+  font-size: 15px;
+  background: white;
+  width: 100%;
+}
+button {
+  padding: 12px 20px;
+  background: #c85a2a;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 16px;
+  margin-right: 8px;
+}
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+button.secondary { background: #666; }
+button.danger { background: #c83a2a; }
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: #e0d8cc;
+  border-radius: 4px;
+  margin: 12px 0 20px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(to right, #c85a2a, #d86c3e);
+  width: 0%;
+  transition: width 0.3s;
+}
+
+.log {
+  background: #1a1714;
+  color: #9FE1CB;
+  font-family: 'SF Mono', Consolas, monospace;
+  font-size: 12px;
+  padding: 16px;
+  border-radius: 8px;
+  max-height: 400px;
+  overflow-y: auto;
+  margin-top: 16px;
+  white-space: pre-wrap;
+}
+.log-success { color: #9FE1CB; }
+.log-error { color: #F7C1C1; }
+.log-warn { color: #FAC775; }
+.log-info { color: #85B7EB; }
+
+.settings-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 600px) {
+  .stats { grid-template-columns: repeat(2, 1fr); }
+  .settings-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<h1>🤖 Batch AI-berigelse</h1>
+<p class="intro">Beriger vurderinger automatisk med AI-genereret indhold (bullets, per-kategori tekster, FAQ). Kører en ad gangen i baggrunden.</p>
+
+<div class="panel">
+  <h3 style="margin-bottom: 12px">Login</h3>
+  <label>Supabase URL</label>
+  <input type="text" id="supaUrl" value="https://numlafmwxgffshqcjxuc.supabase.co" readonly>
+  <label>Supabase Anon Key</label>
+  <input type="text" id="supaKey" placeholder="Sæt ind din anon-nøgle" value="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im51bWxhZm13eGdmZnNocWNqeHVjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUyMjU0NTgsImV4cCI6MjA5MDgwMTQ1OH0.WojLfL2iz1ZDt6PeRqeGbC8BvJwwPdk4pzxZM390xbI">
+  <button onclick="loadStats()">📊 Hent statistik</button>
+</div>
+
+<div class="panel" id="statsPanel" style="display:none">
+  <h3 style="margin-bottom: 12px">Status</h3>
+  <div class="stats">
+    <div class="stat"><div class="stat-num" id="statTotal">—</div><div class="stat-label">I alt</div></div>
+    <div class="stat"><div class="stat-num" id="statEnriched">—</div><div class="stat-label">Beriget</div></div>
+    <div class="stat"><div class="stat-num" id="statPending">—</div><div class="stat-label">Mangler</div></div>
+    <div class="stat"><div class="stat-num" id="statApproved">—</div><div class="stat-label">Approved</div></div>
+  </div>
+
+  <div class="settings-row">
+    <div>
+      <label>Antal per batch</label>
+      <select id="batchSize">
+        <option value="1">1 (test)</option>
+        <option value="5">5</option>
+        <option value="10" selected>10</option>
+        <option value="20">20</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+      </select>
+    </div>
+    <div>
+      <label>Filter</label>
+      <select id="filterStatus">
+        <option value="all">Alle uden berigelse</option>
+        <option value="approved">Kun approved</option>
+        <option value="pending">Kun pending</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="progress-bar">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+
+  <button id="startBtn" onclick="startBatch()">▶️ Start berigelse</button>
+  <button id="stopBtn" class="danger" onclick="stopBatch()" style="display:none">⏸️ Stop</button>
+  <button class="secondary" onclick="loadStats()">🔄 Opdater status</button>
+</div>
+
+<div class="log" id="log" style="display:none"></div>
+
+<script>
+let db = null;
+let isRunning = false;
+let shouldStop = false;
+
+function log(msg, cls = '') {
+  const el = document.getElementById('log');
+  el.style.display = 'block';
+  const line = document.createElement('div');
+  line.className = 'log-' + (cls || 'info');
+  const time = new Date().toLocaleTimeString('da-DK');
+  line.textContent = `[${time}] ${msg}`;
+  el.appendChild(line);
+  el.scrollTop = el.scrollHeight;
+}
+
+async function loadStats() {
+  const url = document.getElementById('supaUrl').value.trim();
+  const key = document.getElementById('supaKey').value.trim();
+
+  if (!url || !key) { alert('Udfyld URL og nøgle'); return; }
+
+  db = supabase.createClient(url, key);
+  log('Henter statistik...', 'info');
+
+  try {
+    // Total
+    const { count: total, error: e1 } = await db.from('ratings').select('*', { count: 'exact', head: true });
+    if (e1) throw e1;
+
+    // Beriget
+    const { count: enriched, error: e2 } = await db.from('ratings').select('*', { count: 'exact', head: true }).not('ai_bullets', 'is', null);
+    if (e2) throw e2;
+
+    // Approved
+    const { count: approved, error: e3 } = await db.from('ratings').select('*', { count: 'exact', head: true }).eq('status', 'approved');
+    if (e3) throw e3;
+
+    document.getElementById('statTotal').textContent = total;
+    document.getElementById('statEnriched').textContent = enriched;
+    document.getElementById('statPending').textContent = total - enriched;
+    document.getElementById('statApproved').textContent = approved;
+    document.getElementById('statsPanel').style.display = 'block';
+
+    log(`✓ Statistik hentet: ${total} total, ${enriched} beriget, ${total - enriched} mangler`, 'success');
+  } catch (err) {
+    log('✗ Fejl: ' + err.message, 'error');
+  }
+}
+
+async function startBatch() {
+  if (isRunning) return;
+  isRunning = true;
+  shouldStop = false;
+
+  document.getElementById('startBtn').style.display = 'none';
+  document.getElementById('stopBtn').style.display = 'inline-block';
+
+  const batchSize = parseInt(document.getElementById('batchSize').value);
+  const filter = document.getElementById('filterStatus').value;
+
+  log(`🚀 Starter batch-berigelse (${batchSize} titler)...`, 'info');
+
+  try {
+    // Hent vurderinger der mangler berigelse
+    let query = db.from('ratings').select('id, title, platform, episode, notes, content_type, status')
+      .is('ai_bullets', null)
+      .order('created_at', { ascending: true })
+      .limit(batchSize);
+
+    if (filter === 'approved') query = query.eq('status', 'approved');
+    else if (filter === 'pending') query = query.eq('status', 'pending');
+
+    const { data: items, error } = await query;
+    if (error) throw error;
+
+    if (!items || items.length === 0) {
+      log('✓ Ingen vurderinger mangler berigelse!', 'success');
+      finish();
+      return;
+    }
+
+    log(`📋 Fundet ${items.length} vurderinger at berige`, 'info');
+
+    let successCount = 0;
+    let errorCount = 0;
+
+    for (let i = 0; i < items.length; i++) {
+      if (shouldStop) {
+        log(`⏸️ Stoppet af bruger efter ${i} vurderinger`, 'warn');
+        break;
+      }
+
+      const item = items[i];
+      const pct = ((i + 1) / items.length * 100).toFixed(0);
+      document.getElementById('progressFill').style.width = pct + '%';
+
+      log(`[${i+1}/${items.length}] Beriger "${item.title}" (${item.platform})...`, 'info');
+
+      try {
+        const response = await fetch('/.netlify/functions/enrich', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: item.title,
+            platform: item.platform,
+            episode: item.episode,
+            notes: item.notes,
+            ratingId: item.id
+          })
+        });
+
+        const result = await response.json();
+
+        if (!result.success) {
+          log(`  ✗ API-fejl: ${result.error}`, 'error');
+          errorCount++;
+          continue;
+        }
+
+        const e = result.enrichment;
+
+        // Gem i Supabase
+        const { error: updateError } = await db.from('ratings').update({
+          ai_bullets: e.ai_bullets,
+          ai_category_texts: e.ai_category_texts,
+          ai_faq: e.ai_faq,
+          ai_analysis: e.ai_analysis,
+          ai_scores: e.ai_scores,
+          recommended_age: e.recommended_age,
+          age_group: e.age_group,
+          enriched_at: new Date().toISOString()
+        }).eq('id', item.id);
+
+        if (updateError) {
+          log(`  ✗ DB-fejl: ${updateError.message}`, 'error');
+          errorCount++;
+          continue;
+        }
+
+        log(`  ✓ Beriget og gemt (anbefalet ${e.recommended_age} år)`, 'success');
+        successCount++;
+
+      } catch (err) {
+        log(`  ✗ Uventet fejl: ${err.message}`, 'error');
+        errorCount++;
+      }
+
+      // Pause mellem kald for ikke at overbelaste
+      await new Promise(r => setTimeout(r, 500));
+    }
+
+    log(`🎉 Færdig: ${successCount} berigede, ${errorCount} fejl`, 'success');
+
+    // Opdater statistik
+    await loadStats();
+
+  } catch (err) {
+    log('✗ Fatal fejl: ' + err.message, 'error');
+  } finally {
+    finish();
+  }
+}
+
+function stopBatch() {
+  shouldStop = true;
+  log('⏸️ Stopper efter nuværende berigelse...', 'warn');
+}
+
+function finish() {
+  isRunning = false;
+  shouldStop = false;
+  document.getElementById('startBtn').style.display = 'inline-block';
+  document.getElementById('stopBtn').style.display = 'none';
+}
+</script>
+
+</body>
+</html>
