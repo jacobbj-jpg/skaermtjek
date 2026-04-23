@@ -277,57 +277,84 @@ async function startBatch() {
 
       log(`[${i+1}/${items.length}] Beriger "${item.title}" (${item.platform})...`, 'info');
 
-      try {
-        const response = await fetch('/.netlify/functions/enrich', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            title: item.title,
-            platform: item.platform,
-            episode: item.episode,
-            notes: item.notes,
-            ratingId: item.id
-          })
-        });
+      let attempts = 0;
+      let success = false;
+      const maxAttempts = 3;
 
-        const result = await response.json();
+      while (attempts < maxAttempts && !success && !shouldStop) {
+        attempts++;
+        try {
+          const response = await fetch('/.netlify/functions/enrich', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              title: item.title,
+              platform: item.platform,
+              episode: item.episode,
+              notes: item.notes,
+              ratingId: item.id
+            })
+          });
 
-        if (!result.success) {
-          log(`  ✗ API-fejl: ${result.error}`, 'error');
-          errorCount++;
-          continue;
+          // Hvis response ikke er JSON (HTML timeout), retry
+          const contentType = response.headers.get('content-type') || '';
+          if (!contentType.includes('application/json')) {
+            if (attempts < maxAttempts) {
+              log(`  ⚠️ Timeout (forsøg ${attempts}/${maxAttempts}) — venter 5 sek og prøver igen...`, 'warn');
+              await new Promise(r => setTimeout(r, 5000));
+              continue;
+            } else {
+              log(`  ✗ Timeout efter ${maxAttempts} forsøg — springer over`, 'error');
+              errorCount++;
+              break;
+            }
+          }
+
+          const result = await response.json();
+
+          if (!result.success) {
+            log(`  ✗ API-fejl: ${result.error}`, 'error');
+            errorCount++;
+            break;
+          }
+
+          const e = result.enrichment;
+
+          // Gem i Supabase
+          const { error: updateError } = await db.from('ratings').update({
+            ai_bullets: e.ai_bullets,
+            ai_category_texts: e.ai_category_texts,
+            ai_faq: e.ai_faq,
+            ai_analysis: e.ai_analysis,
+            ai_scores: e.ai_scores,
+            recommended_age: e.recommended_age,
+            age_group: e.age_group,
+            enriched_at: new Date().toISOString()
+          }).eq('id', item.id);
+
+          if (updateError) {
+            log(`  ✗ DB-fejl: ${updateError.message}`, 'error');
+            errorCount++;
+            break;
+          }
+
+          log(`  ✓ Beriget og gemt (anbefalet ${e.recommended_age} år)`, 'success');
+          successCount++;
+          success = true;
+
+        } catch (err) {
+          if (attempts < maxAttempts) {
+            log(`  ⚠️ Fejl (forsøg ${attempts}/${maxAttempts}): ${err.message} — prøver igen...`, 'warn');
+            await new Promise(r => setTimeout(r, 5000));
+          } else {
+            log(`  ✗ Uventet fejl efter ${maxAttempts} forsøg: ${err.message}`, 'error');
+            errorCount++;
+          }
         }
-
-        const e = result.enrichment;
-
-        // Gem i Supabase
-        const { error: updateError } = await db.from('ratings').update({
-          ai_bullets: e.ai_bullets,
-          ai_category_texts: e.ai_category_texts,
-          ai_faq: e.ai_faq,
-          ai_analysis: e.ai_analysis,
-          ai_scores: e.ai_scores,
-          recommended_age: e.recommended_age,
-          age_group: e.age_group,
-          enriched_at: new Date().toISOString()
-        }).eq('id', item.id);
-
-        if (updateError) {
-          log(`  ✗ DB-fejl: ${updateError.message}`, 'error');
-          errorCount++;
-          continue;
-        }
-
-        log(`  ✓ Beriget og gemt (anbefalet ${e.recommended_age} år)`, 'success');
-        successCount++;
-
-      } catch (err) {
-        log(`  ✗ Uventet fejl: ${err.message}`, 'error');
-        errorCount++;
       }
 
-      // Pause mellem kald for ikke at overbelaste
-      await new Promise(r => setTimeout(r, 500));
+      // Længere pause mellem requests for at undgå overbelastning
+      await new Promise(r => setTimeout(r, 2000));
     }
 
     log(`🎉 Færdig: ${successCount} berigede, ${errorCount} fejl`, 'success');
