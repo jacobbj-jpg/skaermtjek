@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SkærmTjek — Test AI-berigelse</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #faf7f2;
+  color: #1a1714;
+  padding: 2rem 1rem;
+  max-width: 800px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-bottom: 8px; }
+p { color: #666; margin-bottom: 1.5rem; font-size: 14px; }
+.form { background: white; padding: 1.5rem; border-radius: 12px; border: 1px solid #e0d8cc; margin-bottom: 1rem; }
+label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 4px; margin-top: 12px; }
+input, select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #e0d8cc;
+  border-radius: 8px;
+  font-size: 15px;
+  background: white;
+}
+button {
+  width: 100%;
+  padding: 14px;
+  background: #c85a2a;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 20px;
+}
+button:disabled { opacity: 0.5; }
+.result {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid #e0d8cc;
+  margin-top: 1rem;
+  display: none;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.result.visible { display: block; }
+.result h3 { font-size: 16px; margin-bottom: 8px; margin-top: 16px; color: #185FA5; }
+.result h3:first-child { margin-top: 0; }
+.result .analysis { background: #f0f7fd; padding: 12px; border-radius: 8px; }
+.result pre {
+  background: #f5f2ed;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+}
+.result .bullet {
+  display: flex;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0ead8;
+}
+.result .bullet:last-child { border-bottom: none; }
+.result .timing { color: #888; font-size: 12px; margin-top: 8px; }
+.loading { text-align: center; padding: 2rem; color: #666; }
+.spinner {
+  display: inline-block;
+  width: 20px; height: 20px;
+  border: 3px solid #e0d8cc;
+  border-top-color: #c85a2a;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.error { color: #c83a2a; padding: 12px; background: #fcebeb; border-radius: 8px; }
+</style>
+</head>
+<body>
+
+<h1>🧪 Test AI-berigelse</h1>
+<p>Vælg en titel at berige. Den kalder Claude API og viser resultatet uden at gemme i databasen.</p>
+
+<div class="form">
+  <label>Titel</label>
+  <input type="text" id="title" value="Gurli Gris" placeholder="fx Minecraft">
+
+  <label>Platform</label>
+  <select id="platform">
+    <option value="disney">Disney+</option>
+    <option value="netflix">Netflix</option>
+    <option value="youtube">YouTube</option>
+    <option value="dr">DR / Ramasjang</option>
+    <option value="tv2">TV 2 Play</option>
+    <option value="max">Max</option>
+    <option value="viaplay">Viaplay</option>
+    <option value="skyshowtime">SkyShowtime</option>
+    <option value="sfkids">SF Kids</option>
+    <option value="gaming">Konsol & PC</option>
+    <option value="switch">Nintendo Switch</option>
+    <option value="ipad">iPad-apps</option>
+    <option value="tiktok">TikTok</option>
+    <option value="instagram">Instagram</option>
+    <option value="snapchat">Snapchat</option>
+    <option value="ytshorts">YouTube Shorts</option>
+    <option value="bereal">BeReal</option>
+    <option value="discord">Discord</option>
+    <option value="twitch">Twitch</option>
+  </select>
+
+  <button id="runBtn" onclick="runTest()">🤖 Kør AI-berigelse</button>
+</div>
+
+<div class="result" id="result"></div>
+
+<script>
+async function runTest() {
+  const title = document.getElementById('title').value.trim();
+  const platform = document.getElementById('platform').value;
+  const btn = document.getElementById('runBtn');
+  const result = document.getElementById('result');
+
+  if (!title) { alert('Indtast en titel'); return; }
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Genererer...';
+  result.className = 'result visible';
+  result.innerHTML = '<div class="loading"><span class="spinner"></span>Kalder Claude API — kan tage 10-30 sekunder...</div>';
+
+  const start = Date.now();
+
+  try {
+    const response = await fetch('/.netlify/functions/enrich', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title, platform })
+    });
+
+    const data = await response.json();
+    const elapsed = ((Date.now() - start) / 1000).toFixed(1);
+
+    if (!data.success) {
+      result.innerHTML = `<div class="error"><strong>Fejl:</strong> ${data.error || 'Ukendt'}<br>${data.details || data.raw || ''}</div>`;
+      return;
+    }
+
+    const e = data.enrichment;
+    let html = `<h3>📝 AI-analyse</h3><div class="analysis">${e.ai_analysis || '—'}</div>`;
+
+    html += `<h3>📅 Anbefalet alder: ${e.recommended_age} år</h3>`;
+
+    html += `<h3>🔢 Scores (1-10)</h3><pre>${JSON.stringify(e.ai_scores, null, 2)}</pre>`;
+
+    if (e.ai_bullets && e.ai_bullets.length) {
+      html += `<h3>💬 Bullets til forsidekortet</h3>`;
+      e.ai_bullets.forEach(b => {
+        html += `<div class="bullet"><span>${b.icon}</span><span><strong>${b.highlight}</strong> ${b.text}</span></div>`;
+      });
+    }
+
+    if (e.ai_category_texts) {
+      html += `<h3>📖 Per-kategori tekster (Option A)</h3>`;
+      Object.entries(e.ai_category_texts).forEach(([cat, text]) => {
+        html += `<div class="bullet"><span><strong>${cat}:</strong></span><span>${text}</span></div>`;
+      });
+    }
+
+    if (e.ai_faq && e.ai_faq.length) {
+      html += `<h3>❓ FAQ</h3>`;
+      e.ai_faq.forEach(f => {
+        html += `<div class="bullet"><span></span><span><strong>${f.q}</strong><br>${f.a}</span></div>`;
+      });
+    }
+
+    html += `<div class="timing">⏱️ Gennemført på ${elapsed} sekunder</div>`;
+
+    result.innerHTML = html;
+
+  } catch(err) {
+    result.innerHTML = `<div class="error"><strong>Netværksfejl:</strong> ${err.message}</div>`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '🤖 Kør AI-berigelse';
+  }
+}
+</script>
+
+</body>
+</html>
