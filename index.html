@@ -743,6 +743,72 @@ nav {
   gap: 5px;
 }
 
+.card-bullets {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 4px;
+}
+
+.card-bullet {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.card-bullet-icon {
+  font-size: 14px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.card-bullet-text {
+  flex: 1;
+  color: var(--ink2, #3d3830);
+}
+
+.card-bullet-text strong {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.card-cta {
+  background: linear-gradient(to right, var(--accent), #d86c3e);
+  color: white;
+  padding: 12px 20px;
+  margin: 14px -20px -20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 0 0 16px 16px;
+}
+
+.card-cta strong { font-weight: 600; }
+
+.card-cta-arrow {
+  background: rgba(255,255,255,0.25);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s;
+  flex-shrink: 0;
+}
+
+.content-card:hover .card-cta-arrow { transform: translateX(3px); }
+
+@media (max-width: 600px) {
+  .card-cta { margin: 12px -16px -16px; padding: 11px 16px; font-size: 12px; }
+  .card-bullet { font-size: 12px; }
+}
+
 .bar-row {
   display: flex;
   align-items: center;
@@ -8099,26 +8165,36 @@ function cardHTML(item) {
       }
     </div>
     <div class="verdict-tag" style="background:${color}18;color:${color};border:1px solid ${color}30">${verdict.icon} ${verdict.label}</div>
-    <div class="bars-mini">
-      ${topCats.map(cat => {
-        const v = (item.ai_scores || item.scores) && ((item.ai_scores || item.scores)[cat.id]) || 1;
-        const pct = ((v-1)/9*100).toFixed(0);
-        const c = scoreColor(v);
-        return `<div class="bar-row score-tooltip" data-tip="${scoreTip(cat, v)}" tabindex="0">
-          <div class="bar-label">${cat.icon} ${cat.name}</div>
-          <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${c}"></div></div>
-          <div class="bar-val" style="color:${c}">${v}</div>
-        </div>`;
-      }).join('')}
-    </div>
+    ${item.ai_bullets && Array.isArray(item.ai_bullets) && item.ai_bullets.length > 0
+      ? `<div class="card-bullets">
+          ${item.ai_bullets.slice(0, 4).map(b => `
+            <div class="card-bullet">
+              <span class="card-bullet-icon">${b.icon || '•'}</span>
+              <div class="card-bullet-text"><strong>${b.highlight || ''}</strong> ${b.text || ''}</div>
+            </div>
+          `).join('')}
+        </div>`
+      : `<div class="bars-mini">
+          ${topCats.map(cat => {
+            const v = (item.ai_scores || item.scores) && ((item.ai_scores || item.scores)[cat.id]) || 1;
+            const pct = ((v-1)/9*100).toFixed(0);
+            const c = scoreColor(v);
+            return `<div class="bar-row score-tooltip" data-tip="${scoreTip(cat, v)}" tabindex="0">
+              <div class="bar-label">${cat.icon} ${cat.name}</div>
+              <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${c}"></div></div>
+              <div class="bar-val" style="color:${c}">${v}</div>
+            </div>`;
+          }).join('')}
+        </div>`
+    }
     <div class="card-footer">
       <div class="age-badges">
         ${item.recommended_age !== undefined && item.recommended_age !== null
           ? item.recommended_age <= 2
-            ? `<span class="age-badge age-badge-ai age-badge-baby">👶 0–2 år</span>`
+            ? `<span class="age-badge age-badge-ai age-badge-baby">📅 Vejledende fra 2 år</span>`
             : item.recommended_age <= 4
-              ? `<span class="age-badge age-badge-ai age-badge-toddler">🧒 2–4 år</span>`
-              : `<span class="age-badge age-badge-ai">✓ Egnet fra ${item.recommended_age} år</span>`
+              ? `<span class="age-badge age-badge-ai age-badge-toddler">📅 Vejledende fra ${item.recommended_age} år</span>`
+              : `<span class="age-badge age-badge-ai">📅 Vejledende fra ${item.recommended_age} år</span>`
           : item.age_group
             ? `<span class="age-badge">ca. ${item.age_group} år</span>`
             : ''
@@ -8128,6 +8204,10 @@ function cardHTML(item) {
     </div>
     ${disclaimer}
     ${getRelatedLink(item)}
+    <div class="card-cta">
+      <span>Se fuld vurdering${isEpisode ? '' : ' af <strong>' + item.title + '</strong>'}</span>
+      <span class="card-cta-arrow">→</span>
+    </div>
   </div>`;
 }
 
@@ -9358,20 +9438,28 @@ function scoreColor(v) {
 function getVerdict(avg, item) {
   // Aldersrelativ vurdering hvis bruger har valgt alder OG vi har recommended_age
   const ageMaxMap = {'0-2':2, '2-4':4, '4-6':6, '7-9':9, '10-12':12, '13+':17};
+  const ageLabels = {'0-2':'0-2 år', '2-4':'2-4 år', '4-6':'4-6 år', '7-9':'7-9 år', '10-12':'10-12 år', '13+':'13+ år'};
   const chosenMaxAge = currentAgeFilter !== 'all' ? (ageMaxMap[currentAgeFilter] || null) : null;
+  const ageLabel = currentAgeFilter !== 'all' ? ageLabels[currentAgeFilter] : null;
   const recAge = item?.recommended_age;
+
+  // Hjælpefunktion til at tilføje alders-prefix
+  const prefix = ageLabel ? `Til ${ageLabel}: ` : '';
 
   if (chosenMaxAge && recAge) {
     // Aldersrelativ logik — samme som sikkerhedsfilter
-    if (recAge > chosenMaxAge + 2) return { icon:'🚫', label:'Frarådes' };
-    if (recAge > chosenMaxAge + 1) return { icon:'🔶', label:'Til de ældre' };
+    if (recAge > chosenMaxAge + 2) return { icon:'🚫', label: prefix + 'Frarådes' };
+    if (recAge > chosenMaxAge + 1) return { icon:'🔶', label: prefix + 'Til de ældre' };
     if (recAge >= chosenMaxAge - 1 && recAge <= chosenMaxAge + 1) {
       // Grænsetilfælde - også kig på score
-      if (avg > 6) return { icon:'🔶', label:'Til de ældre' };
-      if (avg > 4) return { icon:'⚠️', label:'Med forbehold' };
-      return { icon:'✅', label:'Egnet' };
+      if (avg > 6) return { icon:'🔶', label: prefix + 'Til de ældre' };
+      if (avg > 4) return { icon:'⚠️', label: prefix + 'Med forbehold' };
+      return { icon:'✅', label: prefix + 'Egnet' };
     }
-    // recAge < chosenMaxAge - 1: for yngre end valgt alder, brug score
+    // recAge < chosenMaxAge - 1: for yngre end valgt alder - vis Egnet
+    if (avg <= 4) return { icon:'✅', label: prefix + 'Egnet' };
+    if (avg <= 6) return { icon:'⚠️', label: prefix + 'Med forbehold' };
+    return { icon:'🔶', label: prefix + 'Til de ældre' };
   }
 
   // Generel vurdering (ingen alder valgt eller ingen recommended_age)
