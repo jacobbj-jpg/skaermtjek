@@ -283,6 +283,9 @@ async function startBatch() {
 
       while (attempts < maxAttempts && !success && !shouldStop) {
         attempts++;
+        let isTimeout = false;
+        let errorMsg = '';
+
         try {
           const response = await fetch('/.netlify/functions/enrich', {
             method: 'POST',
@@ -296,21 +299,25 @@ async function startBatch() {
             })
           });
 
-          // Hvis response ikke er JSON (HTML timeout), retry
-          const contentType = response.headers.get('content-type') || '';
-          if (!contentType.includes('application/json')) {
-            if (attempts < maxAttempts) {
-              log(`  ⚠️ Timeout (forsøg ${attempts}/${maxAttempts}) — venter 5 sek og prøver igen...`, 'warn');
-              await new Promise(r => setTimeout(r, 5000));
-              continue;
-            } else {
-              log(`  ✗ Timeout efter ${maxAttempts} forsøg — springer over`, 'error');
-              errorCount++;
-              break;
-            }
+          // Læs response som tekst først for at kunne tjekke format
+          const responseText = await response.text();
+
+          // Check for HTML timeout-respons
+          if (responseText.trim().startsWith('<') || !response.headers.get('content-type')?.includes('application/json')) {
+            isTimeout = true;
+            errorMsg = 'Netlify timeout (HTML-respons)';
+            throw new Error(errorMsg);
           }
 
-          const result = await response.json();
+          // Parse JSON
+          let result;
+          try {
+            result = JSON.parse(responseText);
+          } catch (parseErr) {
+            isTimeout = true;
+            errorMsg = 'Invalid JSON: ' + responseText.substring(0, 80);
+            throw new Error(errorMsg);
+          }
 
           if (!result.success) {
             log(`  ✗ API-fejl: ${result.error}`, 'error');
@@ -344,17 +351,22 @@ async function startBatch() {
 
         } catch (err) {
           if (attempts < maxAttempts) {
-            log(`  ⚠️ Fejl (forsøg ${attempts}/${maxAttempts}): ${err.message} — prøver igen...`, 'warn');
-            await new Promise(r => setTimeout(r, 5000));
+            if (isTimeout) {
+              log(`  ⚠️ Timeout (forsøg ${attempts}/${maxAttempts}) — venter 8 sek...`, 'warn');
+              await new Promise(r => setTimeout(r, 8000));
+            } else {
+              log(`  ⚠️ Fejl (forsøg ${attempts}/${maxAttempts}): ${err.message} — venter 5 sek...`, 'warn');
+              await new Promise(r => setTimeout(r, 5000));
+            }
           } else {
-            log(`  ✗ Uventet fejl efter ${maxAttempts} forsøg: ${err.message}`, 'error');
+            log(`  ✗ Fejl efter ${maxAttempts} forsøg: ${err.message}`, 'error');
             errorCount++;
           }
         }
       }
 
-      // Længere pause mellem requests for at undgå overbelastning
-      await new Promise(r => setTimeout(r, 2000));
+      // Længere pause mellem titler
+      await new Promise(r => setTimeout(r, 3000));
     }
 
     log(`🎉 Færdig: ${successCount} berigede, ${errorCount} fejl`, 'success');
