@@ -29,32 +29,16 @@ exports.handler = async (event, context) => {
     const platformLabel = PLATFORM_LABEL[platform] || platform;
     const scoresStr = ai_scores ? JSON.stringify(ai_scores) : '(ukendt)';
 
-    // Kun per-kategori tekster og FAQ - mere fokuseret prompt
-    const prompt = `Dansk mediepædagog for skaermtjek.dk. "${title}" (${platformLabel})${episode ? ' - ' + episode : ''}. Anbefalet ${recommended_age || '?'} år. Scores: ${scoresStr}.
+    // Meget kompakt prompt - stol på at Sonnet ved hvad den skal
+    const prompt = `"${title}" (${platformLabel})${episode ? ' ' + episode : ''}. Scores: ${scoresStr}. Anbefalet ${recommended_age || '?'} år.
 
-Returner JSON med 2-sætnings begrundelser for HVORFOR scoren er som den er:
-
+Returnér JSON på dansk:
 {
-"ai_category_texts": {
-"violence":"<2 konkrete sætninger>",
-"language":"<2 konkrete sætninger>",
-"dopamine":"<2 konkrete sætninger>",
-"retention":"<2 konkrete sætninger>",
-"commercialism":"<2 konkrete sætninger>",
-"values":"<2 konkrete sætninger>",
-"sexual":"<2 konkrete sætninger>",
-"fear":"<2 konkrete sætninger>",
-"passive":"<2 konkrete sætninger>",
-"socialpressure":"<2 konkrete sætninger>"
-},
-"ai_faq": [
-{"q":"<forældrespørgsmål>","a":"<1-2 sætninger>"},
-{"q":"<forældrespørgsmål>","a":"<1-2 sætninger>"},
-{"q":"<forældrespørgsmål>","a":"<1-2 sætninger>"}
-]
+"ai_category_texts":{"violence":"","language":"","dopamine":"","retention":"","commercialism":"","values":"","sexual":"","fear":"","passive":"","socialpressure":""},
+"ai_faq":[{"q":"","a":""},{"q":"","a":""},{"q":"","a":""}]
 }
 
-Hver kategori-tekst skal være KONKRET for denne titel (nævn specifikke features, karakterer, mekanikker). 3 FAQ om aldersgrænse, problematisk indhold, og alternativer/tips. Kun JSON.`;
+Hver kategori: 1-2 konkrete sætninger der begrunder scoren. FAQ: typiske forældre-spørgsmål om titlen. Kun JSON.`;
 
     const apiKey = process.env.ANTHROPIC_API_KEY;
     if (!apiKey) return { statusCode: 500, headers, body: JSON.stringify({ error: 'ANTHROPIC_API_KEY mangler' }) };
@@ -68,7 +52,7 @@ Hver kategori-tekst skal være KONKRET for denne titel (nævn specifikke feature
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: 2000,
+        max_tokens: 1500,
         messages: [{ role: 'user', content: prompt }]
       })
     });
