@@ -106,13 +106,20 @@ nav {
 .breadcrumb a:hover { color: var(--accent); }
 .breadcrumb span { margin: 0 6px; }
 
-.page { max-width: 780px; margin: 0 auto; padding: 0 5vw 4rem; }
+.page { max-width: 1100px; margin: 0 auto; padding: 0 5vw 4rem; }
+
+/* Smal læseflow til prosa-tekst */
+.narrow { max-width: 780px; margin: 0 auto; }
+
+/* Bred grid til kort/kategorier */
+.wide-grid { max-width: 1100px; margin: 0 auto; }
 
 /* HEADER */
 .rating-header {
   padding: 2rem 0 1.5rem;
   border-bottom: 1px solid var(--border);
   margin-bottom: 0;
+  max-width: 820px;
 }
 
 .platform-pill {
@@ -260,6 +267,16 @@ nav {
 .tab-panel { display: none; }
 .tab-panel.active { display: block; }
 
+/* Prosa-paneler holdes i behagelig læsebredde */
+#panel-overblik, #panel-faq, #panel-samtalen {
+  max-width: 820px;
+}
+
+/* Analyse og Se også må udnytte hele bredden */
+#panel-analyse, #panel-seogsa {
+  max-width: 100%;
+}
+
 /* OVERBLIK TAB */
 .ai-analyse-box {
   background: white;
@@ -378,12 +395,25 @@ nav {
 }
 
 /* ANALYSE TAB */
+#analyseContainer {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  #analyseContainer {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+}
+
 .analyse-category {
   background: white;
   border: 1px solid var(--border);
   border-radius: 14px;
   padding: 1.25rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0;
 }
 
 .analyse-cat-header {
