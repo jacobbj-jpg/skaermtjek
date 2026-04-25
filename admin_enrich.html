@@ -239,7 +239,12 @@ async function startBatch() {
   const batchSize = parseInt(document.getElementById('batchSize').value);
   const phase = document.getElementById('phase').value;
 
-  log(`🚀 Starter batch (${phase === 'fast' ? 'FASE 1: Hurtig' : 'FASE 2: Grundig'}, ${batchSize} titler)...`, 'info');
+  const phaseLabels = {
+    fast: 'FASE 1: Hurtig',
+    deep: 'FASE 2: Grundig',
+    conversations: 'FASE 3: Samtaler'
+  };
+  log(`🚀 Starter batch (${phaseLabels[phase] || phase}, ${batchSize} titler)...`, 'info');
 
   try {
     // Hent vurderinger der mangler den relevante berigelse
