@@ -574,18 +574,15 @@ nav {
 
 .filter-close-mobile {
   display: none;
-  position: sticky;
-  top: 0;
   background: white;
-  padding: 12px 0 8px;
+  padding: 16px 0 12px;
   border-bottom: 1px solid var(--border);
   margin: 0 0 8px;
-  z-index: 5;
   text-align: right;
 }
 
 .filter-close-mobile button {
-  background: var(--accent);
+  background: var(--ink);
   color: white;
   border: none;
   border-radius: 20px;
@@ -3725,8 +3722,8 @@ input.autofilled, textarea.autofilled {
 </nav>
 
 <!-- Mobile FAB - kun synlig på små skærme -->
-<button class="mobile-fab" onclick="showPage('submit')">
-  <span style="font-size:16px">✏️</span>
+<button class="mobile-fab" id="mobileFab" onclick="showPage('submit')">
+  <span style="font-size:16px">⭐</span>
   <span class="fab-text">Tilføj vurdering</span>
 </button>
 
@@ -8109,10 +8106,13 @@ function toggleFilters() {
   const panel = document.getElementById('filterPanel');
   const backdrop = document.getElementById('filterBackdrop');
   const btn = document.getElementById('filterToggleBtn');
+  const fab = document.getElementById('mobileFab');
   const isOpen = panel.classList.toggle('open');
   if (backdrop) backdrop.classList.toggle('open', isOpen);
   btn.classList.toggle('open', isOpen);
   btn.textContent = isOpen ? '✕ Luk' : '🎛️ Filtrer';
+  // Skjul FAB når filter er åbent på mobil
+  if (fab) fab.style.display = isOpen && window.innerWidth <= 768 ? 'none' : '';
   // Forhindr scroll på siden bag når filter er åbent på mobil
   if (window.innerWidth <= 768) {
     document.body.style.overflow = isOpen ? 'hidden' : '';
