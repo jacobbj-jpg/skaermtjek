@@ -572,28 +572,6 @@ nav {
   .filter-backdrop.open { display: block; }
 }
 
-.filter-close-mobile {
-  display: none;
-  background: white;
-  padding: 16px 0 12px;
-  border-bottom: 1px solid var(--border);
-  margin: 0 0 8px;
-  text-align: right;
-}
-
-.filter-close-mobile button {
-  background: var(--ink);
-  color: white;
-  border: none;
-  border-radius: 20px;
-  padding: 10px 20px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  min-height: 40px;
-  min-width: 100px;
-}
-
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -609,8 +587,7 @@ nav {
     max-height: 100vh;
     z-index: 999;
     overflow-y: auto;
-    /* Padding-top giver plads til den fixed luk-bar */
-    padding: 56px 20px 16px;
+    padding: 16px 20px;
     border-top: none;
     border-left: 1px solid var(--border);
     box-shadow: -8px 0 24px rgba(0,0,0,0.15);
@@ -618,32 +595,8 @@ nav {
     -webkit-overflow-scrolling: touch;
   }
 
-  /* Fast luk-bar på mobilfilter — udenfor panelet, fixed til toppen */
-  .filter-close-mobile {
-    display: none;
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: min(420px, 90vw);
-    background: white;
-    padding: 10px 20px;
-    border-bottom: 1px solid var(--border);
-    margin: 0;
-    text-align: right;
-    z-index: 1001;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    box-sizing: border-box;
-  }
-
-  /* Vis luk-bar når den har open-klasse */
-  .filter-close-mobile.open {
-    display: block;
-  }
-
-  /* På mobil: knappen er ikke sticky — bare placeret i bunden */
-  .filter-apply-btn {
-    position: static;
-    margin-bottom: 0;
+  /* På mobil: knapperne placeret naturligt i bunden */
+  .filter-actions {
     box-shadow: none;
   }
 }
@@ -689,6 +642,33 @@ nav {
   gap: 6px;
 }
 
+.filter-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+  position: sticky;
+  bottom: 0;
+  background: white;
+  padding-top: 12px;
+  z-index: 5;
+  box-shadow: 0 -8px 12px rgba(255,255,255,0.95);
+}
+
+.filter-close-btn {
+  background: var(--ink);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 13px 20px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.filter-close-btn:hover { opacity: 0.85; }
+
 .filter-apply-btn {
   background: var(--accent);
   border: none;
@@ -699,12 +679,7 @@ nav {
   font-weight: 600;
   padding: 13px;
   cursor: pointer;
-  width: 100%;
-  margin-top: 12px;
-  position: sticky;
-  bottom: 0;
-  z-index: 5;
-  box-shadow: 0 -4px 12px rgba(250,247,242,0.9);
+  flex: 1;
 }
 
 .filter-apply-btn:hover { opacity: 0.9; }
@@ -3804,10 +3779,6 @@ input.autofilled, textarea.autofilled {
   </div>
   <!-- Backdrop til mobil filter -->
   <div class="filter-backdrop" id="filterBackdrop" onclick="toggleFilters()"></div>
-  <!-- Luk-knap til mobil — udenfor panelet så fixed positioning virker -->
-  <div class="filter-close-mobile" id="filterCloseMobile">
-    <button onclick="toggleFilters()">✕ Luk filter</button>
-  </div>
   <!-- Collapsible filter panel -->
   <div class="filter-panel" id="filterPanel">
     <div class="filter-section">
@@ -3899,7 +3870,10 @@ input.autofilled, textarea.autofilled {
       <div class="filter-section-title">Maks. score: <span id="scoreSliderVal" style="color:var(--accent);font-family:'Fraunces',serif;font-weight:800">Alle</span></div>
       <input type="range" min="1" max="10" value="10" id="scoreSlider" oninput="setScoreMax(this.value)" style="width:100%">
     </div>
-    <button class="filter-apply-btn" onclick="toggleFilters()">Vis resultater ✓</button>
+    <div class="filter-actions">
+      <button class="filter-close-btn" onclick="toggleFilters()">✕ Luk</button>
+      <button class="filter-apply-btn" onclick="toggleFilters()">Vis resultater ✓</button>
+    </div>
   </div>
 </div>
 
@@ -8125,12 +8099,10 @@ function getRelatedArticle(tags) {
 function toggleFilters() {
   const panel = document.getElementById('filterPanel');
   const backdrop = document.getElementById('filterBackdrop');
-  const closeBar = document.getElementById('filterCloseMobile');
   const btn = document.getElementById('filterToggleBtn');
   const fab = document.getElementById('mobileFab');
   const isOpen = panel.classList.toggle('open');
   if (backdrop) backdrop.classList.toggle('open', isOpen);
-  if (closeBar) closeBar.classList.toggle('open', isOpen);
   btn.classList.toggle('open', isOpen);
   btn.textContent = isOpen ? '✕ Luk' : '🎛️ Filtrer';
   // Skjul FAB når filter er åbent på mobil
