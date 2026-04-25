@@ -633,6 +633,121 @@ nav {
 
 .agreement-dash { color: var(--muted); flex-shrink: 0; }
 
+/* NY SAMTALEN-SEKTIONER (Fase 3) */
+.samtalen-section {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+
+.samtalen-section-title {
+  font-family: 'Fraunces', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 8px;
+  letter-spacing: -0.2px;
+}
+
+.samtalen-section-intro {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+
+.dialog-question {
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.5;
+  margin-bottom: 4px;
+}
+
+.dialog-context {
+  font-size: 12px;
+  color: var(--muted);
+  font-style: italic;
+  line-height: 1.4;
+}
+
+.counter-block {
+  background: linear-gradient(135deg, #FAF7F2, white);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 12px;
+}
+
+.counter-block:last-child { margin-bottom: 0; }
+
+.counter-says {
+  font-size: 14px;
+  color: var(--ink2);
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed var(--border);
+  font-style: italic;
+}
+
+.counter-says strong {
+  font-style: normal;
+  color: var(--accent);
+  margin-right: 4px;
+}
+
+.counter-response {
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.6;
+}
+
+.counter-response strong {
+  color: var(--parent-color);
+  margin-right: 4px;
+}
+
+.sources-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.source-link {
+  display: block;
+  padding: 12px 16px;
+  background: var(--warm);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  text-decoration: none;
+  transition: all 0.15s;
+}
+
+.source-link:hover {
+  border-color: var(--accent);
+  background: white;
+  transform: translateX(2px);
+}
+
+.source-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--accent);
+  margin-bottom: 2px;
+}
+
+.source-desc {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+@media (max-width: 600px) {
+  .samtalen-section { padding: 1.25rem 1rem; }
+}
+
 /* SE OGSÅ TAB */
 .related-grid {
   display: grid;
@@ -1438,7 +1553,93 @@ function toggleFAQ(el) {
 function renderSamtalen(item, avgScore) {
   const title = item.title;
   const scores = item.ai_scores || {};
+  const conv = item.ai_conversations;
 
+  // Brug AI-genereret indhold hvis tilgængelig
+  if (conv && (conv.questions || conv.counterarguments)) {
+    let intro = '';
+    if (avgScore >= 7) {
+      intro = `${title} scorer højt på flere bekymringsparametre. Her er nogle samtalestartere til at åbne en god dialog med dit barn — og argumentationshjælp til de svære snakke.`;
+    } else {
+      intro = `${title} indeholder elementer det kan være værdifuldt at tale med dit barn om. Her er nogle konkrete samtalestartere.`;
+    }
+    document.getElementById('samtaleIntro').textContent = intro;
+
+    let html = '';
+
+    // Sektion 1: Spørgsmål til barnet
+    if (conv.questions && Array.isArray(conv.questions) && conv.questions.length > 0) {
+      html += `<div class="samtalen-section">
+        <h3 class="samtalen-section-title">💬 Spørgsmål til samtalen</h3>
+        <div id="dialogQuestions">
+          ${conv.questions.map((q, i) => `
+            <div class="dialog-q">
+              <div class="dialog-num">${i+1}</div>
+              <div class="dialog-text">
+                <div class="dialog-question">${q.q}</div>
+                ${q.context ? `<div class="dialog-context">${q.context}</div>` : ''}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>`;
+    }
+
+    // Sektion 2: Argumentationshjælp (kun for sociale medier / pres-tunge titler)
+    if (conv.counterarguments && Array.isArray(conv.counterarguments) && conv.counterarguments.length > 0) {
+      html += `<div class="samtalen-section">
+        <h3 class="samtalen-section-title">🛡️ Når dit barn siger...</h3>
+        <p class="samtalen-section-intro">Konkret argumentationshjælp når dit barn presser på. Anerkend følelsen — hold rammen.</p>
+        ${conv.counterarguments.map(ca => `
+          <div class="counter-block">
+            <div class="counter-says">
+              <strong>Barnet:</strong> "${ca.child_says}"
+            </div>
+            <div class="counter-response">
+              <strong>Du kan svare:</strong> ${ca.parent_response}
+            </div>
+          </div>
+        `).join('')}
+      </div>`;
+    }
+
+    // Sektion 3: Læs mere
+    if (conv.sources && Array.isArray(conv.sources) && conv.sources.length > 0) {
+      html += `<div class="samtalen-section">
+        <h3 class="samtalen-section-title">📚 Læs mere</h3>
+        <p class="samtalen-section-intro">Officielle danske kilder med yderligere rådgivning.</p>
+        <div class="sources-list">
+          ${conv.sources.map(s => `
+            <a href="${s.url}" target="_blank" rel="noopener" class="source-link">
+              <div class="source-name">${s.name} →</div>
+              <div class="source-desc">${s.description}</div>
+            </a>
+          `).join('')}
+        </div>
+      </div>`;
+    }
+
+    // Indsæt indhold i panelet
+    const panel = document.getElementById('panel-samtalen');
+    const intro_el = document.getElementById('samtaleIntro');
+    // Fjern gamle elementer
+    const oldDialog = document.getElementById('dialogQuestions');
+    if (oldDialog) oldDialog.remove();
+    const oldAgreement = document.getElementById('agreementBox');
+    if (oldAgreement) oldAgreement.remove();
+
+    // Tilføj nyt indhold efter intro
+    let newContent = document.getElementById('samtaleNewContent');
+    if (!newContent) {
+      newContent = document.createElement('div');
+      newContent.id = 'samtaleNewContent';
+      intro_el.insertAdjacentElement('afterend', newContent);
+    }
+    newContent.innerHTML = html;
+    return;
+  }
+
+  // FALLBACK: gammel logik hvis ingen AI-conversations
   let intro = '';
   let questions = [];
   let agreements = [];
@@ -1449,7 +1650,6 @@ function renderSamtalen(item, avgScore) {
     intro = `${title} indeholder nogle elementer det kan være godt at tale med dit barn om. Her er et par spørgsmål der kan åbne for en god samtale.`;
   }
 
-  // Generer spørgsmål baseret på høje scores
   if ((scores.retention || 0) >= 6) {
     questions.push(`Hvor lang tid bruger du typisk på ${title} ad gangen — og hvordan har du det bagefter?`);
     agreements.push(`Sæt en daglig tidsbegrænsning på ${title}`);
@@ -1466,21 +1666,23 @@ function renderSamtalen(item, avgScore) {
     questions.push(`Hvad tænker du om den vold der er i ${title} — er det noget der påvirker dig?`);
   }
 
-  // Altid et åbent spørgsmål
   questions.push(`Hvad er det du bedst kan lide ved ${title} — og hvad ville du ændre hvis du kunne?`);
-
   agreements.push(`Se ${title} åbent med barnet indimellem`);
 
   document.getElementById('samtaleIntro').textContent = intro;
-  document.getElementById('dialogQuestions').innerHTML = questions.map((q, i) => `
-    <div class="dialog-q">
-      <div class="dialog-num">${i+1}</div>
-      <div class="dialog-text">${q}</div>
-    </div>
-  `).join('');
+  const dq = document.getElementById('dialogQuestions');
+  if (dq) {
+    dq.innerHTML = questions.map((q, i) => `
+      <div class="dialog-q">
+        <div class="dialog-num">${i+1}</div>
+        <div class="dialog-text">${q}</div>
+      </div>
+    `).join('');
+  }
 
-  if (agreements.length) {
-    document.getElementById('agreementBox').style.display = 'block';
+  const ab = document.getElementById('agreementBox');
+  if (ab && agreements.length) {
+    ab.style.display = 'block';
     document.getElementById('agreementItems').innerHTML = agreements.map(a => `
       <div class="agreement-item">
         <span class="agreement-dash">—</span>
