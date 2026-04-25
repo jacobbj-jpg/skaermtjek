@@ -618,7 +618,7 @@ nav {
     -webkit-overflow-scrolling: touch;
   }
 
-  /* Fast luk-bar på mobilfilter — fixed til toppen så den altid er synlig */
+  /* Fast luk-bar på mobilfilter — udenfor panelet, fixed til toppen */
   .filter-close-mobile {
     display: none;
     position: fixed;
@@ -630,13 +630,13 @@ nav {
     border-bottom: 1px solid var(--border);
     margin: 0;
     text-align: right;
-    z-index: 1000;
+    z-index: 1001;
     box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     box-sizing: border-box;
   }
 
-  /* Vis luk-bar når filter er åbent */
-  .filter-panel.open .filter-close-mobile {
+  /* Vis luk-bar når den har open-klasse */
+  .filter-close-mobile.open {
     display: block;
   }
 
@@ -3804,12 +3804,12 @@ input.autofilled, textarea.autofilled {
   </div>
   <!-- Backdrop til mobil filter -->
   <div class="filter-backdrop" id="filterBackdrop" onclick="toggleFilters()"></div>
+  <!-- Luk-knap til mobil — udenfor panelet så fixed positioning virker -->
+  <div class="filter-close-mobile" id="filterCloseMobile">
+    <button onclick="toggleFilters()">✕ Luk filter</button>
+  </div>
   <!-- Collapsible filter panel -->
   <div class="filter-panel" id="filterPanel">
-    <!-- Luk-knap kun synlig på mobil -->
-    <div class="filter-close-mobile">
-      <button onclick="toggleFilters()">✕ Luk filter</button>
-    </div>
     <div class="filter-section">
       <div class="filter-section-title">Barnets alder</div>
       <div class="filter-pills-wrap">
@@ -8125,10 +8125,12 @@ function getRelatedArticle(tags) {
 function toggleFilters() {
   const panel = document.getElementById('filterPanel');
   const backdrop = document.getElementById('filterBackdrop');
+  const closeBar = document.getElementById('filterCloseMobile');
   const btn = document.getElementById('filterToggleBtn');
   const fab = document.getElementById('mobileFab');
   const isOpen = panel.classList.toggle('open');
   if (backdrop) backdrop.classList.toggle('open', isOpen);
+  if (closeBar) closeBar.classList.toggle('open', isOpen);
   btn.classList.toggle('open', isOpen);
   btn.textContent = isOpen ? '✕ Luk' : '🎛️ Filtrer';
   // Skjul FAB når filter er åbent på mobil
