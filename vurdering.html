@@ -94,6 +94,58 @@ nav {
   font-weight: 500;
 }
 
+/* MOBIL NAVIGATION & FAB */
+.mobile-fab {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 28px;
+  padding: 11px 16px;
+  text-decoration: none;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(200, 90, 42, 0.25);
+  cursor: pointer;
+  z-index: 998;
+  align-items: center;
+  gap: 6px;
+  opacity: 0.92;
+}
+
+.mobile-fab:hover {
+  background: #a84415;
+  opacity: 1;
+}
+
+.fab-text { display: inline; }
+
+.nav-btn-text { display: inline; }
+
+@media (max-width: 768px) {
+  .nav-btn-text { display: none; }
+  .nav-btn { padding: 8px 10px; font-size: 16px; }
+  .nav-btn.primary { display: none !important; }
+  .mobile-fab { display: inline-flex; }
+}
+
+@media (max-width: 400px) {
+  /* Kun ikon på meget små skærme */
+  .mobile-fab {
+    padding: 0;
+    width: 48px;
+    height: 48px;
+    justify-content: center;
+    bottom: 16px;
+    right: 16px;
+  }
+  .fab-text { display: none; }
+}
+
 .breadcrumb {
   padding: 12px 5vw;
   font-size: 12px;
@@ -941,13 +993,19 @@ nav {
 <nav>
   <a href="/" class="nav-logo">Skærm<span>Tjek</span></a>
   <div class="nav-links">
-    <a href="/" class="nav-btn">🔍 Søg</a>
-    <a href="/#viden" class="nav-btn">📚 Viden</a>
-    <a href="/#blog" class="nav-btn">✍️ Blog</a>
-    <a href="/#om" class="nav-btn">💬 Om</a>
-    <a href="/#submit" class="nav-btn primary">✏️ Tilføj vurdering</a>
+    <a href="/" class="nav-btn">🔍<span class="nav-btn-text"> Søg</span></a>
+    <a href="/#viden" class="nav-btn">📚<span class="nav-btn-text"> Viden</span></a>
+    <a href="/#blog" class="nav-btn">✍️<span class="nav-btn-text"> Blog</span></a>
+    <a href="/#om" class="nav-btn">💬<span class="nav-btn-text"> Om</span></a>
+    <a href="/#submit" class="nav-btn primary">✏️<span class="nav-btn-text"> Tilføj vurdering</span></a>
   </div>
 </nav>
+
+<!-- Mobile FAB - kun synlig på små skærme -->
+<a id="mobileFab" href="/#submit" class="mobile-fab">
+  <span style="font-size:16px">✏️</span>
+  <span class="fab-text">Tilføj vurdering</span>
+</a>
 
 <div class="breadcrumb" id="breadcrumb">
   <a href="/">Forsiden</a>
