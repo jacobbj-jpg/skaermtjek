@@ -943,6 +943,14 @@ const PLATFORM_LABEL = {
   discord:'Discord', twitch:'Twitch'
 };
 
+const PLATFORM_EMOJI = {
+  youtube:'📺', netflix:'🎬', disney:'🏰', dr:'🇩🇰', tv2:'📺',
+  viaplay:'🎥', max:'🎬', hbo:'🎬', skyshowtime:'⭐', sfkids:'🎞️',
+  gaming:'🎮', switch:'🕹️', ipad:'📱',
+  tiktok:'🎵', instagram:'📸', snapchat:'👻', ytshorts:'📱', bereal:'📷',
+  discord:'💬', twitch:'🎙️'
+};
+
 const PLATFORM_CATEGORY = {
   youtube:'Streaming', netflix:'Streaming', disney:'Streaming', dr:'Streaming', tv2:'Streaming',
   viaplay:'Streaming', max:'Streaming', skyshowtime:'Streaming', sfkids:'Streaming',
@@ -1458,32 +1466,46 @@ function renderRelated(item, allData) {
     .filter(r => r.id !== item.id && (r.platform === platform || r.age_group === item.age_group))
     .slice(0, 6);
 
-  document.getElementById('relatedGrid').innerHTML = related.map(r => {
-    const aiAvg = calcAvg(r.ai_scores);
-    const slug = makeSlug(r.title);
-    const verdict = getVerdict(aiAvg);
-    const firstBullet = r.ai_bullets && r.ai_bullets[0];
-    const pEmoji = PLATFORM_EMOJI[r.platform] || '📱';
+  const container = document.getElementById('relatedGrid');
+  if (!container) return;
 
-    return `<a href="/vurdering/${slug}" class="related-card">
-      <div class="related-header">
-        <span class="related-platform">${pEmoji} ${PLATFORM_LABEL[r.platform] || r.platform}</span>
-        ${r.recommended_age ? `<span class="related-age">📅 ${r.recommended_age}+ år</span>` : ''}
-      </div>
-      <div class="related-name">${r.title}</div>
-      <div class="related-scores">
-        ${aiAvg ? `<span class="related-score ai">🤖 AI ${aiAvg.toFixed(1)}</span>` : ''}
-        ${r.parent_score ? `<span class="related-score parent">👨‍👩‍👧 ${r.parent_score.toFixed(1)}</span>` : ''}
-      </div>
-      <span class="related-verdict related-verdict-${verdict.cls}">${verdict.icon} ${verdict.label}</span>
-      ${firstBullet ? `
-        <div class="related-bullet">
-          <span>${firstBullet.icon}</span>
-          <span><strong>${firstBullet.highlight}</strong> ${firstBullet.text}</span>
+  if (related.length === 0) {
+    container.innerHTML = '<p style="color:var(--muted);font-size:14px;text-align:center;padding:1rem">Ingen relaterede vurderinger fundet endnu.</p>';
+    return;
+  }
+
+  container.innerHTML = related.map(r => {
+    try {
+      const aiAvg = calcAvg(r.ai_scores) || 5;
+      const slug = makeSlug(r.title);
+      const verdict = getVerdict(aiAvg);
+      const firstBullet = r.ai_bullets && Array.isArray(r.ai_bullets) && r.ai_bullets[0];
+      const pEmoji = (typeof PLATFORM_EMOJI !== 'undefined' && PLATFORM_EMOJI[r.platform]) || '📱';
+      const pLabel = PLATFORM_LABEL[r.platform] || r.platform;
+
+      return `<a href="/vurdering/${slug}" class="related-card">
+        <div class="related-header">
+          <span class="related-platform">${pEmoji} ${pLabel}</span>
+          ${r.recommended_age ? `<span class="related-age">📅 ${r.recommended_age}+ år</span>` : ''}
         </div>
-      ` : ''}
-      <div class="related-cta">Se vurdering →</div>
-    </a>`;
+        <div class="related-name">${r.title}</div>
+        <div class="related-scores">
+          ${aiAvg ? `<span class="related-score ai">🤖 AI ${aiAvg.toFixed(1)}</span>` : ''}
+          ${r.parent_score ? `<span class="related-score parent">👨‍👩‍👧 ${r.parent_score.toFixed(1)}</span>` : ''}
+        </div>
+        <span class="related-verdict related-verdict-${verdict.cls}">${verdict.icon} ${verdict.label}</span>
+        ${firstBullet ? `
+          <div class="related-bullet">
+            <span>${firstBullet.icon || '•'}</span>
+            <span><strong>${firstBullet.highlight || ''}</strong> ${firstBullet.text || ''}</span>
+          </div>
+        ` : ''}
+        <div class="related-cta">Se vurdering →</div>
+      </a>`;
+    } catch (err) {
+      console.error('Fejl i related card render:', err, r);
+      return '';
+    }
   }).join('');
 }
 
