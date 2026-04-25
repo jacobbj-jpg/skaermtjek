@@ -1462,19 +1462,70 @@ function renderSamtalen(item, avgScore) {
 
 function renderRelated(item, allData) {
   const platform = item.platform;
-  const related = allData
-    .filter(r => r.id !== item.id && (r.platform === platform || r.age_group === item.age_group))
-    .slice(0, 6);
+  const itemAge = item.recommended_age || 99;
+  const itemAvg = calcAvg(item.ai_scores) || 5;
+  const itemScores = item.ai_scores || {};
+
+  // Score hver kandidat baseret på relevans
+  const candidates = allData
+    .filter(r => r.id !== item.id && r.title !== item.title) // ekskludér nuværende + dubletter
+    .map(r => {
+      let score = 0;
+      const rAge = r.recommended_age || 99;
+      const rAvg = calcAvg(r.ai_scores) || 5;
+      const rScores = r.ai_scores || {};
+
+      // +5 for samme platform
+      if (r.platform === platform) score += 5;
+
+      // +5 for samme aldersgruppe (±1 år)
+      if (Math.abs(rAge - itemAge) <= 1) score += 5;
+      else if (Math.abs(rAge - itemAge) <= 2) score += 2;
+
+      // +3 for lignende verdict (begge under 4, begge 4-6, eller begge over 6)
+      const sameVerdictBand =
+        (itemAvg <= 4 && rAvg <= 4) ||
+        (itemAvg > 4 && itemAvg <= 6 && rAvg > 4 && rAvg <= 6) ||
+        (itemAvg > 6 && rAvg > 6);
+      if (sameVerdictBand) score += 3;
+
+      // +2 for samme content_type
+      if (r.content_type === item.content_type) score += 2;
+
+      // +1 hvis de har lignende score-profil (cosine similarity light)
+      const cats = ['violence', 'language', 'dopamine', 'retention', 'commercialism', 'values', 'sexual', 'fear', 'passive', 'socialpressure'];
+      let diffSum = 0;
+      let countCats = 0;
+      cats.forEach(c => {
+        if (itemScores[c] !== undefined && rScores[c] !== undefined) {
+          diffSum += Math.abs(itemScores[c] - rScores[c]);
+          countCats++;
+        }
+      });
+      if (countCats > 0) {
+        const avgDiff = diffSum / countCats;
+        if (avgDiff < 1.5) score += 2;
+        else if (avgDiff < 3) score += 1;
+      }
+
+      // Bonus: prefer berigede titler med bullets (bedre brugeroplevelse)
+      if (r.ai_bullets && Array.isArray(r.ai_bullets) && r.ai_bullets.length > 0) score += 1;
+
+      return { item: r, score };
+    })
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 6)
+    .map(c => c.item);
 
   const container = document.getElementById('relatedGrid');
   if (!container) return;
 
-  if (related.length === 0) {
+  if (candidates.length === 0) {
     container.innerHTML = '<p style="color:var(--muted);font-size:14px;text-align:center;padding:1rem">Ingen relaterede vurderinger fundet endnu.</p>';
     return;
   }
 
-  container.innerHTML = related.map(r => {
+  container.innerHTML = candidates.map(r => {
     try {
       const aiAvg = calcAvg(r.ai_scores) || 5;
       const slug = makeSlug(r.title);
