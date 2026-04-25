@@ -506,11 +506,15 @@ nav {
 }
 
 .filter-topbar {
-  display: flex;
+  display: none; /* Skjules på desktop — kun mobile bruger toggle-knappen */
   align-items: center;
   justify-content: space-between;
   padding: 10px 5vw;
   gap: 12px;
+}
+
+@media (max-width: 768px) {
+  .filter-topbar { display: flex; }
 }
 
 .filter-summary {
@@ -542,17 +546,22 @@ nav {
 }
 
 .filter-panel {
-  display: none;
+  display: flex;
   flex-direction: column;
   gap: 0;
   border-top: 1px solid var(--border);
   background: white;
   padding: 0 5vw 16px;
-  animation: slideDown 0.2s ease;
 }
 
-.filter-panel.open {
-  display: flex;
+@media (max-width: 768px) {
+  .filter-panel {
+    display: none;
+    animation: slideDown 0.2s ease;
+  }
+  .filter-panel.open {
+    display: flex;
+  }
 }
 
 .filter-backdrop {
