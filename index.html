@@ -551,6 +551,7 @@ nav {
   animation: slideDown 0.2s ease;
   max-height: 70vh;
   overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .filter-panel.open {
@@ -608,9 +609,10 @@ nav {
     right: 0;
     bottom: 0;
     width: min(420px, 90vw);
+    max-height: 100vh;
     z-index: 999;
     overflow-y: auto;
-    padding: 0 20px 80px;
+    padding: 0 20px 16px;
     border-top: none;
     border-left: 1px solid var(--border);
     box-shadow: -8px 0 24px rgba(0,0,0,0.15);
@@ -620,6 +622,13 @@ nav {
   }
 
   .filter-close-mobile { display: block; }
+
+  /* På mobil: knappen er ikke sticky — bare placeret i bunden */
+  .filter-apply-btn {
+    position: static;
+    margin-bottom: 0;
+    box-shadow: none;
+  }
 }
 
 @keyframes slideDown {
