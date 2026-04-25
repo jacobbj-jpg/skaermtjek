@@ -506,15 +506,11 @@ nav {
 }
 
 .filter-topbar {
-  display: none; /* Skjules på desktop — kun mobile bruger toggle-knappen */
+  display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 10px 5vw;
   gap: 12px;
-}
-
-@media (max-width: 768px) {
-  .filter-topbar { display: flex; }
 }
 
 .filter-summary {
@@ -546,22 +542,19 @@ nav {
 }
 
 .filter-panel {
-  display: flex;
+  display: none;
   flex-direction: column;
   gap: 0;
   border-top: 1px solid var(--border);
   background: white;
   padding: 0 5vw 16px;
+  animation: slideDown 0.2s ease;
+  max-height: 70vh;
+  overflow-y: auto;
 }
 
-@media (max-width: 768px) {
-  .filter-panel {
-    display: none;
-    animation: slideDown 0.2s ease;
-  }
-  .filter-panel.open {
-    display: flex;
-  }
+.filter-panel.open {
+  display: flex;
 }
 
 .filter-backdrop {
@@ -682,7 +675,13 @@ nav {
   cursor: pointer;
   width: 100%;
   margin-top: 12px;
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  box-shadow: 0 -4px 12px rgba(250,247,242,0.9);
 }
+
+.filter-apply-btn:hover { opacity: 0.9; }
 
 .filter-label { font-size: 12px; color: var(--muted); font-weight: 500; margin-right: 4px; }
 
