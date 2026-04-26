@@ -470,9 +470,11 @@ async function regenerateContent(useWebSearch) {
     }
 
     // Vælg endpoint baseret på mode
+    // Web search bruges KUN til Fase 1 (analyse) - de andre faser har ikke brug for det
+    // og ville ramme Netlify timeout
     const fase1Endpoint = useWebSearch ? '/.netlify/functions/enrich-deep-search' : '/.netlify/functions/enrich';
-    const fase2Endpoint = useWebSearch ? '/.netlify/functions/enrich-deep-search' : '/.netlify/functions/enrich-deep';
-    const fase3Endpoint = useWebSearch ? '/.netlify/functions/enrich-deep-search' : '/.netlify/functions/enrich-conversations';
+    const fase2Endpoint = '/.netlify/functions/enrich-deep';
+    const fase3Endpoint = '/.netlify/functions/enrich-conversations';
 
     // Trin 2: Re-generer Fase 1 (bullets + analyse)
     btn.textContent = useWebSearch ? '🔍 Søger web... (1/3)' : '🤖 Genererer bullets... (1/3)';
@@ -528,6 +530,7 @@ async function regenerateContent(useWebSearch) {
         title: currentItem.title,
         platform: currentItem.platform,
         episode: currentItem.episode,
+        notes: enrichmentNotes,
         manualContext: manualContext,
         ai_scores: newScores,
         recommended_age: recommendedAge,
