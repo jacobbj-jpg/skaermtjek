@@ -236,17 +236,25 @@ button.danger { background: #c83a2a; }
   <h4 style="margin-top:1.5rem;font-size:14px">AI-analyse</h4>
   <textarea id="f_ai_analysis" rows="4" style="width:100%;font-family:inherit;font-size:13px;padding:10px"></textarea>
 
+  <h4 style="margin-top:1.5rem;font-size:14px">Manuel kontekst <span style="font-weight:400;color:#888;font-size:12px">(valgfrit)</span></h4>
+  <p style="font-size:12px;color:#888;margin-bottom:6px;line-height:1.5">
+    Skriv specifik viden om titlen som AI'en skal bruge ved re-generering. Fx: "Onkel Reje er kendt for sjofelt sprog som del af humor, har modtaget klager fra forældre i 2013."
+  </p>
+  <textarea id="f_manual_context" rows="3" style="width:100%;font-family:inherit;font-size:13px;padding:10px" placeholder="Skriv din kontekst her..."></textarea>
+
   <div class="changes-summary" id="changesSummary"></div>
 
   <div style="margin-top:1.5rem;display:flex;gap:8px;flex-wrap:wrap">
     <button onclick="saveChanges()">💾 Gem ændringer</button>
-    <button onclick="regenerateContent()" style="background:#185FA5">🔄 Gem + Re-generer alt indhold</button>
+    <button onclick="regenerateContent(false)" style="background:#185FA5">🔄 Gem + Re-generer (standard)</button>
+    <button onclick="regenerateContent(true)" style="background:#7A45A8">🔍 Gem + Re-generer DYBT (web search)</button>
     <button class="secondary" onclick="resetForm()">↺ Nulstil</button>
     <button class="secondary" onclick="closeEditor()">✕ Luk</button>
   </div>
   <p style="font-size:11px;color:#888;margin-top:8px;line-height:1.5">
-    💾 = Gem kun de manuelle ændringer (scores/alder/analyse).<br>
-    🔄 = Gem og generer nye bullets, per-kategori tekster, FAQ og samtaleoplæg via Claude API ud fra de nye scores. Kan tage 60-90 sekunder.
+    💾 = Gem kun de manuelle ændringer.<br>
+    🔄 = Standard regenerering (~60-90 sek, gratis). Bruges til 95% af titler.<br>
+    🔍 = Dybdegående med web search (~120-180 sek, koster ~14 øre per titel). Bruges til prioriterede/kontroversielle titler hvor vi vil have faktabaseret indhold.
   </p>
 </div>
 
@@ -418,12 +426,24 @@ function closeEditor() {
   originalValues = null;
 }
 
-async function regenerateContent() {
+async function regenerateContent(useWebSearch) {
   if (!currentItem) return;
 
   const btn = event.target;
   btn.disabled = true;
   const originalText = btn.textContent;
+
+  // Hent manuel kontekst (valgfrit)
+  const manualContext = document.getElementById('f_manual_context').value.trim();
+
+  // Bekræft web search hvis det koster
+  if (useWebSearch) {
+    if (!confirm('Dybdegående re-generering med web search koster ~14 øre og tager 2-3 minutter. Fortsæt?')) {
+      btn.disabled = false;
+      btn.textContent = originalText;
+      return;
+    }
+  }
 
   try {
     // Trin 1: Gem først de manuelle ændringer
@@ -436,18 +456,33 @@ async function regenerateContent() {
     cats.forEach(c => { newScores[c] = parseInt(document.getElementById('s_' + c).value); });
     const recommendedAge = parseInt(document.getElementById('f_recommended_age').value);
 
-    // Trin 2: Re-generer bullets + analyse via Fase 1 (med opdateret kontekst)
-    btn.textContent = '🤖 Genererer bullets... (1/3)';
-    showToast('Kalder Claude API for bullets...', '');
+    // Byg notes-tekst med manuel override + valgfri kontekst
+    let enrichmentNotes = `Manuel override: ai_scores er rettet til ${JSON.stringify(newScores)}, recommended_age=${recommendedAge}. Generer indhold der MATCHER disse scores.`;
+    if (manualContext) {
+      enrichmentNotes += `\n\nVIGTIG KONTEKST FRA ADMIN: ${manualContext}`;
+    }
 
-    const fase1 = await fetch('/.netlify/functions/enrich', {
+    // Vælg endpoint baseret på mode
+    const fase1Endpoint = useWebSearch ? '/.netlify/functions/enrich-deep-search' : '/.netlify/functions/enrich';
+    const fase2Endpoint = useWebSearch ? '/.netlify/functions/enrich-deep-search' : '/.netlify/functions/enrich-deep';
+    const fase3Endpoint = useWebSearch ? '/.netlify/functions/enrich-deep-search' : '/.netlify/functions/enrich-conversations';
+
+    // Trin 2: Re-generer Fase 1 (bullets + analyse)
+    btn.textContent = useWebSearch ? '🔍 Søger web... (1/3)' : '🤖 Genererer bullets... (1/3)';
+    showToast(useWebSearch ? 'Web search + bullets...' : 'Genererer bullets...', '');
+
+    const fase1 = await fetch(fase1Endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        phase: 'fast',
         title: currentItem.title,
         platform: currentItem.platform,
         episode: currentItem.episode,
-        notes: `Manuel override: ai_scores er rettet til ${JSON.stringify(newScores)}, recommended_age=${recommendedAge}. Generer indhold der MATCHER disse scores.`,
+        notes: enrichmentNotes,
+        manualContext: manualContext,
+        ai_scores: newScores,
+        recommended_age: recommendedAge,
         ratingId: currentItem.id
       })
     });
@@ -460,24 +495,26 @@ async function regenerateContent() {
     if (!fase1Result.success) throw new Error('Fase 1 fejl: ' + fase1Result.error);
 
     // Gem fase 1 resultat — men behold de manuelle scores!
-    await db.from('ratings').update({
+    const fase1Update = {
       ai_bullets: fase1Result.enrichment.ai_bullets,
       ai_analysis: fase1Result.enrichment.ai_analysis,
-      // BEMÆRK: ai_scores og recommended_age beholdes fra manuel override
       enriched_at: new Date().toISOString()
-    }).eq('id', currentItem.id);
+    };
+    if (fase1Result.enrichment.sources) fase1Update.web_sources = fase1Result.enrichment.sources;
+    await db.from('ratings').update(fase1Update).eq('id', currentItem.id);
 
-    // Trin 3: Re-generer per-kategori tekster + FAQ via Fase 2
-    btn.textContent = '🤖 Genererer kategori-tekster... (2/3)';
-    showToast('Genererer kategori-tekster...', '');
+    // Trin 3: Re-generer Fase 2 (kategori-tekster + FAQ)
+    btn.textContent = useWebSearch ? '🔍 Genererer dybdegående tekster... (2/3)' : '🤖 Genererer kategori-tekster... (2/3)';
 
-    const fase2 = await fetch('/.netlify/functions/enrich-deep', {
+    const fase2 = await fetch(fase2Endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        phase: 'deep',
         title: currentItem.title,
         platform: currentItem.platform,
         episode: currentItem.episode,
+        manualContext: manualContext,
         ai_scores: newScores,
         recommended_age: recommendedAge,
         ratingId: currentItem.id
@@ -496,17 +533,18 @@ async function regenerateContent() {
       ai_faq: fase2Result.enrichment.ai_faq
     }).eq('id', currentItem.id);
 
-    // Trin 4: Re-generer samtaleoplæg via Fase 3
-    btn.textContent = '🤖 Genererer samtaleoplæg... (3/3)';
-    showToast('Genererer samtaleoplæg...', '');
+    // Trin 4: Re-generer Fase 3 (samtaleoplæg)
+    btn.textContent = useWebSearch ? '🔍 Genererer samtaleoplæg... (3/3)' : '🤖 Genererer samtaleoplæg... (3/3)';
 
-    const fase3 = await fetch('/.netlify/functions/enrich-conversations', {
+    const fase3 = await fetch(fase3Endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        phase: 'conversations',
         title: currentItem.title,
         platform: currentItem.platform,
         episode: currentItem.episode,
+        manualContext: manualContext,
         ai_scores: newScores,
         recommended_age: recommendedAge,
         ratingId: currentItem.id
@@ -517,7 +555,6 @@ async function regenerateContent() {
     let fase3Result;
     try { fase3Result = JSON.parse(fase3Text); }
     catch(e) {
-      // Fase 3 må gerne fejle - ikke kritisk
       console.warn('Fase 3 fejlede:', e);
       showToast('✓ Genereret (Fase 3 sprunget over)', 'success');
       return;
@@ -529,7 +566,7 @@ async function regenerateContent() {
       }).eq('id', currentItem.id);
     }
 
-    showToast(`✅ ${currentItem.title} fuldt re-genereret!`, 'success');
+    showToast(`✅ ${currentItem.title} fuldt ${useWebSearch ? 'DYBT ' : ''}re-genereret!`, 'success');
 
     // Genindlæs item så vi kan se resultatet
     setTimeout(() => loadItem(currentItem.id), 500);
