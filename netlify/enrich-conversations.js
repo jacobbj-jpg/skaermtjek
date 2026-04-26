@@ -70,7 +70,7 @@ exports.handler = async (event, context) => {
   if (event.httpMethod !== 'POST') return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method not allowed' }) };
 
   try {
-    const { title, platform, episode, ai_scores, recommended_age, ratingId } = JSON.parse(event.body);
+    const { title, platform, episode, manualContext, ai_scores, recommended_age, ratingId } = JSON.parse(event.body);
     if (!title || !platform) return { statusCode: 400, headers, body: JSON.stringify({ error: 'title og platform er påkrævet' }) };
 
     const PLATFORM_LABEL = {
@@ -93,8 +93,9 @@ exports.handler = async (event, context) => {
 
     // Liste af kilde-IDs som AI kan vælge fra
     const kildeIds = Object.keys(DANSKE_KILDER).join(', ');
+    const contextLine = manualContext ? `\n\nVIGTIG KONTEKST FRA ADMIN (verificeret): ${manualContext}\n` : '';
 
-    const prompt = `"${title}" (${platformLabel})${episode ? ' - ' + episode : ''}. Anbefalet ${recommended_age || '?'} år.
+    const prompt = `"${title}" (${platformLabel})${episode ? ' - ' + episode : ''}. Anbefalet ${recommended_age || '?'} år.${contextLine}
 
 Generer dansk samtale-indhold til forældre i JSON:
 
