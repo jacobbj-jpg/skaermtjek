@@ -46,15 +46,15 @@ Anbefalet alder: ${recommended_age}
 Generer dette JSON (kun JSON, ingen kommentarer, INGEN cite-tags):
 {
 "ai_bullets": [
-  "<konkret positiv pointe baseret på research, max 80 tegn>",
-  "<konkret positiv pointe, max 80 tegn>",
-  "<konkret bekymring som matcher de høje scores, max 80 tegn>",
-  "<konkret bekymring, max 80 tegn>"
+  {"icon": "<relevant emoji>", "highlight": "<1-3 ord overskrift>", "text": "<max 60 tegn forklaring>"},
+  {"icon": "<emoji>", "highlight": "<1-3 ord>", "text": "<max 60 tegn>"},
+  {"icon": "<emoji>", "highlight": "<1-3 ord>", "text": "<max 60 tegn>"},
+  {"icon": "<emoji>", "highlight": "<1-3 ord>", "text": "<max 60 tegn>"}
 ],
 "ai_analysis": "<200-280 ord faktabaseret analyse på dansk. Inkluder konkrete navne, årstal, og verificerbare fakta. Forklar hvorfor scorerne er som de er. Skriv som en informeret forælder, ikke som en marketing-tekst. Brug specifikke eksempler fra research. INGEN <cite>-tags eller reference-numre - bare ren prosa.>"
 }
 
-VIGTIGT: ai_bullets SKAL altid være et array med 4 elementer. Skriv aldrig HTML eller cite-tags i nogen tekst.`;
+VIGTIGT: ai_bullets SKAL være præcis 4 OBJEKTER med felterne icon, highlight, text. To positive (det gode), to negative (bekymringer). Skriv aldrig HTML eller cite-tags.`;
 }
 
 function buildDeepPrompt(title, platform, episode, ai_scores, recommended_age, manualContext) {
@@ -246,7 +246,7 @@ exports.handler = async (event) => {
 
     parsed = deepStripCites(parsed);
 
-    // Valider: For 'fast' fase SKAL ai_bullets være et array med 4 elementer
+    // Valider: For 'fast' fase SKAL ai_bullets være et array af objekter
     if (phase === 'fast') {
       if (!Array.isArray(parsed.ai_bullets) || parsed.ai_bullets.length === 0) {
         return { statusCode: 500, headers, body: JSON.stringify({
@@ -254,9 +254,26 @@ exports.handler = async (event) => {
           raw: text.substring(0, 800)
         }) };
       }
-      // Sørg for præcis 4 bullets
-      while (parsed.ai_bullets.length < 4) parsed.ai_bullets.push('');
-      parsed.ai_bullets = parsed.ai_bullets.slice(0, 4).filter(b => b && b.trim());
+
+      // Konverter strings til objekter hvis Claude returnerede strings (fallback)
+      parsed.ai_bullets = parsed.ai_bullets.map(b => {
+        if (typeof b === 'string') {
+          return { icon: '•', highlight: '', text: b };
+        }
+        // Sørg for at felter findes
+        return {
+          icon: b.icon || '•',
+          highlight: b.highlight || '',
+          text: b.text || ''
+        };
+      });
+
+      // Filter tomme bullets ud, og sørg for præcis 4
+      parsed.ai_bullets = parsed.ai_bullets.filter(b => b.text || b.highlight);
+      while (parsed.ai_bullets.length < 4) {
+        parsed.ai_bullets.push({ icon: '•', highlight: '', text: '' });
+      }
+      parsed.ai_bullets = parsed.ai_bullets.slice(0, 4);
     }
 
     // For conversations: berig sources med faktiske URLs fra danske kilder
