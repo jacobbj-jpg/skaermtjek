@@ -1301,9 +1301,17 @@ function renderPage(item, allData) {
   // FAQ
   renderFAQ(item);
 
-  // Samtalen
+  // Samtalen — vis tabben hvis EN af følgende er sand:
+  // 1. Gennemsnit >= 4 (generel bekymring)
+  // 2. Mindst én score >= 6 (specifik bekymring værd at tale om)
+  // 3. Der findes AI-genereret samtale-indhold (admin har eksplicit lavet det)
   const avgScore = aiAvg || 0;
-  if (avgScore >= 4) {
+  const scores = item.ai_scores || {};
+  const maxScore = Math.max(...Object.values(scores).filter(v => typeof v === 'number'));
+  const hasConversations = item.ai_conversations &&
+    (item.ai_conversations.questions?.length > 0 || item.ai_conversations.counterarguments?.length > 0);
+
+  if (avgScore >= 4 || maxScore >= 6 || hasConversations) {
     document.getElementById('samtaleTab').style.display = 'block';
     renderSamtalen(item, avgScore);
   }
