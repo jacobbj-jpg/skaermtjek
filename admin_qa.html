@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SkærmTjek — QA / Manuel Override</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #faf7f2;
+  color: #1a1714;
+  padding: 2rem 1rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-bottom: 8px; }
+p.intro { color: #666; margin-bottom: 1.5rem; font-size: 14px; }
+
+.panel {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid #e0d8cc;
+  margin-bottom: 1rem;
+}
+
+label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 4px; margin-top: 12px; }
+input, select, textarea {
+  padding: 10px 12px;
+  border: 1px solid #e0d8cc;
+  border-radius: 8px;
+  font-size: 14px;
+  background: white;
+  width: 100%;
+  font-family: inherit;
+}
+button {
+  padding: 10px 18px;
+  background: #c85a2a;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-right: 6px;
+}
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+button.secondary { background: #666; }
+button.danger { background: #c83a2a; }
+
+.search-row { display: flex; gap: 10px; align-items: end; }
+.search-row input { flex: 1; }
+.search-row button { margin-top: 0; flex-shrink: 0; }
+
+.results { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+.result-row {
+  padding: 10px 12px;
+  background: #f5f2ed;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.1s;
+}
+.result-row:hover { background: #FAECE7; border-left: 3px solid #c85a2a; }
+.result-title { font-weight: 500; }
+.result-meta { font-size: 12px; color: #666; }
+
+.editor { display: none; }
+.editor.active { display: block; }
+
+.scores-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+.score-input-row {
+  display: grid;
+  grid-template-columns: 200px 1fr 50px;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0ead8;
+}
+.score-label { font-size: 13px; font-weight: 500; }
+.score-slider { width: 100%; }
+.score-value {
+  text-align: right;
+  font-weight: 700;
+  font-family: 'Fraunces', serif;
+  font-size: 16px;
+  color: #185FA5;
+}
+.score-value.changed { color: #c85a2a; }
+
+.field-row { display: grid; grid-template-columns: 200px 1fr; gap: 10px; margin-top: 8px; align-items: start; }
+
+.changes-summary {
+  background: #FAECE7;
+  border: 1px solid #F0997B;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-top: 16px;
+  font-size: 13px;
+  color: #712B13;
+  display: none;
+}
+.changes-summary.visible { display: block; }
+
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #185FA5;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  font-size: 14px;
+  display: none;
+  z-index: 1000;
+}
+.toast.show { display: block; }
+.toast.success { background: #2a7a5c; }
+.toast.error { background: #c83a2a; }
+
+@media (max-width: 600px) {
+  .scores-grid { grid-template-columns: 1fr; }
+  .score-input-row { grid-template-columns: 130px 1fr 40px; }
+  .field-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<h1>🔧 QA / Manuel Override</h1>
+<p class="intro">Søg efter en titel og rediger AI-scores eller andre felter manuelt. Bruges til titler hvor AI-vurderingen er fejlagtig (fx danske YouTubere).</p>
+
+<div class="panel">
+  <h3 style="margin-bottom: 12px">Login</h3>
+  <label>Supabase URL</label>
+  <input type="text" id="supaUrl" value="https://numlafmwxgffshqcjxuc.supabase.co" readonly>
+  <label>Supabase Anon Key</label>
+  <input type="text" id="supaKey" value="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im51bWxhZm13eGdmZnNocWNqeHVjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUyMjU0NTgsImV4cCI6MjA5MDgwMTQ1OH0.WojLfL2iz1ZDt6PeRqeGbC8BvJwwPdk4pzxZM390xbI">
+  <button onclick="initDB()">🔌 Forbind</button>
+</div>
+
+<div class="panel" id="searchPanel" style="display:none">
+  <h3 style="margin-bottom: 12px">Søg titel</h3>
+  <div class="search-row">
+    <div style="flex:1">
+      <input type="text" id="searchInput" placeholder="Skriv titel (fx Onkel Reje)" onkeyup="if(event.key==='Enter') searchTitle()">
+    </div>
+    <button onclick="searchTitle()">🔍 Søg</button>
+  </div>
+  <div class="results" id="searchResults"></div>
+</div>
+
+<div class="panel editor" id="editorPanel">
+  <h3 style="margin-bottom: 4px" id="editorTitle">—</h3>
+  <p style="font-size:12px;color:#666" id="editorMeta">—</p>
+
+  <h4 style="margin-top:1.5rem;font-size:14px">Grundoplysninger</h4>
+  <div class="field-row">
+    <label>Anbefalet alder</label>
+    <input type="number" id="f_recommended_age" min="2" max="18" oninput="showChangesSummary()">
+  </div>
+  <div class="field-row">
+    <label>Aldersgruppe</label>
+    <select id="f_age_group" onchange="showChangesSummary()">
+      <option value="0-2">0-2</option>
+      <option value="2-4">2-4</option>
+      <option value="4-6">4-6</option>
+      <option value="7-9">7-9</option>
+      <option value="10-12">10-12</option>
+      <option value="13+">13+</option>
+    </select>
+  </div>
+
+  <h4 style="margin-top:1.5rem;font-size:14px">AI-scores (1=lav bekymring, 10=høj)</h4>
+  <div class="scores-grid">
+    <div class="score-input-row">
+      <span class="score-label">⚔️ Vold</span>
+      <input type="range" min="1" max="10" class="score-slider" id="s_violence" oninput="updateScore('violence')">
+      <span class="score-value" id="v_violence">5</span>
+    </div>
+    <div class="score-input-row">
+      <span class="score-label">🗣️ Sprog</span>
+      <input type="range" min="1" max="10" class="score-slider" id="s_language" oninput="updateScore('language')">
+      <span class="score-value" id="v_language">5</span>
+    </div>
+    <div class="score-input-row">
+      <span class="score-label">🎰 Dopamin</span>
+      <input type="range" min="1" max="10" class="score-slider" id="s_dopamine" oninput="updateScore('dopamine')">
+      <span class="score-value" id="v_dopamine">5</span>
+    </div>
+    <div class="score-input-row">
+      <span class="score-label">🔔 Vanedannelse</span>
+      <input type="range" min="1" max="10" class="score-slider" id="s_retention" oninput="updateScore('retention')">
+      <span class="score-value" id="v_retention">5</span>
+    </div>
+    <div class="score-input-row">
+      <span class="score-label">💰 Kommercielt pres</span>
+      <input type="range" min="1" max="10" class="score-slider" id="s_commercialism" oninput="updateScore('commercialism')">
+      <span class="score-value" id="v_commercialism">5</span>
+    </div>
+    <div class="score-input-row">
+      <span class="score-label">💡 Rollemodel</span>
+      <input type="range" min="1" max="10" class="score-slider" id="s_values" oninput="updateScore('values')">
+      <span class="score-value" id="v_values">5</span>
+    </div>
+    <div class="score-input-row">
+      <span class="score-label">🔞 Seksuelt indhold</span>
+      <input type="range" min="1" max="10" class="score-slider" id="s_sexual" oninput="updateScore('sexual')">
+      <span class="score-value" id="v_sexual">5</span>
+    </div>
+    <div class="score-input-row">
+      <span class="score-label">😨 Skræmmende</span>
+      <input type="range" min="1" max="10" class="score-slider" id="s_fear" oninput="updateScore('fear')">
+      <span class="score-value" id="v_fear">5</span>
+    </div>
+    <div class="score-input-row">
+      <span class="score-label">🧠 Passivt forbrug</span>
+      <input type="range" min="1" max="10" class="score-slider" id="s_passive" oninput="updateScore('passive')">
+      <span class="score-value" id="v_passive">5</span>
+    </div>
+    <div class="score-input-row">
+      <span class="score-label">👥 Socialt pres</span>
+      <input type="range" min="1" max="10" class="score-slider" id="s_socialpressure" oninput="updateScore('socialpressure')">
+      <span class="score-value" id="v_socialpressure">5</span>
+    </div>
+  </div>
+
+  <h4 style="margin-top:1.5rem;font-size:14px">AI-analyse</h4>
+  <textarea id="f_ai_analysis" rows="4" style="width:100%;font-family:inherit;font-size:13px;padding:10px"></textarea>
+
+  <div class="changes-summary" id="changesSummary"></div>
+
+  <div style="margin-top:1.5rem;display:flex;gap:8px;flex-wrap:wrap">
+    <button onclick="saveChanges()">💾 Gem ændringer</button>
+    <button class="secondary" onclick="resetForm()">↺ Nulstil</button>
+    <button class="secondary" onclick="closeEditor()">✕ Luk</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let db = null;
+let currentItem = null;
+let originalValues = null;
+
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function initDB() {
+  const url = document.getElementById('supaUrl').value.trim();
+  const key = document.getElementById('supaKey').value.trim();
+  if (!url || !key) { alert('Udfyld URL og nøgle'); return; }
+  db = supabase.createClient(url, key);
+  document.getElementById('searchPanel').style.display = 'block';
+  showToast('Forbundet ✓', 'success');
+}
+
+async function searchTitle() {
+  const q = document.getElementById('searchInput').value.trim();
+  if (!q) return;
+
+  const res = document.getElementById('searchResults');
+  res.innerHTML = '<div style="padding:1rem;text-align:center;color:#666">Søger...</div>';
+
+  try {
+    const { data, error } = await db.from('ratings')
+      .select('id, title, platform, recommended_age, ai_scores, status, parent_votes')
+      .ilike('title', `%${q}%`)
+      .order('title', { ascending: true })
+      .limit(20);
+
+    if (error) throw error;
+
+    if (!data || data.length === 0) {
+      res.innerHTML = '<div style="padding:1rem;text-align:center;color:#666">Ingen resultater</div>';
+      return;
+    }
+
+    res.innerHTML = data.map(r => `
+      <div class="result-row" onclick="loadItem(${r.id})">
+        <div>
+          <div class="result-title">${r.title}</div>
+          <div class="result-meta">${r.platform} · anbefalet ${r.recommended_age || '?'} år · status: ${r.status || 'ukendt'}${r.parent_votes ? ' · ' + r.parent_votes + ' forældre' : ''}</div>
+        </div>
+        <button style="margin:0">Rediger →</button>
+      </div>
+    `).join('');
+  } catch (err) {
+    res.innerHTML = `<div style="color:#c83a2a;padding:1rem">Fejl: ${err.message}</div>`;
+  }
+}
+
+async function loadItem(id) {
+  try {
+    const { data, error } = await db.from('ratings').select('*').eq('id', id).single();
+    if (error) throw error;
+    currentItem = data;
+    originalValues = JSON.parse(JSON.stringify(data));
+
+    document.getElementById('editorTitle').textContent = data.title;
+    document.getElementById('editorMeta').textContent = `${data.platform} · ID ${data.id} · ${data.status || 'ukendt'}`;
+    document.getElementById('f_recommended_age').value = data.recommended_age || 5;
+    document.getElementById('f_age_group').value = data.age_group || '7-9';
+    document.getElementById('f_ai_analysis').value = data.ai_analysis || '';
+
+    const cats = ['violence','language','dopamine','retention','commercialism','values','sexual','fear','passive','socialpressure'];
+    cats.forEach(c => {
+      const v = (data.ai_scores && data.ai_scores[c]) || 5;
+      document.getElementById('s_' + c).value = v;
+      document.getElementById('v_' + c).textContent = v;
+      document.getElementById('v_' + c).classList.remove('changed');
+    });
+
+    document.getElementById('editorPanel').classList.add('active');
+    document.getElementById('changesSummary').classList.remove('visible');
+    document.getElementById('editorPanel').scrollIntoView({ behavior: 'smooth' });
+  } catch (err) {
+    showToast('Fejl: ' + err.message, 'error');
+  }
+}
+
+function updateScore(cat) {
+  const slider = document.getElementById('s_' + cat);
+  const val = document.getElementById('v_' + cat);
+  val.textContent = slider.value;
+  const original = (originalValues.ai_scores && originalValues.ai_scores[cat]) || 5;
+  if (parseInt(slider.value) !== parseInt(original)) {
+    val.classList.add('changed');
+  } else {
+    val.classList.remove('changed');
+  }
+  showChangesSummary();
+}
+
+function showChangesSummary() {
+  if (!originalValues) return;
+  const cats = ['violence','language','dopamine','retention','commercialism','values','sexual','fear','passive','socialpressure'];
+  const labels = {violence:'Vold',language:'Sprog',dopamine:'Dopamin',retention:'Vanedannelse',commercialism:'Kommercielt pres',values:'Rollemodel',sexual:'Seksuelt indhold',fear:'Skræmmende',passive:'Passivt forbrug',socialpressure:'Socialt pres'};
+  const changes = [];
+
+  cats.forEach(c => {
+    const newVal = parseInt(document.getElementById('s_' + c).value);
+    const oldVal = (originalValues.ai_scores && originalValues.ai_scores[c]) || 5;
+    if (newVal !== oldVal) {
+      changes.push(`${labels[c]}: ${oldVal} → ${newVal}`);
+    }
+  });
+
+  const newAge = parseInt(document.getElementById('f_recommended_age').value);
+  if (newAge !== originalValues.recommended_age) {
+    changes.push(`Anbefalet alder: ${originalValues.recommended_age || '?'} → ${newAge}`);
+  }
+
+  const summary = document.getElementById('changesSummary');
+  if (changes.length > 0) {
+    summary.innerHTML = `<strong>${changes.length} ændring${changes.length > 1 ? 'er' : ''}:</strong><br>${changes.join(' · ')}`;
+    summary.classList.add('visible');
+  } else {
+    summary.classList.remove('visible');
+  }
+}
+
+async function saveChanges() {
+  if (!currentItem) return;
+  const cats = ['violence','language','dopamine','retention','commercialism','values','sexual','fear','passive','socialpressure'];
+  const newScores = {};
+  cats.forEach(c => {
+    newScores[c] = parseInt(document.getElementById('s_' + c).value);
+  });
+
+  const updateData = {
+    ai_scores: newScores,
+    recommended_age: parseInt(document.getElementById('f_recommended_age').value),
+    age_group: document.getElementById('f_age_group').value,
+    ai_analysis: document.getElementById('f_ai_analysis').value.trim() || null,
+    enriched_at: new Date().toISOString()
+  };
+
+  try {
+    const { error } = await db.from('ratings').update(updateData).eq('id', currentItem.id);
+    if (error) throw error;
+    showToast(`✓ ${currentItem.title} opdateret`, 'success');
+    originalValues = { ...currentItem, ...updateData };
+    currentItem = { ...currentItem, ...updateData };
+    document.getElementById('changesSummary').classList.remove('visible');
+    cats.forEach(c => document.getElementById('v_' + c).classList.remove('changed'));
+  } catch (err) {
+    showToast('Fejl: ' + err.message, 'error');
+  }
+}
+
+function resetForm() {
+  if (!originalValues) return;
+  loadItem(originalValues.id);
+}
+
+function closeEditor() {
+  document.getElementById('editorPanel').classList.remove('active');
+  currentItem = null;
+  originalValues = null;
+}
+</script>
+
+</body>
+</html>
