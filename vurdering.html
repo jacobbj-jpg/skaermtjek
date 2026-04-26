@@ -1333,16 +1333,19 @@ function renderScores(item, parentVotes) {
     let parentValHTML = '';
 
     if (hasParent) {
-      // Vi har kun samlet parent_score, ikke per kategori endnu
-      // Vis samlet forældrescore som én linje på tværs med tydelig label
-      const pAvg = item.parent_score;
-      const pPct = ((pAvg-1)/9*100).toFixed(0);
-      const pCol = scoreColor(pAvg);
+      // Brug parent_scores per kategori hvis tilgængelig (JSONB med 10 kategorier)
+      // Falder tilbage til samlet parent_score hvis ikke
+      const parentScores = item.parent_scores || {};
+      const hasPerCategory = parentScores[cat.id] !== undefined && parentScores[cat.id] !== null;
+      const pVal = hasPerCategory ? Number(parentScores[cat.id]) : item.parent_score;
+      const pPct = ((pVal - 1) / 9 * 100).toFixed(0);
+      const pCol = scoreColor(pVal);
       parentHTML = `<div class="bar-line">
         <div class="bar-dot" style="background:var(--parent-color)"></div>
         <div class="bar-track"><div class="bar-fill" style="width:${pPct}%;background:${pCol}"></div></div>
       </div>`;
-      parentValHTML = `<div class="score-val parent" style="color:${pCol};font-size:11px;font-weight:400">snit ${pAvg.toFixed(1)}</div>`;
+      const labelText = hasPerCategory ? pVal.toFixed(1) : `snit ${pVal.toFixed(1)}`;
+      parentValHTML = `<div class="score-val parent" style="color:${pCol};font-size:11px;font-weight:400">${labelText}</div>`;
     } else {
       parentHTML = `<div class="bar-line" style="opacity:0.25">
         <div class="bar-dot" style="background:var(--parent-color)"></div>
