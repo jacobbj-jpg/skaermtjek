@@ -134,12 +134,12 @@ async function callClaudeWithSearch(apiKey, prompt) {
       'anthropic-version': '2023-06-01'
     },
     body: JSON.stringify({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 3000,
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 2500,
       tools: [{
         type: 'web_search_20250305',
         name: 'web_search',
-        max_uses: 3  // Maks 3 søgninger per kald = ~14 øre
+        max_uses: 2  // Reduceret fra 3 til 2 for at undgå timeout
       }],
       messages: [{ role: 'user', content: prompt }]
     })
