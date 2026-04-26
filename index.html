@@ -8548,30 +8548,38 @@ function filterAndRender() {
     data = data.filter(d => getScore(d) <= currentScoreMax);
   }
 
-  // Fuzzy search — matcher ord for ord og ignorerer mellemrum/specialtegn
+  // Fuzzy search — matcher ord for ord og ignorerer mellemrum/specialtegn/accents
   if (currentSearch) {
-    const terms = currentSearch.toLowerCase().replace(/[^a-zæøå0-9 ]/gi, '').split(/\s+/).filter(Boolean);
+    // Normaliser: fjern accents, lowercase, kun bogstaver/tal/mellemrum
+    const normalize = (s) => (s || '')
+      .toString()
+      .toLowerCase()
+      .normalize('NFD')                     // adskil accents fra grundbogstaver (é → e + ́)
+      .replace(/[\u0300-\u036f]/g, '')      // fjern accents (combining marks)
+      .replace(/[^a-zæøå0-9 ]/gi, '');     // kun tilladte tegn (vi beholder æøå)
+
+    const terms = normalize(currentSearch).split(/\s+/).filter(Boolean);
     data = data.filter(d => {
-      const hay = [
+      const hay = normalize([
         d.title,
         d.episode || '',
         d.notes || '',
         d.platform || '',
         PLATFORM_LABEL[d.platform] || ''
-      ].join(' ').toLowerCase().replace(/[^a-zæøå0-9 ]/gi, '');
+      ].join(' '));
       return terms.every(term => hay.includes(term));
     });
 
     // Search: sort by title match precision first, then parent votes
     data.sort((a, b) => {
-      const aTitle = a.title.toLowerCase();
-      const bTitle = b.title.toLowerCase();
-      const q = currentSearch.toLowerCase().trim();
+      const aTitle = normalize(a.title);
+      const bTitle = normalize(b.title);
+      const q = normalize(currentSearch).trim();
 
       // Score 0 = exact title match, 1 = title starts with query,
       // 2 = title contains query, 3 = only episode/notes match
       const matchScore = (item) => {
-        const t = item.title.toLowerCase();
+        const t = normalize(item.title);
         if (t === q) return 0;
         if (t.startsWith(q)) return 1;
         if (t.includes(q)) return 2;
@@ -9414,13 +9422,33 @@ async function submitRating() {
 
     if (!DEMO_MODE) {
       try {
-        await db.from('ratings').update({
+        // Bevar status — hvis titlen allerede er approved, skal den forblive approved
+        const updateData = {
           parent_score: existing.parent_score,
           parent_votes: existing.parent_votes,
           notes: existing.notes || null,
-          parent_notes_list: existing.parent_notes_list || null,
-          status: 'pending'
-        }).eq('id', existing.id);
+          parent_notes_list: existing.parent_notes_list || null
+        };
+        // Sæt kun status til pending hvis titlen ikke allerede er approved
+        if (existing.status !== 'approved') {
+          updateData.status = 'pending';
+        }
+        await db.from('ratings').update(updateData).eq('id', existing.id);
+
+        // Indsend også de individuelle scores til parent_submissions-tabellen
+        // Database-trigger update_parent_scores beregner automatisk per-kategori snit
+        if (formScores && Object.keys(formScores).length === 10) {
+          try {
+            await db.from('parent_submissions').insert({
+              rating_id: existing.id,
+              scores: formScores,
+              notes: document.getElementById('f_notes').value.trim() || null
+            });
+          } catch (subErr) {
+            console.warn('Kunne ikke gemme parent_submission:', subErr);
+            // Ikke fatal - parent_score er stadig opdateret
+          }
+        }
       } catch(e) {
         showToast('Fejl ved opdatering – prøv igen');
         btn.disabled = false; btn.textContent = 'Indsend vurdering →';
