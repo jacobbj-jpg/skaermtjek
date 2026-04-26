@@ -13,7 +13,7 @@ exports.handler = async (event, context) => {
   if (event.httpMethod !== 'POST') return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method not allowed' }) };
 
   try {
-    const { title, platform, episode, notes, ai_scores, recommended_age, ratingId } = JSON.parse(event.body);
+    const { title, platform, episode, notes, manualContext, ai_scores, recommended_age, ratingId } = JSON.parse(event.body);
     if (!title || !platform) return { statusCode: 400, headers, body: JSON.stringify({ error: 'title og platform er påkrævet' }) };
 
     const PLATFORM_LABEL = {
@@ -28,9 +28,10 @@ exports.handler = async (event, context) => {
 
     const platformLabel = PLATFORM_LABEL[platform] || platform;
     const scoresStr = ai_scores ? JSON.stringify(ai_scores) : '(ukendt)';
+    const contextLine = manualContext ? `\n\nVIGTIG KONTEKST FRA ADMIN (verificeret):\n${manualContext}\n\nBrug denne kontekst aktivt i alle kategori-tekster og FAQ-svar.` : '';
 
     // Meget kompakt prompt - stol på at Sonnet ved hvad den skal
-    const prompt = `"${title}" (${platformLabel})${episode ? ' ' + episode : ''}. Scores: ${scoresStr}. Anbefalet ${recommended_age || '?'} år.
+    const prompt = `"${title}" (${platformLabel})${episode ? ' ' + episode : ''}. Scores: ${scoresStr}. Anbefalet ${recommended_age || '?'} år.${contextLine}
 
 Returnér JSON på dansk:
 {
