@@ -32,27 +32,29 @@ INSTRUKTIONER:
 2. Find producent, udgivelsesår, målgruppe og særlige karakteristika
 3. Find konkrete eksempler på indhold der kan bekymre eller glæde forældre
 4. Hvis det er en dansk titel, prioriter danske kilder (DR, TV2, Berlingske, Politiken, Information, Kristeligt Dagblad)
+5. KRITISK: Skriv FÆRDIG dansk prosa-tekst i ai_analysis. INGEN <cite>-tags, INGEN reference-numre i firkantede klammer, INGEN markdown. Bare ren læsbar dansk tekst som en informeret forælder ville skrive.
 
 ${manualContext ? `KRITISK KONTEKST FRA ADMIN:
 ${manualContext}
 
-Denne kontekst er VERIFICERET og skal vægtes højt i analysen.
+Denne kontekst er VERIFICERET og skal vægtes højt i analysen. Hvis web search modsiger den, så stol på admin-konteksten.
 
 ` : ''}MANUELLE SCORES (allerede sat af admin, RESPEKTÉR DEM):
 ${JSON.stringify(ai_scores)}
 Anbefalet alder: ${recommended_age}
 
-Generer dette JSON (kun JSON, ingen kommentarer):
+Generer dette JSON (kun JSON, ingen kommentarer, INGEN cite-tags):
 {
 "ai_bullets": [
-  "<konkret positiv pointe baseret på research>",
-  "<konkret positiv pointe>",
-  "<konkret bekymring som matcher de høje scores>",
-  "<konkret bekymring>"
+  "<konkret positiv pointe baseret på research, max 80 tegn>",
+  "<konkret positiv pointe, max 80 tegn>",
+  "<konkret bekymring som matcher de høje scores, max 80 tegn>",
+  "<konkret bekymring, max 80 tegn>"
 ],
-"ai_analysis": "<200-280 ord faktabaseret analyse på dansk. Inkluder konkrete navne, årstal, og verificerbare fakta. Forklar hvorfor scorerne er som de er. Skriv som en informeret forælder, ikke som en marketing-tekst. Brug specifikke eksempler fra research.>",
-"sources": ["<URL1>", "<URL2>"]
-}`;
+"ai_analysis": "<200-280 ord faktabaseret analyse på dansk. Inkluder konkrete navne, årstal, og verificerbare fakta. Forklar hvorfor scorerne er som de er. Skriv som en informeret forælder, ikke som en marketing-tekst. Brug specifikke eksempler fra research. INGEN <cite>-tags eller reference-numre - bare ren prosa.>"
+}
+
+VIGTIGT: ai_bullets SKAL altid være et array med 4 elementer. Skriv aldrig HTML eller cite-tags i nogen tekst.`;
 }
 
 function buildDeepPrompt(title, platform, episode, ai_scores, recommended_age, manualContext) {
@@ -219,6 +221,42 @@ exports.handler = async (event) => {
       parsed = JSON.parse(jsonStr);
     } catch (e) {
       return { statusCode: 500, headers, body: JSON.stringify({ error: 'JSON parse fejl', raw: text.substring(0, 800) }) };
+    }
+
+    // Strip Claude's web-search citation tags fra al tekst (de er ikke pæne for slutbruger)
+    function stripCiteTags(str) {
+      if (typeof str !== 'string') return str;
+      return str
+        .replace(/<\/?cite[^>]*>/gi, '')           // fjern <cite ...> og </cite>
+        .replace(/<\/?antml:cite[^>]*>/gi, '')      // fjern antml:cite varianter
+        .replace(/\s+/g, ' ')                       // normaliser whitespace
+        .trim();
+    }
+
+    function deepStripCites(obj) {
+      if (typeof obj === 'string') return stripCiteTags(obj);
+      if (Array.isArray(obj)) return obj.map(deepStripCites);
+      if (obj && typeof obj === 'object') {
+        const cleaned = {};
+        for (const k in obj) cleaned[k] = deepStripCites(obj[k]);
+        return cleaned;
+      }
+      return obj;
+    }
+
+    parsed = deepStripCites(parsed);
+
+    // Valider: For 'fast' fase SKAL ai_bullets være et array med 4 elementer
+    if (phase === 'fast') {
+      if (!Array.isArray(parsed.ai_bullets) || parsed.ai_bullets.length === 0) {
+        return { statusCode: 500, headers, body: JSON.stringify({
+          error: 'Manglende ai_bullets fra AI',
+          raw: text.substring(0, 800)
+        }) };
+      }
+      // Sørg for præcis 4 bullets
+      while (parsed.ai_bullets.length < 4) parsed.ai_bullets.push('');
+      parsed.ai_bullets = parsed.ai_bullets.slice(0, 4).filter(b => b && b.trim());
     }
 
     // For conversations: berig sources med faktiske URLs fra danske kilder
