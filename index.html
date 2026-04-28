@@ -630,6 +630,75 @@ nav {
   margin-top: 4px;
 }
 
+/* SPRINT 3a: Tragt-step badges */
+.filter-step {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  margin-right: 8px;
+  font-family: 'DM Sans', sans-serif;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* Foldbare platform-kategorier */
+.platform-category {
+  margin-top: 12px;
+  border-top: 1px solid var(--border);
+  padding-top: 8px;
+}
+
+.platform-category:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+
+.platform-category-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 8px 0;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink2);
+  cursor: pointer;
+  text-align: left;
+}
+
+.platform-category-header:hover {
+  color: var(--accent);
+}
+
+.cat-toggle {
+  font-size: 12px;
+  color: var(--muted);
+  transition: transform 0.2s ease;
+}
+
+.platform-category.collapsed .cat-toggle {
+  transform: rotate(-90deg);
+}
+
+.platform-category.collapsed .platform-category-pills {
+  display: none;
+}
+
+.platform-category-pills {
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
 .filter-section-title {
   font-size: 11px;
   text-transform: uppercase;
@@ -3784,8 +3853,12 @@ input.autofilled, textarea.autofilled {
   <div class="filter-backdrop" id="filterBackdrop" onclick="toggleFilters()"></div>
   <!-- Collapsible filter panel -->
   <div class="filter-panel" id="filterPanel">
+
+    <!-- TRIN 1: ALDER -->
     <div class="filter-section">
-      <div class="filter-section-title">Barnets alder</div>
+      <div class="filter-section-title">
+        <span class="filter-step">1</span> Barnets alder
+      </div>
       <div class="filter-pills-wrap">
         <span class="filter-pill active" id="age-all" onclick="setAgeFilter(this,'all')">Alle</span>
         <span class="filter-pill" onclick="setAgeFilter(this,'0-2')">👶 0–2 år</span>
@@ -3796,42 +3869,39 @@ input.autofilled, textarea.autofilled {
         <span class="filter-pill" onclick="setAgeFilter(this,'13+')">13+ år</span>
       </div>
     </div>
+
+    <!-- TRIN 2: SIKKERHED (multi-select) -->
     <div class="filter-section">
-      <div class="filter-section-title">Sikkerhed <span style="font-size:11px;color:var(--muted);font-weight:400;font-style:italic" id="safetyHint">— vælg barnets alder først for bedst resultat</span></div>
+      <div class="filter-section-title">
+        <span class="filter-step">2</span> Sikkerhed
+        <span style="font-size:11px;color:var(--muted);font-weight:400;font-style:italic" id="safetyHint">— vælg flere</span>
+      </div>
       <div class="filter-pills-wrap">
         <span class="safety-btn s-active" id="saf-all" onclick="setSafety(this,'all')">Alle</span>
-        <span class="safety-btn s-green" onclick="setSafety(this,'safe')">✅ Egnet</span>
-        <span class="safety-btn s-yellow" onclick="setSafety(this,'caution')">⚠️ Med forbehold</span>
-        <span class="safety-btn s-red" onclick="setSafety(this,'mature')">🔶 Til de ældre</span>
+        <span class="safety-btn s-green" id="saf-safe" onclick="setSafety(this,'safe')">✅ Egnet</span>
+        <span class="safety-btn s-yellow" id="saf-caution" onclick="setSafety(this,'caution')">⚠️ Med forbehold</span>
+        <span class="safety-btn s-red" id="saf-mature" onclick="setSafety(this,'mature')">🔶 Til de ældre</span>
         <span class="safety-btn s-darkred" id="saf-notrec" onclick="setSafety(this,'notrec')">🚫 Frarådes</span>
       </div>
     </div>
+
+    <!-- TRIN 3: PLATFORM (multi-select, foldbare grupper) -->
     <div class="filter-section">
-      <div class="filter-section-title">Bekymringstyper <span style="font-size:11px;color:var(--muted);font-weight:400;font-style:italic">(vælg flere)</span></div>
-      <div class="filter-pills-wrap">
-        <span class="filter-pill active" id="conc-all" onclick="setConcern(this,'all')">Alle</span>
-        <span class="filter-pill" onclick="setConcern(this,'violence')">⚔️ Vold</span>
-        <span class="filter-pill" onclick="setConcern(this,'language')">🗣️ Sprog</span>
-        <span class="filter-pill" onclick="setConcern(this,'dopamine')">🎰 Dopamin</span>
-        <span class="filter-pill" onclick="setConcern(this,'retention')">🔔 Vanedannelse</span>
-        <span class="filter-pill" onclick="setConcern(this,'commercialism')">💰 Kommercielt pres</span>
-        <span class="filter-pill" onclick="setConcern(this,'values')">💡 Rollemodel</span>
-        <span class="filter-pill" onclick="setConcern(this,'sexual')">🔞 Seksuelt indhold</span>
-        <span class="filter-pill" onclick="setConcern(this,'fear')">😨 Skræmmende</span>
-        <span class="filter-pill" onclick="setConcern(this,'passive')">🧠 Passivt forbrug</span>
-        <span class="filter-pill" onclick="setConcern(this,'socialpressure')">👥 Socialt pres</span>
+      <div class="filter-section-title">
+        <span class="filter-step">3</span> Hvor ses indholdet?
+        <span style="font-size:11px;color:var(--muted);font-weight:400;font-style:italic">— vælg flere</span>
       </div>
-    </div>
-    <div class="filter-section">
-      <div class="filter-section">
-      <div class="filter-section-title">Platform</div>
       <div class="filter-pills-wrap">
-        <span class="filter-pill active" id="plt-all" onclick="setPlatform(this,'all')">Alle</span>
+        <span class="filter-pill active" id="plt-all" onclick="setPlatform(this,'all')">Alle platforme</span>
       </div>
-      <div class="filter-platform-group">
-        <div class="filter-platform-label">📺 Streaming</div>
-        <div class="filter-pills-wrap">
-          <span class="filter-pill" onclick="setPlatform(this,'youtube')">YouTube</span>
+
+      <!-- KATEGORI: Streaming, film & TV -->
+      <div class="platform-category">
+        <button class="platform-category-header" onclick="toggleCategory(this)">
+          <span>🎬 Streaming, film & TV</span>
+          <span class="cat-toggle">▾</span>
+        </button>
+        <div class="filter-pills-wrap platform-category-pills">
           <span class="filter-pill" onclick="setPlatform(this,'netflix')">Netflix</span>
           <span class="filter-pill" onclick="setPlatform(this,'disney')">Disney+</span>
           <span class="filter-pill" onclick="setPlatform(this,'dr')">DR</span>
@@ -3840,42 +3910,49 @@ input.autofilled, textarea.autofilled {
           <span class="filter-pill" onclick="setPlatform(this,'max')">Max</span>
           <span class="filter-pill" onclick="setPlatform(this,'skyshowtime')">SkyShowtime</span>
           <span class="filter-pill" onclick="setPlatform(this,'sfkids')">SF Kids</span>
+          <span class="filter-pill" onclick="setPlatform(this,'apple')">Apple TV+</span>
+          <span class="filter-pill" onclick="setPlatform(this,'prime')">Prime Video</span>
+          <span class="filter-pill" onclick="setPlatform(this,'film_tv')">Film og TV</span>
         </div>
       </div>
-      <div class="filter-platform-group">
-        <div class="filter-platform-label">🎮 Spil</div>
-        <div class="filter-pills-wrap">
+
+      <!-- KATEGORI: Spil og apps -->
+      <div class="platform-category">
+        <button class="platform-category-header" onclick="toggleCategory(this)">
+          <span>🎮 Spil og apps</span>
+          <span class="cat-toggle">▾</span>
+        </button>
+        <div class="filter-pills-wrap platform-category-pills">
           <span class="filter-pill" onclick="setPlatform(this,'gaming')">Konsol & PC</span>
           <span class="filter-pill" onclick="setPlatform(this,'switch')">Nintendo Switch</span>
-          <span class="filter-pill" onclick="setPlatform(this,'ipad')">iPad-apps</span>
+          <span class="filter-pill" onclick="setPlatform(this,'mobile_apps')">iPad / mobil-apps</span>
         </div>
       </div>
-      <div class="filter-platform-group">
-        <div class="filter-platform-label">📱 Sociale medier</div>
-        <div class="filter-pills-wrap">
+
+      <!-- KATEGORI: Sociale medier -->
+      <div class="platform-category">
+        <button class="platform-category-header" onclick="toggleCategory(this)">
+          <span>💬 Sociale medier, chat & communities</span>
+          <span class="cat-toggle">▾</span>
+        </button>
+        <div class="filter-pills-wrap platform-category-pills">
+          <span class="filter-pill" onclick="setPlatform(this,'youtube')">YouTube</span>
           <span class="filter-pill" onclick="setPlatform(this,'tiktok')">TikTok</span>
           <span class="filter-pill" onclick="setPlatform(this,'instagram')">Instagram</span>
           <span class="filter-pill" onclick="setPlatform(this,'snapchat')">Snapchat</span>
           <span class="filter-pill" onclick="setPlatform(this,'ytshorts')">YouTube Shorts</span>
           <span class="filter-pill" onclick="setPlatform(this,'bereal')">BeReal</span>
-        </div>
-      </div>
-      <div class="filter-platform-group">
-        <div class="filter-platform-label">💬 Chat & fællesskaber</div>
-        <div class="filter-pills-wrap">
           <span class="filter-pill" onclick="setPlatform(this,'discord')">Discord</span>
           <span class="filter-pill" onclick="setPlatform(this,'twitch')">Twitch</span>
         </div>
       </div>
     </div>
-    </div>
-    <div class="filter-section">
-      <div class="filter-section-title">Maks. score: <span id="scoreSliderVal" style="color:var(--accent);font-family:'Fraunces',serif;font-weight:800">Alle</span></div>
-      <input type="range" min="1" max="10" value="10" id="scoreSlider" oninput="setScoreMax(this.value)" style="width:100%">
-    </div>
+
     <div class="filter-actions">
       <button class="filter-close-btn" onclick="toggleFilters()">✕ Luk</button>
-      <button class="filter-apply-btn" onclick="toggleFilters()">Vis resultater ✓</button>
+      <button class="filter-apply-btn" onclick="toggleFilters()">
+        <span id="resultCount">Vis resultater</span> ✓
+      </button>
     </div>
   </div>
 </div>
@@ -7651,9 +7728,13 @@ const DEMO_DATA = [
 let db = null;
 let currentFilter = 'all';
 let currentAgeFilter = 'all';
+// Sprint 3a: multi-select for safety og platform
+let currentSafeties = new Set(); // tom = "alle"
+let currentPlatforms = new Set(); // tom = "alle"
+// Legacy state — bevares for kompatibilitet med eksisterende kode
 let currentSafety = 'all';
 let currentScoreMax = 10;
-let currentConcerns = new Set(); // multi-select
+let currentConcerns = new Set();
 let currentSearch = '';
 let selectedAge = '7-9';
 let formScores = {};
@@ -7752,6 +7833,7 @@ function quickAge(el, age) {
     // Auto-sæt sikkerhed til "egnet" + "med forbehold" ved alders-valg
     // Vi laver en speciel 'ageappropriate' mode
     currentSafety = 'ageappropriate';
+    currentSafeties.clear(); // Ryd multi-select valg så ageappropriate kan virke
     document.querySelectorAll('.safety-btn').forEach(b => b.classList.remove('s-active'));
 
     // Sync filter panel
@@ -8118,15 +8200,31 @@ function toggleFilters() {
 
 function updateFilterSummary() {
   const parts = [];
-  const platLabels = {all:'Alle platforme',youtube:'YouTube',netflix:'Netflix',playstation:'PlayStation',disney:'Disney+',tiktok:'TikTok',andet:'Andet'};
-  if (currentFilter !== 'all') parts.push(platLabels[currentFilter] || currentFilter);
-  else parts.push('Alle platforme');
+
+  // Platform: vis antal valgte
+  if (currentPlatforms.size === 0) {
+    parts.push('Alle platforme');
+  } else if (currentPlatforms.size === 1) {
+    const p = Array.from(currentPlatforms)[0];
+    parts.push(PLATFORM_LABEL[p] || p);
+  } else {
+    parts.push(`${currentPlatforms.size} platforme`);
+  }
+
+  // Alder
   if (currentAgeFilter !== 'all') parts.push(currentAgeFilter + ' år');
   else parts.push('Alle aldre');
-  if (currentSafety === 'safe') parts.push('🟢 Trygt');
-  else if (currentSafety === 'caution') parts.push('🟡 Forbehold');
-  else if (currentSafety === 'mature') parts.push('🔴 Ældre');
-  if (currentScoreMax < 10) parts.push('max ' + currentScoreMax);
+
+  // Sikkerhed multi-select
+  if (currentSafeties.size > 0) {
+    const labels = {safe:'🟢 Egnet', caution:'🟡 Forbehold', mature:'🔶 Ældre', notrec:'🚫 Frarådes'};
+    if (currentSafeties.size === 1) {
+      parts.push(labels[Array.from(currentSafeties)[0]]);
+    } else {
+      parts.push(`${currentSafeties.size} sikkerhedsniveauer`);
+    }
+  }
+
   document.getElementById('filterSummary').textContent = parts.join(' · ');
 }
 
@@ -8379,9 +8477,37 @@ document.getElementById('heroSearch').addEventListener('input', () => {
 });
 
 function setPlatform(el, platform) {
-  document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
-  el.classList.add('active');
-  currentFilter = platform;
+  if (platform === 'all') {
+    // "Alle platforme" — ryd alle valg
+    document.querySelectorAll('#filterPanel .filter-pill').forEach(p => {
+      if (p.onclick && p.onclick.toString().includes('setPlatform')) p.classList.remove('active');
+    });
+    el.classList.add('active');
+    currentPlatforms.clear();
+    currentFilter = 'all'; // legacy compat
+  } else {
+    // Fjern "Alle"
+    const allBtn = document.getElementById('plt-all');
+    if (allBtn) allBtn.classList.remove('active');
+
+    // Toggle denne platform
+    if (currentPlatforms.has(platform)) {
+      currentPlatforms.delete(platform);
+      el.classList.remove('active');
+    } else {
+      currentPlatforms.add(platform);
+      el.classList.add('active');
+    }
+
+    // Hvis ingen valgt, gå tilbage til "Alle"
+    if (currentPlatforms.size === 0) {
+      if (allBtn) allBtn.classList.add('active');
+      currentFilter = 'all';
+    } else {
+      // Legacy: hvis kun én platform valgt, sæt currentFilter = den
+      currentFilter = currentPlatforms.size === 1 ? Array.from(currentPlatforms)[0] : 'multi';
+    }
+  }
   filterAndRender();
 }
 
@@ -8395,20 +8521,49 @@ function setAgeFilter(el, age) {
   // Skjul/vis sikkerhedshint
   const hint = document.getElementById('safetyHint');
   if (hint) {
-    hint.textContent = age === 'all' ? '— vælg barnets alder først for bedst resultat' : `— relativt til ${el.textContent.trim()}`;
-    hint.style.opacity = age === 'all' ? '1' : '0.7';
+    hint.textContent = age === 'all' ? '— vælg flere' : `— for ${el.textContent.trim()}`;
+    hint.style.opacity = '1';
   }
 
   filterAndRender();
 }
 
 function setSafety(el, safety) {
-  document.querySelectorAll('.safety-btn').forEach(b => {
-    b.classList.remove('s-active');
-  });
-  el.classList.add('s-active');
-  currentSafety = safety;
+  if (safety === 'all') {
+    // "Alle" — ryd alle valg
+    document.querySelectorAll('.safety-btn').forEach(b => b.classList.remove('s-active'));
+    el.classList.add('s-active');
+    currentSafeties.clear();
+    currentSafety = 'all'; // legacy compat
+  } else {
+    // Fjern "Alle"
+    const allBtn = document.getElementById('saf-all');
+    if (allBtn) allBtn.classList.remove('s-active');
+
+    // Toggle denne sikkerhed
+    if (currentSafeties.has(safety)) {
+      currentSafeties.delete(safety);
+      el.classList.remove('s-active');
+    } else {
+      currentSafeties.add(safety);
+      el.classList.add('s-active');
+    }
+
+    // Hvis ingen valgt, gå tilbage til "Alle"
+    if (currentSafeties.size === 0) {
+      if (allBtn) allBtn.classList.add('s-active');
+      currentSafety = 'all';
+    } else {
+      // Legacy compat: behold første som currentSafety
+      currentSafety = currentSafeties.size === 1 ? Array.from(currentSafeties)[0] : 'multi';
+    }
+  }
   filterAndRender();
+}
+
+function toggleCategory(headerEl) {
+  const cat = headerEl.parentElement;
+  cat.classList.toggle('collapsed');
 }
 
 function setConcern(el, concern) {
@@ -8457,13 +8612,32 @@ function setScoreMax(val) {
 function filterAndRender() {
   let data = allData;
 
-  // Platform — supports both specific platform and category group
-  if (currentFilter !== 'all') {
+  // PLATFORM — multi-select med JSONB-array support
+  // Sprint 1: en titel kan have flere platforme i `platforms`-array
+  if (currentPlatforms.size > 0) {
+    data = data.filter(d => {
+      // Brug platforms-array hvis det findes (multi-platform titler)
+      const titlePlatforms = Array.isArray(d.platforms) && d.platforms.length > 0
+        ? d.platforms
+        : [d.platform]; // fallback til legacy enkelt-platform
+      // Returner true hvis mindst én af titelens platforme er valgt
+      for (const p of titlePlatforms) {
+        if (currentPlatforms.has(p)) return true;
+      }
+      return false;
+    });
+  } else if (currentFilter !== 'all' && currentFilter !== 'multi') {
+    // Legacy single-platform (fra hero/quickfilter)
     if (currentFilter.startsWith('cat:')) {
       const cat = currentFilter.replace('cat:', '');
-      data = data.filter(d => (PLATFORM_CATEGORY[d.platform] || 'andet') === cat);
+      data = data.filter(d => d.category === cat || (PLATFORM_CATEGORY[d.platform] || 'andet') === cat);
     } else {
-      data = data.filter(d => d.platform === currentFilter);
+      data = data.filter(d => {
+        const titlePlatforms = Array.isArray(d.platforms) && d.platforms.length > 0
+          ? d.platforms
+          : [d.platform];
+        return titlePlatforms.includes(currentFilter);
+      });
     }
   }
 
@@ -8480,88 +8654,59 @@ function filterAndRender() {
     });
   }
 
-  // Safety — aldersrelativ logik når alder er valgt
+  // Safety — multi-select. Hvis tom Set, betyder det "alle"
   const getScore = d => (d.parent_votes > 0 && d.parent_score) ? d.parent_score : calcAvg(d.ai_scores || d.scores);
   const ageMaxMap = {'0-2':2, '2-4':4, '4-6':6, '7-9':9, '10-12':12, '13+':17};
   const chosenMaxAge = currentAgeFilter !== 'all' ? (ageMaxMap[currentAgeFilter] || 99) : null;
 
-  if (currentSafety === 'ageappropriate') {
-    // Auto-mode når alder er valgt fra hero: vis kun egnet + med forbehold
+  // Hjælpefunktion: returner sikkerhedskategori for en titel
+  function getSafetyBucket(d) {
+    const score = getScore(d);
+    if (chosenMaxAge && d.recommended_age) {
+      if (d.recommended_age > chosenMaxAge + 2) return 'notrec';
+      if (d.recommended_age > chosenMaxAge + 1) return 'mature';
+      if (d.recommended_age >= chosenMaxAge - 1 && d.recommended_age <= chosenMaxAge + 1 && score > 4) return 'caution';
+      if (d.recommended_age <= chosenMaxAge && score <= 4) return 'safe';
+      if (score > 6) return 'mature';
+      if (score > 4) return 'caution';
+      return 'safe';
+    }
+    // Uden alder valgt: kategoriser på score alene
+    if (score > 7 || (d.recommended_age && d.recommended_age >= 16)) return 'notrec';
+    if (score > 6) return 'mature';
+    if (score > 4) return 'caution';
+    return 'safe';
+  }
+
+  if (currentSafeties.size > 0) {
+    // Multi-select: behold kun titler hvis sikkerhedsbucket er valgt
+    data = data.filter(d => currentSafeties.has(getSafetyBucket(d)));
+  } else if (currentSafety === 'ageappropriate') {
+    // Quick-filter mode fra hero
     data = data.filter(d => {
       if (chosenMaxAge && d.recommended_age) {
-        // Inkludér hvis recommended_age <= valgt alder + 1 (lidt ældre er OK som "med forbehold")
         return d.recommended_age <= chosenMaxAge + 1;
       }
-      // Fallback hvis ingen recommended_age: brug score
       return getScore(d) <= 6;
     });
-  } else if (currentSafety === 'safe') {
-    // Egnet: recommended_age <= valgt alder OG score <= 4
-    data = data.filter(d => {
-      if (chosenMaxAge && d.recommended_age && d.recommended_age > chosenMaxAge) return false;
-      return getScore(d) <= 4;
-    });
-  } else if (currentSafety === 'caution') {
-    // Med forbehold: grænsetilfælde eller score 4-6
-    data = data.filter(d => {
-      const score = getScore(d);
-      if (chosenMaxAge && d.recommended_age) {
-        // Grænsetilfælde: recommended_age = valgt alder ± 1
-        if (d.recommended_age >= chosenMaxAge - 1 && d.recommended_age <= chosenMaxAge + 1) return true;
-      }
-      return score > 4 && score <= 6;
-    });
-  } else if (currentSafety === 'mature') {
-    // Til de ældre: recommended_age > valgt alder eller score > 6
-    data = data.filter(d => {
-      if (chosenMaxAge && d.recommended_age && d.recommended_age > chosenMaxAge + 1) return true;
-      return getScore(d) > 6;
-    });
-  } else if (currentSafety === 'notrec') {
-    // Frarådes
-    if (chosenMaxAge) {
-      // Med alder: vis kun indhold der er klart frarådet til denne aldersgruppe
-      data = data.filter(d => (d.recommended_age || 0) > chosenMaxAge + 2);
-    } else {
-      // Uden alder: vis indhold med høj score (>7) som generelt frarådes til børn
-      data = data.filter(d => {
-        const score = getScore(d);
-        return score > 7 || (d.recommended_age && d.recommended_age >= 16);
-      });
-    }
-  }
-
-  // Bekymringstyper — multi-select, vis vurderinger hvor MINDST ÉN af de valgte scorer 6+
-  if (currentConcerns.size > 0) {
-    data = data.filter(d => {
-      const scores = d.ai_scores || d.scores || {};
-      // OR-logik: mindst én valgt kategori skal være høj
-      for (const concern of currentConcerns) {
-        if ((scores[concern] || 0) >= 6) return true;
-      }
-      return false;
-    });
-  }
-
-  // Score max slider
-  if (currentScoreMax < 10) {
-    data = data.filter(d => getScore(d) <= currentScoreMax);
   }
 
   // Fuzzy search — matcher ord for ord og ignorerer mellemrum/specialtegn/accents
   if (currentSearch) {
-    // Normaliser: fjern accents, lowercase, kun bogstaver/tal/mellemrum
     const normalize = (s) => (s || '')
       .toString()
       .toLowerCase()
-      .normalize('NFD')                     // adskil accents fra grundbogstaver (é → e + ́)
-      .replace(/[\u0300-\u036f]/g, '')      // fjern accents (combining marks)
-      .replace(/[^a-zæøå0-9 ]/gi, '');     // kun tilladte tegn (vi beholder æøå)
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-zæøå0-9 ]/gi, '');
 
     const terms = normalize(currentSearch).split(/\s+/).filter(Boolean);
     data = data.filter(d => {
+      // Sprint 2: søg også i alternative_titles
+      const altTitles = Array.isArray(d.alternative_titles) ? d.alternative_titles.join(' ') : '';
       const hay = normalize([
         d.title,
+        altTitles,
         d.episode || '',
         d.notes || '',
         d.platform || '',
@@ -8620,6 +8765,16 @@ function filterAndRender() {
   document.getElementById('browseTitle').textContent = parts.length
     ? 'Filtreret: ' + parts.join(' · ')
     : 'Mest vurderede';
+
+  // Sprint 3a: dynamisk tæller på "Vis resultater" knap
+  const countEl = document.getElementById('resultCount');
+  if (countEl) {
+    countEl.textContent = data.length === 0
+      ? 'Ingen resultater'
+      : data.length === 1
+        ? 'Vis 1 anbefaling'
+        : `Vis ${data.length} anbefalinger`;
+  }
 
   updateFilterSummary();
   renderCards(data);
