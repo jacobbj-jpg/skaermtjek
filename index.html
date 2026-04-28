@@ -665,20 +665,72 @@ nav {
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  padding: 4px 0;
+  gap: 8px;
+}
+
+.cat-select-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   background: none;
   border: none;
-  padding: 8px 0;
+  padding: 6px 8px;
   font-family: 'DM Sans', sans-serif;
   font-size: 13px;
   font-weight: 600;
   color: var(--ink2);
   cursor: pointer;
   text-align: left;
+  flex: 1;
+  border-radius: 6px;
+  transition: background 0.15s;
 }
 
-.platform-category-header:hover {
+.cat-select-btn:hover {
+  background: rgba(200, 90, 42, 0.06);
   color: var(--accent);
 }
+
+.cat-select-btn.active {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.cat-checkbox {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid var(--border);
+  border-radius: 4px;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+
+.cat-select-btn.active .cat-checkbox {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.cat-select-btn.active .cat-checkbox::after {
+  content: '✓';
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.cat-fold-btn {
+  background: none;
+  border: none;
+  padding: 6px 8px;
+  cursor: pointer;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.cat-fold-btn:hover { color: var(--accent); }
 
 .cat-toggle {
   font-size: 12px;
@@ -3896,11 +3948,16 @@ input.autofilled, textarea.autofilled {
       </div>
 
       <!-- KATEGORI: Streaming, film & TV -->
-      <div class="platform-category">
-        <button class="platform-category-header" onclick="toggleCategory(this)">
-          <span>🎬 Streaming, film & TV</span>
-          <span class="cat-toggle">▾</span>
-        </button>
+      <div class="platform-category" data-cat="streaming">
+        <div class="platform-category-header">
+          <button class="cat-select-btn" onclick="setPlatformCategory(this, 'streaming')">
+            <span class="cat-checkbox"></span>
+            <span>🎬 Streaming, film & TV</span>
+          </button>
+          <button class="cat-fold-btn" onclick="toggleCategory(this)" aria-label="Fold sammen">
+            <span class="cat-toggle">▾</span>
+          </button>
+        </div>
         <div class="filter-pills-wrap platform-category-pills">
           <span class="filter-pill" onclick="setPlatform(this,'netflix')">Netflix</span>
           <span class="filter-pill" onclick="setPlatform(this,'disney')">Disney+</span>
@@ -3917,11 +3974,16 @@ input.autofilled, textarea.autofilled {
       </div>
 
       <!-- KATEGORI: Spil og apps -->
-      <div class="platform-category">
-        <button class="platform-category-header" onclick="toggleCategory(this)">
-          <span>🎮 Spil og apps</span>
-          <span class="cat-toggle">▾</span>
-        </button>
+      <div class="platform-category" data-cat="gaming">
+        <div class="platform-category-header">
+          <button class="cat-select-btn" onclick="setPlatformCategory(this, 'gaming')">
+            <span class="cat-checkbox"></span>
+            <span>🎮 Spil og apps</span>
+          </button>
+          <button class="cat-fold-btn" onclick="toggleCategory(this)" aria-label="Fold sammen">
+            <span class="cat-toggle">▾</span>
+          </button>
+        </div>
         <div class="filter-pills-wrap platform-category-pills">
           <span class="filter-pill" onclick="setPlatform(this,'gaming')">Konsol & PC</span>
           <span class="filter-pill" onclick="setPlatform(this,'switch')">Nintendo Switch</span>
@@ -3930,11 +3992,16 @@ input.autofilled, textarea.autofilled {
       </div>
 
       <!-- KATEGORI: Sociale medier -->
-      <div class="platform-category">
-        <button class="platform-category-header" onclick="toggleCategory(this)">
-          <span>💬 Sociale medier, chat & communities</span>
-          <span class="cat-toggle">▾</span>
-        </button>
+      <div class="platform-category" data-cat="social">
+        <div class="platform-category-header">
+          <button class="cat-select-btn" onclick="setPlatformCategory(this, 'social')">
+            <span class="cat-checkbox"></span>
+            <span>💬 Sociale medier, chat & communities</span>
+          </button>
+          <button class="cat-fold-btn" onclick="toggleCategory(this)" aria-label="Fold sammen">
+            <span class="cat-toggle">▾</span>
+          </button>
+        </div>
         <div class="filter-pills-wrap platform-category-pills">
           <span class="filter-pill" onclick="setPlatform(this,'youtube')">YouTube</span>
           <span class="filter-pill" onclick="setPlatform(this,'tiktok')">TikTok</span>
@@ -8508,6 +8575,19 @@ function setPlatform(el, platform) {
       currentFilter = currentPlatforms.size === 1 ? Array.from(currentPlatforms)[0] : 'multi';
     }
   }
+
+  // Opdater alle kategori-checkbokse baseret på om alle deres platforme er valgt
+  document.querySelectorAll('.platform-category').forEach(catEl => {
+    const pills = catEl.querySelectorAll('.platform-category-pills .filter-pill');
+    const platformsInCat = Array.from(pills).map(p => {
+      const m = p.getAttribute('onclick')?.match(/setPlatform\(this,\s*['"]([^'"]+)['"]\)/);
+      return m ? m[1] : null;
+    }).filter(Boolean);
+    const allSelected = platformsInCat.length > 0 && platformsInCat.every(p => currentPlatforms.has(p));
+    const catBtn = catEl.querySelector('.cat-select-btn');
+    if (catBtn) catBtn.classList.toggle('active', allSelected);
+  });
+
   filterAndRender();
 }
 
@@ -8562,8 +8642,58 @@ function setSafety(el, safety) {
 }
 
 function toggleCategory(headerEl) {
-  const cat = headerEl.parentElement;
-  cat.classList.toggle('collapsed');
+  // Find op til .platform-category container (uanset om der klikkes på knap eller pil)
+  const cat = headerEl.closest('.platform-category');
+  if (cat) cat.classList.toggle('collapsed');
+}
+
+// Sprint 3a-fix: Vælg/fravælg alle platforme i en kategori
+function setPlatformCategory(btn, category) {
+  // Find alle platforme i denne kategori (via DOM)
+  const catEl = btn.closest('.platform-category');
+  const pills = catEl.querySelectorAll('.platform-category-pills .filter-pill');
+  const platformsInCat = Array.from(pills).map(p => {
+    // Udled platform-id fra onclick="setPlatform(this,'xxx')"
+    const m = p.getAttribute('onclick')?.match(/setPlatform\(this,\s*['"]([^'"]+)['"]\)/);
+    return m ? m[1] : null;
+  }).filter(Boolean);
+
+  // Tjek om alle er valgt
+  const allSelected = platformsInCat.every(p => currentPlatforms.has(p));
+
+  if (allSelected) {
+    // Fjern alle
+    platformsInCat.forEach(p => {
+      currentPlatforms.delete(p);
+      pills.forEach(pill => {
+        if (pill.getAttribute('onclick')?.includes(`'${p}'`)) pill.classList.remove('active');
+      });
+    });
+    btn.classList.remove('active');
+  } else {
+    // Tilføj alle
+    platformsInCat.forEach(p => {
+      currentPlatforms.add(p);
+      pills.forEach(pill => {
+        if (pill.getAttribute('onclick')?.includes(`'${p}'`)) pill.classList.add('active');
+      });
+    });
+    btn.classList.add('active');
+  }
+
+  // Opdater "Alle platforme"-knap
+  const allBtn = document.getElementById('plt-all');
+  if (allBtn) {
+    if (currentPlatforms.size === 0) {
+      allBtn.classList.add('active');
+      currentFilter = 'all';
+    } else {
+      allBtn.classList.remove('active');
+      currentFilter = currentPlatforms.size === 1 ? Array.from(currentPlatforms)[0] : 'multi';
+    }
+  }
+
+  filterAndRender();
 }
 
 function setConcern(el, concern) {
