@@ -616,6 +616,29 @@ nav {
 
 .filter-section:last-of-type { border-bottom: none; }
 
+/* SPRINT 3b: Dæmpet sikkerhedssektion når ingen alder er valgt */
+.filter-section.dampened {
+  opacity: 0.65;
+}
+
+.filter-section.dampened .safety-btn {
+  pointer-events: none;
+}
+
+.filter-section.dampened .safety-btn#saf-all {
+  pointer-events: auto;
+  opacity: 1;
+}
+
+#safetyTitle {
+  transition: color 0.2s ease;
+}
+
+.filter-section.aged-context #safetyTitle {
+  color: var(--accent);
+  font-weight: 700;
+}
+
 .filter-platform-group {
   margin-top: 10px;
 }
@@ -3923,17 +3946,25 @@ input.autofilled, textarea.autofilled {
     </div>
 
     <!-- TRIN 2: SIKKERHED (multi-select) -->
-    <div class="filter-section">
+    <div class="filter-section" id="safetySection">
       <div class="filter-section-title">
-        <span class="filter-step">2</span> Sikkerhed
-        <span style="font-size:11px;color:var(--muted);font-weight:400;font-style:italic" id="safetyHint">— vælg flere</span>
+        <span class="filter-step">2</span> <span id="safetyTitle">Sikkerhed</span>
+        <span style="font-size:11px;color:var(--muted);font-weight:400;font-style:italic" id="safetyHint">— vælg barnets alder først for personlige anbefalinger</span>
       </div>
       <div class="filter-pills-wrap">
         <span class="safety-btn s-active" id="saf-all" onclick="setSafety(this,'all')">Alle</span>
-        <span class="safety-btn s-green" id="saf-safe" onclick="setSafety(this,'safe')">✅ Egnet</span>
-        <span class="safety-btn s-yellow" id="saf-caution" onclick="setSafety(this,'caution')">⚠️ Med forbehold</span>
-        <span class="safety-btn s-red" id="saf-mature" onclick="setSafety(this,'mature')">🔶 Til de ældre</span>
-        <span class="safety-btn s-darkred" id="saf-notrec" onclick="setSafety(this,'notrec')">🚫 Frarådes</span>
+        <span class="safety-btn s-green" id="saf-safe" onclick="setSafety(this,'safe')">
+          <span class="saf-emoji">✅</span> <span class="saf-label" data-default="Egnet" data-aged="Trygt valg">Egnet</span>
+        </span>
+        <span class="safety-btn s-yellow" id="saf-caution" onclick="setSafety(this,'caution')">
+          <span class="saf-emoji">⚠️</span> <span class="saf-label" data-default="Med forbehold" data-aged="Se sammen">Med forbehold</span>
+        </span>
+        <span class="safety-btn s-red" id="saf-mature" onclick="setSafety(this,'mature')">
+          <span class="saf-emoji">🔶</span> <span class="saf-label" data-default="Til de ældre" data-aged="Vent et par år">Til de ældre</span>
+        </span>
+        <span class="safety-btn s-darkred" id="saf-notrec" onclick="setSafety(this,'notrec')">
+          <span class="saf-emoji">🚫</span> <span class="saf-label" data-default="Frarådes" data-aged="Ikke endnu">Frarådes</span>
+        </span>
       </div>
     </div>
 
@@ -7815,6 +7846,10 @@ if (!DEMO_MODE) {
 // ---- INIT ----
 document.addEventListener('DOMContentLoaded', () => {
   buildSliders();
+
+  // Sprint 3b: Initial dæmpning af sikkerhedssektion (ingen alder valgt endnu)
+  updateSafetySection('all', null);
+
   // Check for admin mode via URL
   if (window.location.search.includes('admin=1')) {
     showPage('admin');
@@ -7881,7 +7916,7 @@ function quickAge(el, age) {
     el.classList.remove('active');
     currentAgeFilter = 'all';
     currentSafety = 'all';
-    // Deselect in filter panel
+    // Deselect age in filter panel
     document.querySelectorAll('#filterPanel .filter-pill').forEach(p => {
       if (p.onclick && p.onclick.toString().includes('setAgeFilter')) {
         p.classList.remove('active');
@@ -7892,18 +7927,19 @@ function quickAge(el, age) {
     document.querySelectorAll('.safety-btn').forEach(b => b.classList.remove('s-active'));
     const safAll = document.getElementById('saf-all');
     if (safAll) safAll.classList.add('s-active');
+    // Sprint 3b: Dæmp sikkerhedssektion igen
+    updateSafetySection('all', null);
   } else {
     document.querySelectorAll('.hero-age-chip').forEach(c => c.classList.remove('active'));
     el.classList.add('active');
     currentAgeFilter = age;
 
     // Auto-sæt sikkerhed til "egnet" + "med forbehold" ved alders-valg
-    // Vi laver en speciel 'ageappropriate' mode
     currentSafety = 'ageappropriate';
-    currentSafeties.clear(); // Ryd multi-select valg så ageappropriate kan virke
+    currentSafeties.clear();
     document.querySelectorAll('.safety-btn').forEach(b => b.classList.remove('s-active'));
 
-    // Sync filter panel
+    // Sync alder i filter panel
     document.querySelectorAll('#filterPanel .filter-pill').forEach(p => {
       if (p.onclick && p.onclick.toString().includes('setAgeFilter')) {
         p.classList.remove('active');
@@ -7912,12 +7948,21 @@ function quickAge(el, age) {
       }
     });
 
-    // Opdater safetyHint
-    const hint = document.getElementById('safetyHint');
-    if (hint) {
-      hint.textContent = `— relativt til ${el.textContent.trim()}`;
-      hint.style.opacity = '0.7';
-    }
+    // VIGTIGT: Ryd ALLE platform-valg så vi starter fra "Alle platforme"
+    currentPlatforms.clear();
+    currentFilter = 'all';
+    document.querySelectorAll('#filterPanel .filter-pill').forEach(p => {
+      if (p.onclick && p.onclick.toString().includes('setPlatform')) {
+        p.classList.remove('active');
+      }
+    });
+    const allPltBtn = document.getElementById('plt-all');
+    if (allPltBtn) allPltBtn.classList.add('active');
+    // Ryd kategori-checkbokse
+    document.querySelectorAll('.cat-select-btn').forEach(btn => btn.classList.remove('active'));
+
+    // Opdater sikkerhedssektion dynamisk (Sprint 3b)
+    updateSafetySection(age, el.textContent.trim());
   }
   filterAndRender();
   // Scroll to results
@@ -8598,14 +8643,44 @@ function setAgeFilter(el, age) {
   el.classList.add('active');
   currentAgeFilter = age;
 
-  // Skjul/vis sikkerhedshint
-  const hint = document.getElementById('safetyHint');
-  if (hint) {
-    hint.textContent = age === 'all' ? '— vælg flere' : `— for ${el.textContent.trim()}`;
-    hint.style.opacity = '1';
-  }
+  // Sprint 3b: Opdater sikkerhedssektion dynamisk
+  updateSafetySection(age, el.textContent.trim());
 
   filterAndRender();
+}
+
+// Sprint 3b: Dynamiske sikkerhedsbetegnelser baseret på valgt alder
+function updateSafetySection(age, ageLabel) {
+  const section = document.getElementById('safetySection');
+  const title = document.getElementById('safetyTitle');
+  const hint = document.getElementById('safetyHint');
+  const labels = document.querySelectorAll('.saf-label');
+
+  if (age === 'all') {
+    // Ingen alder valgt → dæmpet og generisk
+    section.classList.add('dampened');
+    section.classList.remove('aged-context');
+    title.textContent = 'Sikkerhed';
+    if (hint) {
+      hint.textContent = '— vælg barnets alder først for personlige anbefalinger';
+      hint.style.fontStyle = 'italic';
+    }
+    labels.forEach(l => {
+      l.textContent = l.dataset.default || l.textContent;
+    });
+  } else {
+    // Alder valgt → aktiv og handlings-orienteret
+    section.classList.remove('dampened');
+    section.classList.add('aged-context');
+    title.textContent = `For ${ageLabel}`;
+    if (hint) {
+      hint.textContent = '— vælg flere';
+      hint.style.fontStyle = 'normal';
+    }
+    labels.forEach(l => {
+      l.textContent = l.dataset.aged || l.textContent;
+    });
+  }
 }
 
 function setSafety(el, safety) {
