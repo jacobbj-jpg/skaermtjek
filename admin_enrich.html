@@ -163,6 +163,7 @@ button.danger { background: #c83a2a; }
         <option value="fast" selected>Fase 1 — Hurtig (scores + bullets)</option>
         <option value="deep">Fase 2 — Grundig (kategori-tekster + FAQ)</option>
         <option value="conversations">Fase 3 — Samtaler (spørgsmål + kilder)</option>
+        <option value="tags">Fase 4 — Positive tags (værdier)</option>
       </select>
     </div>
   </div>
@@ -242,7 +243,8 @@ async function startBatch() {
   const phaseLabels = {
     fast: 'FASE 1: Hurtig',
     deep: 'FASE 2: Grundig',
-    conversations: 'FASE 3: Samtaler'
+    conversations: 'FASE 3: Samtaler',
+    tags: 'FASE 4: Positive tags'
   };
   log(`🚀 Starter batch (${phaseLabels[phase] || phase}, ${batchSize} titler)...`, 'info');
 
@@ -261,13 +263,16 @@ async function startBatch() {
     } else if (phase === 'conversations') {
       // Fase 3: har ai_bullets men mangler ai_conversations
       query = query.not('ai_bullets', 'is', null).is('ai_conversations', null);
+    } else if (phase === 'tags') {
+      // Fase 4: har ai_bullets men mangler positive_tags
+      query = query.not('ai_bullets', 'is', null).is('positive_tags', null);
     }
 
     const { data: items, error } = await query;
     if (error) throw error;
 
     if (!items || items.length === 0) {
-      log(`✓ Ingen vurderinger mangler ${phase === 'fast' ? 'fase 1' : 'fase 2'}!`, 'success');
+      log(`✓ Ingen vurderinger mangler ${phaseLabels[phase] || phase}!`, 'success');
       finish();
       return;
     }
@@ -305,8 +310,11 @@ async function startBatch() {
           } else if (phase === 'deep') {
             endpoint = '/.netlify/functions/enrich-deep';
             body = { title: item.title, platform: item.platform, episode: item.episode, notes: item.notes, ai_scores: item.ai_scores, recommended_age: item.recommended_age, ratingId: item.id };
-          } else {
+          } else if (phase === 'conversations') {
             endpoint = '/.netlify/functions/enrich-conversations';
+            body = { title: item.title, platform: item.platform, episode: item.episode, ai_scores: item.ai_scores, recommended_age: item.recommended_age, ratingId: item.id };
+          } else if (phase === 'tags') {
+            endpoint = '/.netlify/functions/enrich-tags';
             body = { title: item.title, platform: item.platform, episode: item.episode, ai_scores: item.ai_scores, recommended_age: item.recommended_age, ratingId: item.id };
           }
 
@@ -349,8 +357,10 @@ async function startBatch() {
           } else if (phase === 'deep') {
             updateData.ai_category_texts = e.ai_category_texts;
             updateData.ai_faq = e.ai_faq;
-          } else {
+          } else if (phase === 'conversations') {
             updateData.ai_conversations = e.ai_conversations;
+          } else if (phase === 'tags') {
+            updateData.positive_tags = e.positive_tags;
           }
 
           const { error: updateError } = await db.from('ratings').update(updateData).eq('id', item.id);
