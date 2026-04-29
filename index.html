@@ -1255,6 +1255,10 @@ nav {
   display: flex;
   align-items: center;
   gap: 8px;
+  /* PAKKE 2: Forhindrer at bars kaprer touch-events på mobil */
+  touch-action: pan-y;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .bar-label {
@@ -1273,11 +1277,13 @@ nav {
   background: var(--warm);
   border-radius: 2px;
   overflow: hidden;
+  pointer-events: none;
 }
 
 .bar-fill {
   height: 100%;
   border-radius: 2px;
+  pointer-events: none;
 }
 
 .bar-val {
@@ -1833,6 +1839,10 @@ input[type="range"]::-webkit-slider-thumb {
   display: flex;
   align-items: center;
   gap: 12px;
+  /* PAKKE 2: Forhindrer at bars kaprer touch-events på mobil */
+  touch-action: pan-y;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .detail-bar-icon { font-size: 16px; width: 24px; text-align: center; }
@@ -1846,12 +1856,14 @@ input[type="range"]::-webkit-slider-thumb {
   background: var(--warm);
   border-radius: 4px;
   overflow: hidden;
+  pointer-events: none;
 }
 
 .detail-bar-fill {
   height: 100%;
   border-radius: 4px;
   transition: width 0.6s ease;
+  pointer-events: none;
 }
 
 .detail-bar-val {
