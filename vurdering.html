@@ -390,6 +390,17 @@ nav {
 .scores-col-label.ai { color: var(--ai-color); }
 .scores-col-label.parent { color: var(--parent-color); }
 
+/* PAKKE 2: Forklarende tekst over score-bjælker */
+.scores-explainer {
+  font-size: 13px;
+  color: var(--ink2);
+  line-height: 1.5;
+  background: rgba(0,0,0,0.025);
+  padding: 12px 14px;
+  border-radius: 10px;
+  margin: 1rem 0 1.25rem;
+}
+
 .score-row {
   display: grid;
   grid-template-columns: 32px 1fr 60px 60px;
@@ -397,9 +408,23 @@ nav {
   align-items: center;
   padding: 10px 0;
   border-bottom: 1px solid rgba(224,216,204,0.5);
+  /* PAKKE 2: Forhindrer at score-bars kaprer touch-events på mobil */
+  touch-action: pan-y;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .score-row:last-child { border-bottom: none; }
+
+.bar-track,
+.bar-fill {
+  /* PAKKE 2: Disable drag/select på selve søjlerne */
+  touch-action: pan-y;
+  -webkit-user-select: none;
+  user-select: none;
+  pointer-events: none;
+}
 
 .score-icon { font-size: 18px; text-align: center; }
 
@@ -408,9 +433,32 @@ nav {
 .score-name { font-size: 13px; font-weight: 500; color: var(--ink); }
 .score-desc { font-size: 11px; color: var(--muted); }
 
-.dual-bars { display: flex; flex-direction: column; gap: 3px; }
+.dual-bars { display: flex; flex-direction: column; gap: 6px; }
 
-.bar-line { display: flex; align-items: center; gap: 5px; }
+.bar-line { display: flex; align-items: center; gap: 8px; }
+
+/* PAKKE 2: Tydelige AI/FORÆLDRE-labels */
+.bar-source-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  width: 56px;
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.bar-source-label.ai { color: var(--ai-color); }
+.bar-source-label.parent { color: var(--parent-color); }
+
+.bar-inline-val {
+  font-size: 13px;
+  font-weight: 700;
+  font-family: 'Fraunces', serif;
+  width: 48px;
+  flex-shrink: 0;
+  text-align: right;
+}
 
 .bar-dot {
   width: 5px;
@@ -421,13 +469,13 @@ nav {
 
 .bar-track {
   flex: 1;
-  height: 5px;
+  height: 8px;
   background: var(--warm);
-  border-radius: 3px;
+  border-radius: 4px;
   overflow: hidden;
 }
 
-.bar-fill { height: 100%; border-radius: 3px; transition: width 0.6s ease; }
+.bar-fill { height: 100%; border-radius: 4px; transition: width 0.6s ease; }
 
 .score-val {
   font-size: 14px;
@@ -1079,11 +1127,8 @@ nav {
       <div class="progress-label" id="progressLabel"></div>
     </div>
 
-    <div class="scores-header-row">
-      <div></div>
-      <div style="font-size:11px;color:var(--muted);font-style:italic">Forældrenes søjle viser samlet snit — individuel per-kategori score kommer når vi har nok data</div>
-      <div class="scores-col-label ai">AI</div>
-      <div class="scores-col-label parent" id="parentColLabel">Forældre</div>
+    <div class="scores-explainer" id="scoresExplainer">
+      Hver kategori vises med både <strong style="color:var(--ai-color)">AI-vurdering</strong> og <strong style="color:var(--parent-color)">forældre-snit</strong>. <span id="parentExplainer" style="color:var(--muted);font-style:italic">Individuel per-kategori score fra forældre kommer når vi har nok data.</span>
     </div>
     <div id="scoresContainer"></div>
 
@@ -1277,14 +1322,24 @@ function renderPage(item, allData) {
   const ctaTitle = document.getElementById('ctaTitle');
   const ctaButton = document.getElementById('ctaButton');
   if (ctaTitle) ctaTitle.textContent = item.title;
-  if (ctaButton) {
-    // Link til vurderingsformular med prefill
-    const params = new URLSearchParams({
-      rate: item.title,
-      platform: item.platform || ''
-    });
-    ctaButton.href = '/?' + params.toString();
-  }
+
+  // PAKKE 2: prefill alle "Tilføj vurdering"-links med titel + platform
+  const prefillParams = new URLSearchParams({
+    rate: item.title,
+    platform: item.platform || ''
+  });
+  const prefillUrl = '/?' + prefillParams.toString();
+
+  if (ctaButton) ctaButton.href = prefillUrl;
+
+  // FAB-knap (mobil)
+  const fab = document.getElementById('mobileFab');
+  if (fab) fab.href = prefillUrl;
+
+  // Top-nav "Tilføj vurdering"-knap
+  document.querySelectorAll('.nav-btn.primary').forEach(btn => {
+    btn.href = prefillUrl;
+  });
 
   // AI score
   const aiScores = item.ai_scores;
@@ -1356,7 +1411,8 @@ function renderScores(item, parentVotes) {
   const container = document.getElementById('scoresContainer');
 
   if (!hasParent) {
-    document.getElementById('parentColLabel').style.opacity = '0.3';
+    const exp = document.getElementById('parentExplainer');
+    if (exp) exp.textContent = 'Vær den første til at give en forældre-vurdering!';
   }
 
   container.innerHTML = CATEGORIES.map(cat => {
@@ -1376,17 +1432,18 @@ function renderScores(item, parentVotes) {
       const pPct = ((pVal - 1) / 9 * 100).toFixed(0);
       const pCol = scoreColor(pVal);
       parentHTML = `<div class="bar-line">
-        <div class="bar-dot" style="background:var(--parent-color)"></div>
+        <div class="bar-source-label parent">FORÆLDRE</div>
         <div class="bar-track"><div class="bar-fill" style="width:${pPct}%;background:${pCol}"></div></div>
+        <div class="bar-inline-val" style="color:${pCol}">${hasPerCategory ? pVal.toFixed(1) : pVal.toFixed(1) + ' (snit)'}</div>
       </div>`;
-      const labelText = hasPerCategory ? pVal.toFixed(1) : `snit ${pVal.toFixed(1)}`;
-      parentValHTML = `<div class="score-val parent" style="color:${pCol};font-size:11px;font-weight:400">${labelText}</div>`;
+      parentValHTML = '';
     } else {
-      parentHTML = `<div class="bar-line" style="opacity:0.25">
-        <div class="bar-dot" style="background:var(--parent-color)"></div>
+      parentHTML = `<div class="bar-line" style="opacity:0.45">
+        <div class="bar-source-label parent">FORÆLDRE</div>
         <div class="bar-track"><div class="bar-fill" style="width:0%"></div></div>
+        <div class="bar-inline-val" style="color:var(--muted);font-size:11px">ingen endnu</div>
       </div>`;
-      parentValHTML = `<div class="parent-placeholder">—</div>`;
+      parentValHTML = '';
     }
 
     return `<div class="score-row">
@@ -1395,16 +1452,13 @@ function renderScores(item, parentVotes) {
         <div class="score-name">${cat.name}</div>
         <div class="dual-bars">
           <div class="bar-line">
-            <div class="bar-dot" style="background:var(--ai-color)"></div>
+            <div class="bar-source-label ai">AI</div>
             <div class="bar-track"><div class="bar-fill" style="width:${aiPct}%;background:${aiCol}"></div></div>
+            <div class="bar-inline-val" style="color:${aiCol}">${aiVal}</div>
           </div>
           ${parentHTML}
         </div>
         <div class="score-desc">${cat.desc}</div>
-      </div>
-      <div class="score-val-wrap">
-        <div class="score-val ai" style="color:${aiCol}">${aiVal}</div>
-        ${parentValHTML}
       </div>
     </div>`;
   }).join('');
