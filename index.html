@@ -8817,30 +8817,36 @@ function cardHTML(item) {
   const pLabel = PLATFORM_LABEL[item.platform] || item.platform;
   const aiColor = scoreColor(aiAvg);
 
-  // PAKKE 2: Dynamisk type-label baseret på content_type + platform-kategori
+  // PAKKE 2: Dynamisk type-label
+  // Logik: category er den mest pålidelige (streaming/gaming/social),
+  // content_type='channel' er for generisk (bruges på næsten alt)
   const typeCategory = item.category || PLATFORM_CATEGORY[item.platform] || 'andet';
   let typeLabel = '';
   let typeLabelClass = 'channel-type-label';
+
+  // 1. Specifikke content_types tager forrang (film/app)
   if (item.content_type === 'film') {
     typeLabel = '🎥 FILM';
     typeLabelClass += ' film-type-label';
-  } else if (item.content_type === 'channel') {
-    typeLabel = '⭐ KANAL';
-  } else if (item.content_type === 'serie' || item.content_type === 'series') {
-    typeLabel = '📺 SERIE';
-  } else if (item.content_type === 'spil' || item.content_type === 'game') {
-    typeLabel = '🎮 SPIL';
   } else if (item.content_type === 'app') {
     typeLabel = '📱 APP';
-  } else if (typeCategory === 'gaming' || typeCategory === 'spil') {
+  }
+  // 2. Ellers brug category til at differentiere
+  else if (typeCategory === 'gaming' || typeCategory === 'spil') {
     typeLabel = '🎮 SPIL';
   } else if (typeCategory === 'social') {
-    typeLabel = '💬 SOCIALT MEDIE';
-  } else if (item.platform === 'youtube' || item.platform === 'twitch') {
-    typeLabel = '⭐ KANAL';
+    // Sociale medier-platforme (TikTok, Snapchat, BeReal, Instagram, Discord)
+    // vs YouTube/Twitch som er kanal-platforme
+    if (item.platform === 'youtube' || item.platform === 'twitch' || item.platform === 'ytshorts') {
+      typeLabel = '⭐ KANAL';
+    } else {
+      typeLabel = '💬 SOCIALT MEDIE';
+    }
   } else if (typeCategory === 'streaming') {
     typeLabel = '📺 SERIE';
-  } else {
+  }
+  // 3. Fallback
+  else {
     typeLabel = '⭐ INDHOLD';
   }
 
