@@ -8817,6 +8817,33 @@ function cardHTML(item) {
   const pLabel = PLATFORM_LABEL[item.platform] || item.platform;
   const aiColor = scoreColor(aiAvg);
 
+  // PAKKE 2: Dynamisk type-label baseret på content_type + platform-kategori
+  const typeCategory = item.category || PLATFORM_CATEGORY[item.platform] || 'andet';
+  let typeLabel = '';
+  let typeLabelClass = 'channel-type-label';
+  if (item.content_type === 'film') {
+    typeLabel = '🎥 FILM';
+    typeLabelClass += ' film-type-label';
+  } else if (item.content_type === 'channel') {
+    typeLabel = '⭐ KANAL';
+  } else if (item.content_type === 'serie' || item.content_type === 'series') {
+    typeLabel = '📺 SERIE';
+  } else if (item.content_type === 'spil' || item.content_type === 'game') {
+    typeLabel = '🎮 SPIL';
+  } else if (item.content_type === 'app') {
+    typeLabel = '📱 APP';
+  } else if (typeCategory === 'gaming' || typeCategory === 'spil') {
+    typeLabel = '🎮 SPIL';
+  } else if (typeCategory === 'social') {
+    typeLabel = '💬 SOCIALT MEDIE';
+  } else if (item.platform === 'youtube' || item.platform === 'twitch') {
+    typeLabel = '⭐ KANAL';
+  } else if (typeCategory === 'streaming') {
+    typeLabel = '📺 SERIE';
+  } else {
+    typeLabel = '⭐ INDHOLD';
+  }
+
   const cardClass = isEpisode ? 'content-card episode-card' : 'content-card channel-card';
   const parentVotes = item.parent_votes || 0;
   const aiOnly = parentVotes === 0;
@@ -8852,7 +8879,7 @@ function cardHTML(item) {
     <div class="episode-card-title">"${item.episode || 'Afsnit'}"</div>
     ` : `
     <div class="channel-card-header">
-      ${isFilm ? '<span class="channel-type-label film-type-label">🎥 FILM</span>' : isEpisode ? '<span class="channel-type-label ep-type-label">▶ AFSNIT</span>' : '<span class="channel-type-label">⭐ KANAL / SERIE / SPIL</span>'}
+      <span class="${typeLabelClass}">${typeLabel}</span>
     </div>
     <div class="card-top">
       <div class="card-icon">${pEmoji}</div>
