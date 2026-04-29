@@ -8921,6 +8921,13 @@ function setScoreMax(val) {
 function filterAndRender() {
   let data = allData;
 
+  // SPRINT 4 fix: Skjul afsnits-rækker fra forsiden som default
+  // Kun hvis brugeren søger specifikt, vises afsnit i resultaterne
+  // (Søgning matcher i alle felter inkl. episode-titlen, så afsnit dukker op når relevant)
+  if (!currentSearch || currentSearch.trim() === '') {
+    data = data.filter(d => d.content_type !== 'episode');
+  }
+
   // PLATFORM — multi-select med JSONB-array support
   // Sprint 1: en titel kan have flere platforme i `platforms`-array
   if (currentPlatforms.size > 0) {
