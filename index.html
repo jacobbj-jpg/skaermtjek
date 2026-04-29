@@ -347,6 +347,26 @@ nav {
   max-width: 600px;
 }
 
+/* PAKKE 2: "Hvad bør de IKKE se" research-link på forsiden */
+.hero-research-row {
+  margin-top: 14px;
+}
+
+.hero-research-link {
+  font-size: 13px;
+  color: rgba(250, 247, 242, 0.75);
+  cursor: pointer;
+  border-bottom: 1px dashed rgba(250, 247, 242, 0.3);
+  padding-bottom: 2px;
+  transition: all 0.15s;
+  display: inline-block;
+}
+
+.hero-research-link:hover {
+  color: rgba(250, 247, 242, 1);
+  border-bottom-color: rgba(250, 247, 242, 0.7);
+}
+
 .hero-sources-subtle {
   margin-top: 24px;
   opacity: 0.7;
@@ -1086,9 +1106,11 @@ nav {
 /* SECTION TITLE */
 .section-head {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .section-head h2 {
@@ -1101,6 +1123,49 @@ nav {
 .section-head .count {
   font-size: 13px;
   color: var(--muted);
+  margin-right: auto;
+  margin-left: 8px;
+}
+
+/* PAKKE 2: Sortering-dropdown */
+.sort-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sort-label {
+  font-size: 12px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+#sortSelect {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 6px 24px 6px 12px;
+  background: white;
+  color: var(--ink);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='10' height='10'%3E%3Cpath fill='%23666' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 10px;
+}
+
+#sortSelect:hover {
+  border-color: var(--ink);
+}
+
+@media (max-width: 600px) {
+  .sort-label { display: none; }
+  #sortSelect { font-size: 12px; padding: 5px 22px 5px 10px; }
 }
 
 /* CARD GRID */
@@ -4075,6 +4140,10 @@ input.autofilled, textarea.autofilled {
       <span class="hero-age-chip" onclick="quickAge(this,'13+')">13+ år</span>
     </div>
     <div class="hero-age-help">Klik på en aldersgruppe — vi viser indhold der er egnet, og skjuler det der er vurderet til ældre børn.</div>
+    <!-- PAKKE 2: Hurtig adgang til "hvad bør de ikke se" -->
+    <div class="hero-research-row">
+      <span class="hero-research-link" onclick="quickShowFraraded()">🚫 Vis det der frarådes — orientér dig om hvad børnene måske allerede har set</span>
+    </div>
     <div class="hero-stats">
       <div class="stat"><strong id="statCount">—</strong>Vurderinger</div>
       <div class="stat"><strong id="statPlatforms">14</strong>Platforme</div>
@@ -4273,6 +4342,16 @@ input.autofilled, textarea.autofilled {
     <div class="section-head">
       <h2 id="browseTitle">Seneste vurderinger</h2>
       <span class="count" id="browseCount"></span>
+      <div class="sort-wrap">
+        <label for="sortSelect" class="sort-label">Sortér:</label>
+        <select id="sortSelect" onchange="setSortOrder(this.value)">
+          <option value="recent">Senest opdaterede</option>
+          <option value="alphabetical">A–Å</option>
+          <option value="ai-low">Bedst score (AI lavest)</option>
+          <option value="ai-high">Højeste score (AI højest)</option>
+          <option value="parent-votes">Flest forældre-stemmer</option>
+        </select>
+      </div>
     </div>
     <div id="cardGrid" class="card-grid"></div>
   </div>
@@ -4335,7 +4414,7 @@ input.autofilled, textarea.autofilled {
             </div>
             <div class="field-group">
               <label>Platform *</label>
-              <<select id="f_platform">
+              <select id="f_platform" onchange="updateUrlPlaceholder()">
                 <option value="">Vælg platform…</option>
                 <optgroup label="📺 Streaming">
                   <option value="youtube">YouTube</option>
@@ -8043,6 +8122,8 @@ let currentSafeties = new Set(); // tom = "alle"
 let currentPlatforms = new Set(); // tom = "alle"
 // Sprint 4: multi-select for positive values (OR-logik)
 let currentValueTags = new Set(); // tom = "alle"
+// PAKKE 2: Sortering
+let currentSort = 'recent';
 // Legacy state — bevares for kompatibilitet med eksisterende kode
 let currentSafety = 'all';
 let currentScoreMax = 10;
@@ -9080,6 +9161,46 @@ function setValueTag(el, tagId) {
   filterAndRender();
 }
 
+// PAKKE 2: Sætter sortering
+function setSortOrder(order) {
+  currentSort = order;
+  filterAndRender();
+}
+
+// PAKKE 2: Anvender sortering på et data-array
+function applySort(data) {
+  const arr = data.slice();
+  const getAi = d => calcAvg(d.ai_scores || d.scores) || 99;
+  if (currentSort === 'alphabetical') {
+    arr.sort((a, b) => (a.title || '').localeCompare(b.title || '', 'da'));
+  } else if (currentSort === 'ai-low') {
+    arr.sort((a, b) => getAi(a) - getAi(b));
+  } else if (currentSort === 'ai-high') {
+    arr.sort((a, b) => getAi(b) - getAi(a));
+  } else if (currentSort === 'parent-votes') {
+    arr.sort((a, b) => (b.parent_votes || 0) - (a.parent_votes || 0));
+  }
+  // 'recent' = behold original sortering
+  return arr;
+}
+
+// PAKKE 2: Quick-filter til "Vis kun frarådes" — research mode for forældre
+function quickShowFraraded() {
+  // Ryd alle andre filtre
+  clearAllFilters();
+  // Sæt kun "frarådes" som sikkerhedsfilter
+  currentSafeties.add('notrec');
+  const btn = document.getElementById('saf-notrec');
+  const safAll = document.getElementById('saf-all');
+  if (btn) btn.classList.add('s-active');
+  if (safAll) safAll.classList.remove('s-active');
+  filterAndRender();
+  document.getElementById('browseTitle').textContent = 'Indhold der frarådes';
+  // Scroll til resultaterne
+  const browseSection = document.getElementById('page-browse');
+  if (browseSection) browseSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
 // Sprint 3a-fix: Vælg/fravælg alle platforme i en kategori
 function setPlatformCategory(btn, category) {
   // Find alle platforme i denne kategori (via DOM)
@@ -9368,6 +9489,8 @@ function _doFilterAndRender() {
 
   updateFilterSummary();
   if (typeof updateClearButtons === 'function') updateClearButtons();
+  // PAKKE 2: Sortering
+  data = applySort(data);
   renderCards(data);
 }
 
@@ -9999,6 +10122,46 @@ function onUrlInput(val) {
   // Clean tracking params immediately
   const clean = val.trim().split('?')[0];
   urlDebounceTimer = setTimeout(() => fetchUrlMeta(clean), 600);
+}
+
+// PAKKE 2: Dynamisk placeholder for kanallink baseret på valgt platform
+function updateUrlPlaceholder() {
+  const select = document.getElementById('f_platform');
+  const input = document.getElementById('f_url');
+  const label = input?.previousElementSibling;
+  if (!select || !input) return;
+  const platform = select.value;
+
+  const placeholders = {
+    youtube: { ph: 'fx https://youtube.com/@kanalnavn', label: 'Kanallink (valgfrit, men anbefalet)' },
+    netflix: { ph: 'fx https://netflix.com/title/...', label: 'Link til Netflix-side (valgfrit)' },
+    disney: { ph: 'fx https://disneyplus.com/da-dk/...', label: 'Link til Disney+-side (valgfrit)' },
+    dr: { ph: 'fx https://dr.dk/drtv/serie/...', label: 'Link til DRTV-side (valgfrit)' },
+    tv2: { ph: 'fx https://play.tv2.dk/...', label: 'Link til TV 2 Play-side (valgfrit)' },
+    viaplay: { ph: 'fx https://viaplay.dk/...', label: 'Link til Viaplay-side (valgfrit)' },
+    max: { ph: 'fx https://max.com/...', label: 'Link til Max-side (valgfrit)' },
+    skyshowtime: { ph: 'fx https://skyshowtime.com/...', label: 'Link til SkyShowtime-side (valgfrit)' },
+    sfkids: { ph: 'fx https://sfkids.dk/...', label: 'Link til SF Kids-side (valgfrit)' },
+    gaming: { ph: 'fx https://store.steampowered.com/app/...', label: 'Link til spillets side (valgfrit)' },
+    switch: { ph: 'fx https://nintendo.dk/...', label: 'Link til Nintendo-side (valgfrit)' },
+    ipad: { ph: 'fx https://apps.apple.com/...', label: 'Link til App Store (valgfrit)' },
+    mobile_apps: { ph: 'fx https://apps.apple.com/... eller Google Play', label: 'Link til app store (valgfrit)' },
+    tiktok: { ph: 'fx https://tiktok.com/@brugernavn', label: 'Link til TikTok-profil (valgfrit)' },
+    instagram: { ph: 'fx https://instagram.com/brugernavn', label: 'Link til Instagram-profil (valgfrit)' },
+    snapchat: { ph: 'fx https://snapchat.com/add/brugernavn', label: 'Link til Snapchat-profil (valgfrit)' },
+    ytshorts: { ph: 'fx https://youtube.com/shorts/...', label: 'Link til YouTube Shorts (valgfrit)' },
+    bereal: { ph: 'fx https://bere.al/brugernavn', label: 'BeReal-link (valgfrit)' },
+    discord: { ph: 'fx https://discord.gg/server-invite', label: 'Discord-server invite (valgfrit)' },
+    twitch: { ph: 'fx https://twitch.tv/kanalnavn', label: 'Link til Twitch-kanal (valgfrit)' }
+  };
+
+  if (platform && placeholders[platform]) {
+    input.placeholder = placeholders[platform].ph;
+    if (label && label.tagName === 'LABEL') label.textContent = placeholders[platform].label;
+  } else {
+    input.placeholder = 'Indsæt link til indholdet (valgfrit)';
+    if (label && label.tagName === 'LABEL') label.textContent = 'Link (valgfrit, men anbefalet)';
+  }
 }
 
 async function fetchUrlMeta(url) {
