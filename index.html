@@ -578,9 +578,10 @@ nav {
   border-color: var(--ink);
 }
 
-/* PAKKE 2: X-knap i søgefelt */
+/* PAKKE 2: X-knap i søgefelt — altid placeret inde i inputfeltets højre side */
 .search-clear-btn {
   position: absolute;
+  /* Standard: 110px fra højre fordi "Søg nu"-knappen tager plads */
   right: 110px;
   top: 50%;
   transform: translateY(-50%);
@@ -603,6 +604,16 @@ nav {
 @media (max-width: 768px) {
   .search-clear-btn {
     right: 100px;
+  }
+}
+
+/* På meget små skærme bliver search-bar stacked (column) — så X skal være øverst i input-rækken */
+@media (max-width: 400px) {
+  .search-clear-btn {
+    /* Når layout bliver column, sidder X i input-rækken (øverst) */
+    right: 18px;
+    top: 30px;
+    transform: none;
   }
 }
 
