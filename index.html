@@ -653,6 +653,56 @@ nav {
   margin-top: 4px;
 }
 
+/* SPRINT 4: Positive værdi-knapper - friske farver */
+.value-btn {
+  background: white;
+  border: 1.5px solid #d4e9d4;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 13px;
+  color: #2a7a5c;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'DM Sans', sans-serif;
+  display: inline-block;
+  margin: 3px 4px 3px 0;
+}
+
+.value-btn:hover {
+  background: #e8f5ec;
+  border-color: #2a7a5c;
+}
+
+.value-btn.active {
+  background: #2a7a5c;
+  color: white;
+  border-color: #2a7a5c;
+  font-weight: 500;
+}
+
+/* Værdi-badges på vurderingskort */
+.card-value-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #e8f5ec;
+  color: #2a7a5c;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-right: 4px;
+  margin-top: 6px;
+  border: 1px solid #d4e9d4;
+}
+
+.card-value-badges {
+  margin-top: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+}
+
 /* SPRINT 3a: Tragt-step badges */
 .filter-step {
   display: inline-flex;
@@ -3968,10 +4018,25 @@ input.autofilled, textarea.autofilled {
       </div>
     </div>
 
-    <!-- TRIN 3: PLATFORM (multi-select, foldbare grupper) -->
+    <!-- TRIN 3: VÆRDIER (multi-select, OR-logik) -->
     <div class="filter-section">
       <div class="filter-section-title">
-        <span class="filter-step">3</span> Hvor ses indholdet?
+        <span class="filter-step">3</span> Hvad leder du efter?
+        <span style="font-size:11px;color:var(--muted);font-weight:400;font-style:italic">— vælg flere</span>
+      </div>
+      <div class="filter-pills-wrap">
+        <span class="value-btn" id="val-laering" onclick="setValueTag(this,'laering')">🌱 Læring</span>
+        <span class="value-btn" id="val-kreativitet" onclick="setValueTag(this,'kreativitet')">🎨 Kreativitet</span>
+        <span class="value-btn" id="val-aktiv" onclick="setValueTag(this,'aktiv')">🏃 Aktiv</span>
+        <span class="value-btn" id="val-socialt" onclick="setValueTag(this,'socialt')">🤝 Socialt & empati</span>
+        <span class="value-btn" id="val-fordybelse" onclick="setValueTag(this,'fordybelse')">🧩 Fordybelse</span>
+      </div>
+    </div>
+
+    <!-- TRIN 4: PLATFORM (multi-select, foldbare grupper) -->
+    <div class="filter-section">
+      <div class="filter-section-title">
+        <span class="filter-step">4</span> Hvor ses indholdet?
         <span style="font-size:11px;color:var(--muted);font-weight:400;font-style:italic">— vælg flere</span>
       </div>
       <div class="filter-pills-wrap">
@@ -4988,6 +5053,15 @@ const PLATFORM_CATEGORY = {
   gaming:'spil', switch:'spil', ipad:'spil',
   tiktok:'socialt', instagram:'socialt', snapchat:'socialt', ytshorts:'socialt', bereal:'socialt',
   discord:'chat', twitch:'chat'
+};
+
+// SPRINT 4: Positive værdi-tags
+const POSITIVE_TAGS = {
+  laering:     { id: 'laering',     name: 'Læring',          icon: '🌱' },
+  kreativitet: { id: 'kreativitet', name: 'Kreativitet',     icon: '🎨' },
+  aktiv:       { id: 'aktiv',       name: 'Aktiv',           icon: '🏃' },
+  socialt:     { id: 'socialt',     name: 'Socialt & empati',icon: '🤝' },
+  fordybelse:  { id: 'fordybelse',  name: 'Fordybelse',      icon: '🧩' }
 };
 
 // ── BLOG POSTS ────────────────────────────────────────────────────────
@@ -7829,6 +7903,8 @@ let currentAgeFilter = 'all';
 // Sprint 3a: multi-select for safety og platform
 let currentSafeties = new Set(); // tom = "alle"
 let currentPlatforms = new Set(); // tom = "alle"
+// Sprint 4: multi-select for positive values (OR-logik)
+let currentValueTags = new Set(); // tom = "alle"
 // Legacy state — bevares for kompatibilitet med eksisterende kode
 let currentSafety = 'all';
 let currentScoreMax = 10;
@@ -7927,6 +8003,9 @@ function quickAge(el, age) {
     document.querySelectorAll('.safety-btn').forEach(b => b.classList.remove('s-active'));
     const safAll = document.getElementById('saf-all');
     if (safAll) safAll.classList.add('s-active');
+    // Sprint 4: Ryd værdi-tags
+    currentValueTags.clear();
+    document.querySelectorAll('.value-btn').forEach(b => b.classList.remove('active'));
     // Sprint 3b: Dæmp sikkerhedssektion igen
     updateSafetySection('all', null);
   } else {
@@ -7960,6 +8039,10 @@ function quickAge(el, age) {
     if (allPltBtn) allPltBtn.classList.add('active');
     // Ryd kategori-checkbokse
     document.querySelectorAll('.cat-select-btn').forEach(btn => btn.classList.remove('active'));
+
+    // Sprint 4: Ryd også værdi-tags ved nyt alders-valg fra hero
+    currentValueTags.clear();
+    document.querySelectorAll('.value-btn').forEach(b => b.classList.remove('active'));
 
     // Opdater sikkerhedssektion dynamisk (Sprint 3b)
     updateSafetySection(age, el.textContent.trim());
@@ -8551,6 +8634,15 @@ function cardHTML(item) {
           }).join('')}
         </div>`
     }
+    ${Array.isArray(item.positive_tags) && item.positive_tags.length > 0
+      ? `<div class="card-value-badges">
+          ${item.positive_tags.map(tag => {
+            const tagInfo = POSITIVE_TAGS[tag];
+            return tagInfo ? `<span class="card-value-badge">${tagInfo.icon} ${tagInfo.name}</span>` : '';
+          }).join('')}
+        </div>`
+      : ''
+    }
     <div class="card-footer">
       <div class="age-badges">
         ${item.recommended_age !== undefined && item.recommended_age !== null
@@ -8722,6 +8814,18 @@ function toggleCategory(headerEl) {
   if (cat) cat.classList.toggle('collapsed');
 }
 
+// Sprint 4: Toggle positiv værdi-tag (multi-select OR-logik)
+function setValueTag(el, tagId) {
+  if (currentValueTags.has(tagId)) {
+    currentValueTags.delete(tagId);
+    el.classList.remove('active');
+  } else {
+    currentValueTags.add(tagId);
+    el.classList.add('active');
+  }
+  filterAndRender();
+}
+
 // Sprint 3a-fix: Vælg/fravælg alle platforme i en kategori
 function setPlatformCategory(btn, category) {
   // Find alle platforme i denne kategori (via DOM)
@@ -8856,6 +8960,17 @@ function filterAndRender() {
       }
       // fallback to age_group
       return d.age_group === currentAgeFilter;
+    });
+  }
+
+  // Sprint 4: Værdi-tags — OR-logik (mindst én af de valgte tags skal matche)
+  if (currentValueTags.size > 0) {
+    data = data.filter(d => {
+      const tags = Array.isArray(d.positive_tags) ? d.positive_tags : [];
+      for (const tag of currentValueTags) {
+        if (tags.includes(tag)) return true;
+      }
+      return false;
     });
   }
 
