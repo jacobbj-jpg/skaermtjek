@@ -203,6 +203,14 @@ nav {
   font-size: 14px;
   color: var(--muted);
   margin-bottom: 1.5rem;
+  line-height: 1.5;
+  max-width: 720px;
+  /* Vis op til 3 linjer, ellers ombryd naturligt */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* SCORES ROW */
@@ -1244,7 +1252,26 @@ function renderPage(item, allData) {
   // Header
   document.getElementById('platformPill').textContent = `${platCat} · ${platLabel}`;
   document.getElementById('ratingTitle').textContent = item.title;
-  document.getElementById('ratingSubtitle').textContent = item.episode || item.notes?.substring(0, 80) + '...' || '';
+
+  // Subtitle: smartere logik
+  // 1. Hvis det er et specifikt afsnit, vis afsnittet
+  // 2. Ellers: brug første sætning af ai_analysis hvis den findes
+  // 3. Ellers: brug notes ombrudt naturligt
+  let subtitle = '';
+  if (item.content_type === 'episode' && item.episode) {
+    subtitle = item.episode;
+  } else if (item.ai_analysis && typeof item.ai_analysis === 'string') {
+    // Tag første sætning af ai_analysis
+    const firstSentence = item.ai_analysis.split(/(?<=[.!?])\s+/)[0];
+    subtitle = firstSentence;
+  } else if (item.notes) {
+    // Vis notes uden at klippe brutalt — lad CSS håndtere ombryd
+    subtitle = item.notes;
+  } else if (item.episode) {
+    // Fallback: episode-feltet (kun hvis intet andet findes)
+    subtitle = item.episode;
+  }
+  document.getElementById('ratingSubtitle').textContent = subtitle;
 
   // Contribute CTA
   const ctaTitle = document.getElementById('ctaTitle');
