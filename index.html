@@ -537,6 +537,63 @@ nav {
   transition: background 0.15s;
 }
 
+/* PAKKE 2: Ryd-knap for aktive filtre */
+.filter-clear-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  color: var(--muted);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  padding: 6px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+
+.filter-clear-btn:hover {
+  background: var(--bg);
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+/* PAKKE 2: X-knap i søgefelt */
+.search-clear-btn {
+  position: absolute;
+  right: 110px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--muted);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  z-index: 5;
+}
+
+@media (max-width: 768px) {
+  .search-clear-btn {
+    right: 100px;
+  }
+}
+
+.search-clear-btn:hover {
+  background: var(--ink);
+}
+
+.search-clear-btn.visible {
+  display: flex;
+}
+
 .filter-toggle-btn.open {
   background: var(--accent);
 }
@@ -865,6 +922,25 @@ nav {
 }
 
 .filter-close-btn:hover { opacity: 0.85; }
+
+/* PAKKE 2: Nulstil-knap i filter-panel */
+.filter-reset-btn {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 12px 18px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.filter-reset-btn:hover {
+  background: var(--bg);
+  color: var(--ink);
+  border-color: var(--ink);
+}
 
 .filter-apply-btn {
   background: var(--accent);
@@ -3925,8 +4001,11 @@ input.autofilled, textarea.autofilled {
     <div class="hero-tag">Lavet af forældre — for forældre</div>
     <h1>Hvad ser dine børn<br>egentlig <em>på skærmen?</em></h1>
     <p>Søg på YouTube-kanaler, Netflix-serier, spil og apps. Se hvad andre forældre mener om vold, sprog, reklamer og vanedannelse.</p>
-    <div class="search-bar">
-      <input type="text" id="heroSearch" placeholder="Søg fx 'ComKean', 'Minecraft', 'Cocomelon'…" onkeydown="if(event.key==='Enter') doSearch()">
+    <div class="search-bar" style="position:relative">
+      <input type="text" id="heroSearch" placeholder="Søg fx 'ComKean', 'Minecraft', 'Cocomelon'…"
+        oninput="onSearchInput()"
+        onkeydown="if(event.key==='Enter') doSearch()">
+      <button class="search-clear-btn" id="searchClearBtn" onclick="clearSearch()" aria-label="Ryd søgning">✕</button>
       <button onclick="doSearch()">Søg nu</button>
     </div>
     <div class="hero-steps">
@@ -3970,6 +4049,9 @@ input.autofilled, textarea.autofilled {
   <!-- Mobile top bar: active filters summary + toggle button -->
   <div class="filter-topbar">
     <div class="filter-summary" id="filterSummary">Alle platforme · Alle aldre</div>
+    <button class="filter-clear-btn" id="filterClearBtn" onclick="clearAllFilters()" style="display:none" title="Nulstil alle filtre">
+      ✕ Nulstil
+    </button>
     <button class="filter-toggle-btn" onclick="toggleFilters()" id="filterToggleBtn">
       🎛️ Filtrer
     </button>
@@ -4113,6 +4195,7 @@ input.autofilled, textarea.autofilled {
 
     <div class="filter-actions">
       <button class="filter-close-btn" onclick="toggleFilters()">✕ Luk</button>
+      <button class="filter-reset-btn" onclick="clearAllFilters()" title="Nulstil alle filtre">Nulstil</button>
       <button class="filter-apply-btn" onclick="toggleFilters()">
         <span id="resultCount">Vis resultater</span> ✓
       </button>
@@ -8396,21 +8479,23 @@ function toggleFilters() {
 function updateFilterSummary() {
   const parts = [];
 
-  // Platform: vis antal valgte
-  if (currentPlatforms.size === 0) {
-    parts.push('Alle platforme');
-  } else if (currentPlatforms.size === 1) {
-    const p = Array.from(currentPlatforms)[0];
-    parts.push(PLATFORM_LABEL[p] || p);
-  } else {
-    parts.push(`${currentPlatforms.size} platforme`);
+  // PAKKE 2: Kun vis aktive filtre, så bjælken er informativ på mobil
+  // Hvis intet filter er sat, vis en standardtekst
+
+  // Alder først (vigtigste)
+  if (currentAgeFilter !== 'all') {
+    parts.push('👶 ' + currentAgeFilter + ' år');
   }
 
-  // Alder
-  if (currentAgeFilter !== 'all') parts.push(currentAgeFilter + ' år');
-  else parts.push('Alle aldre');
+  // Værdi-tags
+  if (currentValueTags.size > 0) {
+    const tagIcons = Array.from(currentValueTags)
+      .map(t => POSITIVE_TAGS[t]?.icon || '')
+      .join(' ');
+    parts.push(tagIcons.trim());
+  }
 
-  // Sikkerhed multi-select
+  // Sikkerhed
   if (currentSafeties.size > 0) {
     const labels = {safe:'🟢 Egnet', caution:'🟡 Forbehold', mature:'🔶 Ældre', notrec:'🚫 Frarådes'};
     if (currentSafeties.size === 1) {
@@ -8420,7 +8505,22 @@ function updateFilterSummary() {
     }
   }
 
-  document.getElementById('filterSummary').textContent = parts.join(' · ');
+  // Platform
+  if (currentPlatforms.size === 1) {
+    const p = Array.from(currentPlatforms)[0];
+    parts.push('📺 ' + (PLATFORM_LABEL[p] || p));
+  } else if (currentPlatforms.size > 1) {
+    parts.push(`📺 ${currentPlatforms.size} platforme`);
+  }
+
+  // Søgning
+  if (currentSearch) {
+    parts.push(`🔍 "${currentSearch}"`);
+  }
+
+  // Hvis intet er aktivt, vis standard
+  const text = parts.length ? parts.join(' · ') : 'Alle vurderinger';
+  document.getElementById('filterSummary').textContent = text;
 }
 
 // ---- LOAD DATA ----
@@ -8673,12 +8773,93 @@ function doSearch() {
   filterAndRender();
   if (currentSearch) document.getElementById('browseTitle').textContent = `Resultater for "${currentSearch}"`;
   else document.getElementById('browseTitle').textContent = 'Seneste vurderinger';
+  updateClearButtons();
 }
 
 document.getElementById('heroSearch').addEventListener('input', () => {
   currentSearch = document.getElementById('heroSearch').value.trim().toLowerCase();
   filterAndRender();
+  updateClearButtons();
 });
+
+// PAKKE 2: Hjælper for input-events fra søgefeltet
+function onSearchInput() {
+  currentSearch = document.getElementById('heroSearch').value.trim().toLowerCase();
+  filterAndRender();
+  updateClearButtons();
+}
+
+// PAKKE 2: Ryd kun søgning
+function clearSearch() {
+  document.getElementById('heroSearch').value = '';
+  currentSearch = '';
+  filterAndRender();
+  updateClearButtons();
+  document.getElementById('browseTitle').textContent = 'Seneste vurderinger';
+}
+
+// PAKKE 2: Ryd alle filtre på én gang (alder, sikkerhed, platforme, værdier, søgning)
+function clearAllFilters() {
+  // Søgning
+  document.getElementById('heroSearch').value = '';
+  currentSearch = '';
+
+  // Alder
+  currentAgeFilter = 'all';
+  document.querySelectorAll('.hero-age-chip').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('#filterPanel .filter-pill').forEach(p => {
+    if (p.onclick && p.onclick.toString().includes('setAgeFilter')) {
+      p.classList.remove('active');
+      if (p.textContent.trim() === 'Alle') p.classList.add('active');
+    }
+  });
+
+  // Sikkerhed
+  currentSafety = 'all';
+  currentSafeties.clear();
+  document.querySelectorAll('.safety-btn').forEach(b => b.classList.remove('s-active'));
+  const safAll = document.getElementById('saf-all');
+  if (safAll) safAll.classList.add('s-active');
+  updateSafetySection('all', null);
+
+  // Platform
+  currentPlatforms.clear();
+  currentFilter = 'all';
+  document.querySelectorAll('#filterPanel .filter-pill').forEach(p => {
+    if (p.onclick && p.onclick.toString().includes('setPlatform')) {
+      p.classList.remove('active');
+    }
+  });
+  const allPltBtn = document.getElementById('plt-all');
+  if (allPltBtn) allPltBtn.classList.add('active');
+  document.querySelectorAll('.cat-select-btn').forEach(btn => btn.classList.remove('active'));
+
+  // Værdi-tags
+  currentValueTags.clear();
+  document.querySelectorAll('.value-btn').forEach(b => b.classList.remove('active'));
+
+  filterAndRender();
+  updateClearButtons();
+  document.getElementById('browseTitle').textContent = 'Seneste vurderinger';
+}
+
+// PAKKE 2: Vis/skjul ryd-knapper baseret på om filtre er aktive
+function updateClearButtons() {
+  // X i søgefelt
+  const searchClear = document.getElementById('searchClearBtn');
+  if (searchClear) searchClear.classList.toggle('visible', !!currentSearch);
+
+  // Nulstil-knap i filterbar
+  const filterClear = document.getElementById('filterClearBtn');
+  if (filterClear) {
+    const hasActiveFilter = currentSearch ||
+      currentAgeFilter !== 'all' ||
+      currentSafeties.size > 0 ||
+      currentPlatforms.size > 0 ||
+      currentValueTags.size > 0;
+    filterClear.style.display = hasActiveFilter ? 'inline-flex' : 'none';
+  }
+}
 
 function setPlatform(el, platform) {
   if (platform === 'all') {
@@ -9104,6 +9285,7 @@ function filterAndRender() {
   }
 
   updateFilterSummary();
+  if (typeof updateClearButtons === 'function') updateClearButtons();
   renderCards(data);
 }
 
