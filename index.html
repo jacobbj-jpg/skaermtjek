@@ -923,6 +923,31 @@ nav {
 
 .filter-close-btn:hover { opacity: 0.85; }
 
+/* PAKKE 2: Aktive filtre indikator øverst i panel */
+.filter-active-summary {
+  background: linear-gradient(135deg, rgba(200, 90, 42, 0.08), rgba(200, 90, 42, 0.04));
+  border: 1px solid rgba(200, 90, 42, 0.2);
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin-bottom: 12px;
+}
+
+.filter-active-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+
+.filter-active-content {
+  font-size: 13px;
+  color: var(--ink);
+  font-weight: 500;
+  line-height: 1.5;
+}
+
 /* PAKKE 2: Nulstil-knap i filter-panel */
 .filter-reset-btn {
   background: transparent;
@@ -969,10 +994,22 @@ nav {
   cursor: pointer;
   transition: all 0.15s;
   font-weight: 400;
+  /* PAKKE 2: Bedre touch-respons på mobil */
+  -webkit-tap-highlight-color: rgba(200, 90, 42, 0.15);
+  touch-action: manipulation;
+  user-select: none;
 }
 
 .filter-pill:hover { border-color: var(--accent); color: var(--accent); }
+.filter-pill:active { transform: scale(0.97); }
 .filter-pill.active { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+
+/* PAKKE 2: Touch-respons også for safety og value knapper */
+.safety-btn, .value-btn, .cat-select-btn, .hero-age-chip, .filter-toggle-btn, .filter-clear-btn {
+  -webkit-tap-highlight-color: rgba(200, 90, 42, 0.15);
+  touch-action: manipulation;
+  user-select: none;
+}
 
 .filter-row {
   display: flex;
@@ -4060,6 +4097,12 @@ input.autofilled, textarea.autofilled {
   <div class="filter-backdrop" id="filterBackdrop" onclick="toggleFilters()"></div>
   <!-- Collapsible filter panel -->
   <div class="filter-panel" id="filterPanel">
+
+    <!-- PAKKE 2: Aktive filtre indikator i toppen -->
+    <div class="filter-active-summary" id="filterActiveSummary" style="display:none">
+      <div class="filter-active-label">Aktive filtre:</div>
+      <div class="filter-active-content" id="filterActiveContent"></div>
+    </div>
 
     <!-- TRIN 1: ALDER -->
     <div class="filter-section">
@@ -8521,6 +8564,18 @@ function updateFilterSummary() {
   // Hvis intet er aktivt, vis standard
   const text = parts.length ? parts.join(' · ') : 'Alle vurderinger';
   document.getElementById('filterSummary').textContent = text;
+
+  // PAKKE 2: Også opdater filter-panel toppen
+  const panelSummary = document.getElementById('filterActiveSummary');
+  const panelContent = document.getElementById('filterActiveContent');
+  if (panelSummary && panelContent) {
+    if (parts.length === 0) {
+      panelSummary.style.display = 'none';
+    } else {
+      panelSummary.style.display = 'block';
+      panelContent.textContent = parts.join(' · ');
+    }
+  }
 }
 
 // ---- LOAD DATA ----
@@ -8610,12 +8665,18 @@ function renderCards(data) {
     return;
   }
   document.getElementById('browseCount').textContent = data.length + ' vurderinger';
+
+  // PAKKE 2: Performance-optimering for mobil
+  // Tidligere: 200+ setTimeout per kort med stagger animation = stort lag på mobil
+  // Nu: Direkte rendering, ingen stagger — animation klares via CSS in-view
   grid.innerHTML = data.map(item => cardHTML(item)).join('');
-  // Re-observe animations
-  document.querySelectorAll('.content-card').forEach((el, i) => {
-    el.style.animationDelay = (i * 0.04) + 's';
-    el.classList.add('fade-in');
-    setTimeout(() => el.classList.add('visible'), 50 + i * 40);
+
+  // Tilføj fade-in straks (uden stagger delay)
+  // Brug requestAnimationFrame for at lade browseren rendere først
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.content-card').forEach(el => {
+      el.classList.add('fade-in', 'visible');
+    });
   });
 }
 
@@ -9100,6 +9161,15 @@ function setScoreMax(val) {
 }
 
 function filterAndRender() {
+  // PAKKE 2: Debounce for at undgå dobbelt-render ved hurtige klik på mobil
+  // Hvis filterAndRender allerede er planlagt, drop den gamle og lav en ny
+  if (filterAndRender._debounceTimer) {
+    clearTimeout(filterAndRender._debounceTimer);
+  }
+  filterAndRender._debounceTimer = setTimeout(_doFilterAndRender, 30);
+}
+
+function _doFilterAndRender() {
   let data = allData;
 
   // SPRINT 4 fix: Skjul afsnits-rækker fra forsiden som default
