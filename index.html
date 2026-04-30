@@ -1059,7 +1059,7 @@ nav {
 
 /* MAIN LAYOUT */
 .main {
-  max-width: 1100px;
+  max-width: 1400px; /* PAKKE 3: Bredere desktop-layout - udnytter mere skærmplads */
   margin: 0 auto;
   padding: 40px 5vw;
 }
@@ -1145,8 +1145,21 @@ nav {
 /* CARD GRID */
 .card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 18px;
+}
+
+/* PAKKE 3: Bredere desktop får flere kolonner */
+@media (min-width: 1100px) {
+  .card-grid {
+    grid-template-columns: repeat(3, 1fr); /* eksakt 3 kolonner */
+  }
+}
+
+@media (min-width: 1400px) {
+  .card-grid {
+    grid-template-columns: repeat(4, 1fr); /* eller 4 hvis skærmen er stor nok */
+  }
 }
 
 .content-card {
@@ -3504,6 +3517,57 @@ input[type="range"]::-webkit-slider-thumb {
   font-style: italic;
 }
 
+/* PAKKE 3: Notice når brugeren har valgt eksisterende titel */
+.existing-title-notice {
+  background: linear-gradient(135deg, rgba(42, 122, 92, 0.1), rgba(42, 122, 92, 0.04));
+  border: 1px solid rgba(42, 122, 92, 0.3);
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.existing-title-icon {
+  font-size: 22px;
+  color: #2a7a5c;
+  font-weight: 700;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #2a7a5c;
+}
+
+.existing-title-text {
+  flex: 1;
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.4;
+}
+
+.existing-title-clear {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-size: 12px;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 4px 0 0;
+  margin-top: 2px;
+  display: block;
+  font-family: inherit;
+}
+
+.existing-title-clear:hover {
+  color: var(--accent);
+}
+
 /* URL preview card */
 .url-preview {
   background: var(--warm);
@@ -4368,13 +4432,28 @@ input.autofilled, textarea.autofilled {
               <label>Navn på kanal, serie, spil eller app *</label>
               <input type="text" id="f_title" placeholder="fx ComKean, Fortnite, TikTok, Stranger Things…" oninput="liveSearchChannel(this.value)">
               <div class="channel-suggest" id="channelSuggest" style="display:none"></div>
-              <div class="url-hint">Skriv navn — eller indsæt link nedenfor for autodfyld</div>
+              <div class="url-hint">Skriv navn — vi viser eksisterende vurderinger mens du skriver, eller du kan oprette en ny</div>
             </div>
+
+            <!-- PAKKE 3: Notice når brugeren har valgt en eksisterende titel -->
+            <div id="existingTitleNotice" class="existing-title-notice" style="display:none">
+              <span class="existing-title-icon">✓</span>
+              <div class="existing-title-text">
+                Du tilføjer en vurdering til <strong id="existingTitleName">denne titel</strong>.
+                <button type="button" class="existing-title-clear" onclick="clearExistingTitleMode()">
+                  ↺ Vurdér en anden titel i stedet
+                </button>
+              </div>
+            </div>
+
             <div class="field-group">
               <label>Kanallink (valgfrit, men anbefalet)</label>
               <div class="url-input-wrap">
                 <input type="url" id="f_url" placeholder="fx https://youtube.com/@ComKean" oninput="onUrlInput(this.value)">
                 <div class="url-spinner" id="urlSpinner">⏳</div>
+              </div>
+              <div class="url-hint" style="font-size:11px;margin-top:4px;color:var(--muted)">
+                Hjælper os med at finde indholdet hvis det er en helt ny vurdering
               </div>
             </div>
             <div class="url-preview" id="urlPreview" style="display:none">
@@ -9959,10 +10038,46 @@ function liveSearchChannel(val) {
   box.style.display = 'block';
 }
 
+// PAKKE 3: Smart håndtering af eksisterende vs ny kanal
+// Når brugeren vælger en eksisterende titel fra dropdown, skjul kanallink-feltet
+// — vi har allerede titlens platform og identitet, link er overflødigt
 function selectExistingChannel(title, platform) {
   document.getElementById('f_title').value = title;
   setFormPlatform(platform);
   document.getElementById('channelSuggest').style.display = 'none';
+
+  // PAKKE 3: Markér at vi har en eksisterende titel
+  setExistingTitleMode(true, title);
+}
+
+// PAKKE 3: Toggle "eksisterende titel"-tilstand
+function setExistingTitleMode(isExisting, titleName) {
+  const urlField = document.getElementById('f_url');
+  const urlWrap = urlField?.closest('.field-group');
+  const existingNotice = document.getElementById('existingTitleNotice');
+
+  if (isExisting) {
+    // Skjul URL-feltet (det er ikke nødvendigt for eksisterende)
+    if (urlWrap) urlWrap.style.display = 'none';
+    if (urlField) urlField.value = ''; // ryd evt. tekst
+    // Vis notice der bekræfter at vi vurderer en eksisterende titel
+    if (existingNotice) {
+      existingNotice.style.display = 'block';
+      const titleSpan = document.getElementById('existingTitleName');
+      if (titleSpan) titleSpan.textContent = titleName || 'denne titel';
+    }
+  } else {
+    // Vis URL-feltet igen — dette er en ny titel
+    if (urlWrap) urlWrap.style.display = '';
+    if (existingNotice) existingNotice.style.display = 'none';
+  }
+}
+
+// PAKKE 3: Når brugeren tilbagestiller til ny titel
+function clearExistingTitleMode() {
+  setExistingTitleMode(false);
+  document.getElementById('f_title').value = '';
+  document.getElementById('f_title').focus();
 }
 
 // ---- EPISODE URL FLOW ----
