@@ -578,51 +578,6 @@ nav {
   border-color: var(--ink);
 }
 
-/* PAKKE 2: Container der wrapper input + X-knap så X altid er inde i input */
-.search-input-wrap {
-  position: relative;
-  flex: 1;
-  display: flex;
-}
-
-.search-input-wrap input {
-  width: 100%;
-  padding-right: 44px; /* mere plads til X-knappen så cursor ikke kolliderer */
-}
-
-/* PAKKE 2: X-knap altid inde i input-feltet, helt uafhængigt af "Søg nu"-knappens placering */
-.search-clear-btn {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.12);
-  color: var(--ink);
-  border: none;
-  border-radius: 50%;
-  width: 22px;
-  height: 22px;
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 1;
-  cursor: pointer;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  z-index: 5;
-  transition: all 0.15s;
-}
-
-.search-clear-btn:hover {
-  background: var(--ink);
-  color: white;
-}
-
-.search-clear-btn.visible {
-  display: flex;
-}
-
 .filter-toggle-btn.open {
   background: var(--accent);
 }
@@ -4125,12 +4080,9 @@ input.autofilled, textarea.autofilled {
     <h1>Hvad ser dine børn<br>egentlig <em>på skærmen?</em></h1>
     <p>Søg på YouTube-kanaler, Netflix-serier, spil og apps. Se hvad andre forældre mener om vold, sprog, reklamer og vanedannelse.</p>
     <div class="search-bar">
-      <div class="search-input-wrap">
-        <input type="text" id="heroSearch" placeholder="Søg fx 'ComKean', 'Minecraft', 'Cocomelon'…"
-          oninput="onSearchInput()"
-          onkeydown="if(event.key==='Enter') doSearch()">
-        <button class="search-clear-btn" id="searchClearBtn" onclick="clearSearch()" aria-label="Ryd søgning">✕</button>
-      </div>
+      <input type="text" id="heroSearch" placeholder="Søg fx 'ComKean', 'Minecraft', 'Cocomelon'…"
+        oninput="onSearchInput()"
+        onkeydown="if(event.key==='Enter') doSearch()">
       <button onclick="doSearch()">Søg nu</button>
     </div>
     <div class="hero-steps">
@@ -9041,12 +8993,8 @@ function clearAllFilters() {
   document.getElementById('browseTitle').textContent = 'Seneste vurderinger';
 }
 
-// PAKKE 2: Vis/skjul ryd-knapper baseret på om filtre er aktive
+// PAKKE 2: Vis/skjul ryd-knap (filter-bjælke) baseret på om filtre er aktive
 function updateClearButtons() {
-  // X i søgefelt
-  const searchClear = document.getElementById('searchClearBtn');
-  if (searchClear) searchClear.classList.toggle('visible', !!currentSearch);
-
   // Nulstil-knap i filterbar
   const filterClear = document.getElementById('filterClearBtn');
   if (filterClear) {
