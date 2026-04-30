@@ -578,11 +578,22 @@ nav {
   border-color: var(--ink);
 }
 
-/* PAKKE 2: X-knap i søgefelt — altid placeret inde i inputfeltets højre side */
+/* PAKKE 2: Container der wrapper input + X-knap så X altid er inde i input */
+.search-input-wrap {
+  position: relative;
+  flex: 1;
+  display: flex;
+}
+
+.search-input-wrap input {
+  width: 100%;
+  padding-right: 38px; /* plads til X-knappen */
+}
+
+/* PAKKE 2: X-knap altid inde i input-feltet, helt uafhængigt af "Søg nu"-knappens placering */
 .search-clear-btn {
   position: absolute;
-  /* Standard: 110px fra højre fordi "Søg nu"-knappen tager plads */
-  right: 110px;
+  right: 10px;
   top: 50%;
   transform: translateY(-50%);
   background: var(--muted);
@@ -599,22 +610,6 @@ nav {
   justify-content: center;
   padding: 0;
   z-index: 5;
-}
-
-@media (max-width: 768px) {
-  .search-clear-btn {
-    right: 100px;
-  }
-}
-
-/* På meget små skærme bliver search-bar stacked (column) — så X skal være øverst i input-rækken */
-@media (max-width: 400px) {
-  .search-clear-btn {
-    /* Når layout bliver column, sidder X i input-rækken (øverst) */
-    right: 18px;
-    top: 30px;
-    transform: none;
-  }
 }
 
 .search-clear-btn:hover {
@@ -4126,11 +4121,13 @@ input.autofilled, textarea.autofilled {
     <div class="hero-tag">Lavet af forældre — for forældre</div>
     <h1>Hvad ser dine børn<br>egentlig <em>på skærmen?</em></h1>
     <p>Søg på YouTube-kanaler, Netflix-serier, spil og apps. Se hvad andre forældre mener om vold, sprog, reklamer og vanedannelse.</p>
-    <div class="search-bar" style="position:relative">
-      <input type="text" id="heroSearch" placeholder="Søg fx 'ComKean', 'Minecraft', 'Cocomelon'…"
-        oninput="onSearchInput()"
-        onkeydown="if(event.key==='Enter') doSearch()">
-      <button class="search-clear-btn" id="searchClearBtn" onclick="clearSearch()" aria-label="Ryd søgning">✕</button>
+    <div class="search-bar">
+      <div class="search-input-wrap">
+        <input type="text" id="heroSearch" placeholder="Søg fx 'ComKean', 'Minecraft', 'Cocomelon'…"
+          oninput="onSearchInput()"
+          onkeydown="if(event.key==='Enter') doSearch()">
+        <button class="search-clear-btn" id="searchClearBtn" onclick="clearSearch()" aria-label="Ryd søgning">✕</button>
+      </div>
       <button onclick="doSearch()">Søg nu</button>
     </div>
     <div class="hero-steps">
