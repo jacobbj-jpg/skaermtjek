@@ -1130,6 +1130,16 @@ nav {
 @media (max-width: 600px) {
   .sort-label { display: none; }
   #sortSelect { font-size: 12px; padding: 5px 22px 5px 10px; }
+  .section-head h2 {
+    font-size: 18px; /* mindre på mobil så det ikke fylder for meget */
+    flex: 1 1 auto;
+    min-width: 0;
+    /* truncate hvis lang tekst (fx "Filtreret: 7-9 år · Egnet · Netflix") */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .section-head .count { display: none; } /* skjul count på mobil — info findes i sort-knap */
 }
 
 /* CARD GRID */
@@ -4303,7 +4313,7 @@ input.autofilled, textarea.autofilled {
       </div>
     </div>
     <div class="section-head">
-      <h2 id="browseTitle">Seneste vurderinger</h2>
+      <h2 id="browseTitle">Anbefalinger</h2>
       <span class="count" id="browseCount"></span>
       <div class="sort-wrap">
         <label for="sortSelect" class="sort-label">Sortér:</label>
@@ -8922,7 +8932,7 @@ function doSearch() {
   currentSearch = document.getElementById('heroSearch').value.trim().toLowerCase();
   filterAndRender();
   if (currentSearch) document.getElementById('browseTitle').textContent = `Resultater for "${currentSearch}"`;
-  else document.getElementById('browseTitle').textContent = 'Seneste vurderinger';
+  else document.getElementById('browseTitle').textContent = 'Anbefalinger';
   updateClearButtons();
 }
 
@@ -8945,7 +8955,7 @@ function clearSearch() {
   currentSearch = '';
   filterAndRender();
   updateClearButtons();
-  document.getElementById('browseTitle').textContent = 'Seneste vurderinger';
+  document.getElementById('browseTitle').textContent = 'Anbefalinger';
 }
 
 // PAKKE 2: Ryd alle filtre på én gang (alder, sikkerhed, platforme, værdier, søgning)
@@ -8995,7 +9005,7 @@ function clearAllFilters() {
 
   filterAndRender();
   updateClearButtons();
-  document.getElementById('browseTitle').textContent = 'Seneste vurderinger';
+  document.getElementById('browseTitle').textContent = 'Anbefalinger';
 }
 
 // PAKKE 2: Vis/skjul ryd-knap (filter-bjælke) baseret på om filtre er aktive
@@ -9476,7 +9486,7 @@ function _doFilterAndRender() {
   if (currentSearch) parts.push('"' + currentSearch + '"');
   document.getElementById('browseTitle').textContent = parts.length
     ? 'Filtreret: ' + parts.join(' · ')
-    : 'Mest vurderede';
+    : 'Anbefalinger';
 
   // Sprint 3a: dynamisk tæller på "Vis resultater" knap
   const countEl = document.getElementById('resultCount');
