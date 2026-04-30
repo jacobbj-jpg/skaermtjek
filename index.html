@@ -4308,10 +4308,10 @@ input.autofilled, textarea.autofilled {
       <div class="sort-wrap">
         <label for="sortSelect" class="sort-label">Sortér:</label>
         <select id="sortSelect" onchange="setSortOrder(this.value)">
+          <option value="ai-low" selected>Bedst score først</option>
           <option value="recent">Senest opdaterede</option>
           <option value="alphabetical">A–Å</option>
-          <option value="ai-low">Bedst score (AI lavest)</option>
-          <option value="ai-high">Højeste score (AI højest)</option>
+          <option value="ai-high">Højeste score først</option>
           <option value="parent-votes">Flest forældre-stemmer</option>
         </select>
       </div>
@@ -8086,7 +8086,7 @@ let currentPlatforms = new Set(); // tom = "alle"
 // Sprint 4: multi-select for positive values (OR-logik)
 let currentValueTags = new Set(); // tom = "alle"
 // PAKKE 2: Sortering
-let currentSort = 'recent';
+let currentSort = 'ai-low'; // Default: bedst score først (lavest AI-tal = mest egnet)
 // Legacy state — bevares for kompatibilitet med eksisterende kode
 let currentSafety = 'all';
 let currentScoreMax = 10;
@@ -8988,6 +8988,11 @@ function clearAllFilters() {
   currentValueTags.clear();
   document.querySelectorAll('.value-btn').forEach(b => b.classList.remove('active'));
 
+  // PAKKE 2: Reset sortering til default (bedst score først)
+  currentSort = 'ai-low';
+  const sortSel = document.getElementById('sortSelect');
+  if (sortSel) sortSel.value = 'ai-low';
+
   filterAndRender();
   updateClearButtons();
   document.getElementById('browseTitle').textContent = 'Seneste vurderinger';
@@ -9186,6 +9191,10 @@ function quickShowFraraded() {
   const safAll = document.getElementById('saf-all');
   if (btn) btn.classList.add('s-active');
   if (safAll) safAll.classList.remove('s-active');
+  // Sortering: vis det værste først (højeste AI-score) — research-mode
+  currentSort = 'ai-high';
+  const sortSel = document.getElementById('sortSelect');
+  if (sortSel) sortSel.value = 'ai-high';
   filterAndRender();
   document.getElementById('browseTitle').textContent = 'Indhold der frarådes';
   // Scroll til resultaterne
