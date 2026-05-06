@@ -8771,6 +8771,8 @@ const DEMO_DATA = [
 let db = null;
 let currentFilter = 'all';
 let currentAgeFilter = 'all';
+// Quick filter: content_type-begrænsning ('film', 'app', 'channel', 'serie' eller null)
+let currentContentType = null;
 // Sprint 3a: multi-select for safety og platform
 let currentSafeties = new Set(); // tom = "alle"
 let currentPlatforms = new Set(); // tom = "alle"
@@ -9685,6 +9687,9 @@ function clearAllFilters() {
   document.getElementById('heroSearch').value = '';
   currentSearch = '';
 
+  // Quick filter content_type
+  currentContentType = null;
+
   // Alder
   currentAgeFilter = 'all';
   document.querySelectorAll('.hero-age-chip').forEach(c => c.classList.remove('active'));
@@ -9948,7 +9953,7 @@ function applyQuickFilter(type, btn) {
     case 'fredagsfilm':
       // Strammere kriterier: kun film, sikkerhed=Egnet, alder 7-9 (kan ses af hele familien)
       // Sorteret efter bedst score først for kvalitet
-      currentTypeFilter = 'film';
+      currentContentType = 'film';
       currentSafeties.add('safe');
       currentAgeFilter = '7-9';
       const ageBtnFilm = document.querySelector('[onclick*="setAgeFilter(this,\'7-9\')"]');
@@ -9981,7 +9986,7 @@ function applyQuickFilter(type, btn) {
 
     case 'apps':
       // Stramt: apps + mobile_apps + sikkerhed=Egnet + alder 4-6 (de små)
-      currentTypeFilter = 'app';
+      currentContentType = 'app';
       currentPlatforms.add('mobile_apps');
       currentSafeties.add('safe');
       currentAgeFilter = '4-6';
@@ -10147,6 +10152,11 @@ function _doFilterAndRender() {
   // (Søgning matcher i alle felter inkl. episode-titlen, så afsnit dukker op når relevant)
   if (!currentSearch || currentSearch.trim() === '') {
     data = data.filter(d => d.content_type !== 'episode');
+  }
+
+  // QUICK FILTER: content_type-begrænsning (kun film, kun apps osv.)
+  if (currentContentType) {
+    data = data.filter(d => d.content_type === currentContentType);
   }
 
   // PLATFORM — multi-select med JSONB-array support
