@@ -2794,6 +2794,57 @@ input[type="range"]::-webkit-slider-thumb {
   flex-shrink: 0;
 }
 
+.jacob-portrait {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 3px solid var(--cream);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.jacob-share-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.jacob-share-label {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.jacob-share-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  background: var(--warm);
+  color: var(--ink);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+
+.jacob-share-btn:hover {
+  background: var(--ink);
+  color: white;
+  border-color: var(--ink);
+}
+
+.jacob-share-btn svg {
+  flex-shrink: 0;
+}
+
 .jacob-name {
   font-family: 'Fraunces', serif;
   font-size: 18px;
@@ -4731,26 +4782,26 @@ input.autofilled, textarea.autofilled {
     <!-- MANIFEST -->
     <div class="manifest-block" style="background:var(--ink);margin:-32px -20px 32px;padding:48px 24px 40px;border-radius:0 0 24px 24px;">
       <div class="manifest-eyebrow">Vores udgangspunkt</div>
-      <h2 class="manifest-title">Børn fortjener forældre<br>der ved hvad de ser</h2>
-      <p class="manifest-lead">SkærmTjek startede med en frustration de fleste forældre kender: dit barn sidder og ser noget, og du aner ikke hvad det er — om det er trygt, om det er vanedannende, om der er skjulte køb. Du spørger. De siger "det er bare YouTube".</p>
+      <h2 class="manifest-title">Skærmtid behøver ikke være<br>en kamp i hjemmet</h2>
+      <p class="manifest-lead">Skærmen fylder meget i danske familier. Vi tror ikke debatten skal være sort eller hvid — men nuanceret. SkærmTjek hjælper dig med at vælge kvalitet frem for fyld, undgå det der påvirker mest negativt, og give dig et bedre grundlag for samtalerne med dine børn om hvad de ser, spiller og deler.</p>
     </div>
 
     <!-- HVORFOR -->
     <div class="om-section">
       <div class="om-card">
-        <div class="om-icon">😤</div>
-        <h3>Problemet</h3>
-        <p>Der fandtes ingen dansk ressource der kombinerede faktabaseret viden med rigtige forældreoplevelser. IMDB og Common Sense Media er amerikanske. Forældregrupper på Facebook er fragmenterede og anekdotiske. Og platformene selv har ingen interesse i at fortælle dig om vanedannende design.</p>
+        <div class="om-icon">🎯</div>
+        <h3>Et go-to-sted for skærm-rejsen</h3>
+        <p>Hvilke apps må mit barn spille om eftermiddagen? Hvilken film passer til en fredag aften med hele familien? Hvad bør jeg vide om de sociale medier mine børn snakker om? SkærmTjek er stedet du starter — uanset hvor i barnets skærmrejse I er.</p>
+      </div>
+      <div class="om-card">
+        <div class="om-icon">💬</div>
+        <h3>Bedre samtaler — bedre grundlag</h3>
+        <p>De vigtigste samtaler med dine børn om skærm sker ikke når du forbyder dem noget. De sker når du ved hvad de ser, og kan tale med om det. Vores AI-analyser giver konkrete pointer du kan tage med i dialogen — ikke moral, men fakta.</p>
       </div>
       <div class="om-card">
         <div class="om-icon">📊</div>
-        <h3>Løsningen</h3>
-        <p>Vi ville have data frem for mavefornemmelser. Ikke "jeg synes det er fint" — men konkrete scores på vold, sprog, vanedannelse og kommercielt pres. Ikke fra eksperter der aldrig har set Cocomelon, men fra forældre der sidder og ser det med deres børn.</p>
-      </div>
-      <div class="om-card">
-        <div class="om-icon">🤝</div>
-        <h3>Fællesskabet</h3>
-        <p>SkærmTjek er lavet af forældre for forældre. AI'en giver et kvalificeret udgangspunkt — men det er dine observationer der gør siden værdifuld. Hver vurdering du bidrager med hjælper hundredvis af andre forældre til at træffe bedre valg for deres børn.</p>
+        <h3>Data over mavefornemmelser</h3>
+        <p>Vi giver dig konkrete scores på vold, sprog, vanedannelse og kommercielt pres. Ikke fra eksperter der aldrig har set Cocomelon, men en kombination af AI-analyse og forældre der sidder med deres børn og ser det. Begge perspektiver er ligeværdige.</p>
       </div>
     </div>
 
@@ -4793,27 +4844,31 @@ input.autofilled, textarea.autofilled {
         <div class="om-dark-title">Hvad er SkærmTjek præcist?</div>
         <div class="om-faq-item">
           <strong>Er det gratis?</strong>
-          <p>Ja — grundlæggende altid. SkærmTjek drives primært af et ønske om at give danske forældre et bedre redskab. Vi undersøger løbende bæredygtige måder at finansiere videreudviklingen på — uden at gå på kompromis med uafhængighed eller forældrenes tillid.</p>
+          <p>Ja. Helt gratis, ingen reklamer, ingen betalte placeringer. SkærmTjek er et frivilligt projekt — driftsomkostningerne dækker jeg selv.</p>
         </div>
         <div class="om-faq-item">
           <strong>Hvem laver AI-vurderingerne?</strong>
-          <p>Vi bruger Claude (Anthropic) til at generere en indledende vurdering baseret på offentligt tilgængelig information om kanalen eller serien. Det er et kvalificeret udgangspunkt — ikke en facit. AI og forældrenes egne erfaringer er to ligeværdige og komplementerende kilder.</p>
+          <p>Vi bruger Claude (Anthropic) til at generere en indledende vurdering baseret på offentligt tilgængelig information. Det er et kvalificeret udgangspunkt — ikke en facit. AI og forældrenes egne erfaringer er to ligeværdige kilder der supplerer hinanden.</p>
         </div>
         <div class="om-faq-item">
           <strong>Kan jeg stole på vurderingerne?</strong>
-          <p>Det afhænger af datamængden. En kanal med 50+ forældreanmeldelser er meget troværdig. En kanal med kun AI-vurdering er et udgangspunkt. Vi viser altid tydeligt hvilken kategori en vurdering tilhører.</p>
+          <p>Det afhænger af datamængden. En kanal med 50+ forældreanmeldelser er meget troværdig. En kanal med kun AI-vurdering er et udgangspunkt. Vi viser altid tydeligt hvilken kategori en vurdering tilhører — så du kan vurdere selv.</p>
         </div>
         <div class="om-faq-item">
           <strong>Vil I sælge mine data?</strong>
-          <p>Nej. Vi gemmer ikke personoplysninger. Fornavne og børns aldre bruges kun til at give observationerne kontekst — vi sælger, deler eller analyserer dem ikke kommercielt.</p>
+          <p>Nej. Vi gemmer ikke personoplysninger. Fornavne og børns aldre bruges kun til at give observationerne kontekst — vi sælger, deler eller analyserer dem ikke kommercielt. Aldrig.</p>
+        </div>
+        <div class="om-faq-item">
+          <strong>Hvorfor laver du det?</strong>
+          <p>Som far til tre savnede jeg selv en sådan platform. Som læringsprojekt giver det mig mulighed for at forstå AI bedre — og bevise hvordan AI kan løse konkrete hverdagsproblemer for almindelige mennesker. Det er ikke et firma eller en forretning. Det er et projekt der både er drevet af et reelt behov og personlig nysgerrighed.</p>
         </div>
       </div>
     </div>
 
     <!-- CTA -->
     <div class="om-cta">
-      <h3>Hjælp os at gøre SkærmTjek bedre</h3>
-      <p>Den mest værdifulde ting du kan gøre er at dele din egen oplevelse. Det tager 2 minutter og hjælper hundredvis af andre forældre.</p>
+      <h3>Den bedste måde at hjælpe SkærmTjek</h3>
+      <p>Bidrag med dine egne vurderinger — det er det der gør platformen reelt værdifuld for andre forældre. Det tager 2 minutter.</p>
       <button class="btn-submit" style="max-width:280px;margin:0 auto" onclick="showPage('submit')">✏️ Tilføj en vurdering →</button>
     </div>
 
@@ -4953,20 +5008,6 @@ input.autofilled, textarea.autofilled {
         <div class="trans-rows">
           <div class="trans-row">
             <div class="trans-item">
-              <span class="trans-name">Donationer (MobilePay)</span>
-              <span class="trans-note">Frivillige bidrag fra forældre</span>
-            </div>
-            <span class="trans-amount trans-income" id="trans-donations">0 kr/md</span>
-          </div>
-          <div class="trans-row">
-            <div class="trans-item">
-              <span class="trans-name">Skolelicenser</span>
-              <span class="trans-note">Skoler og kommuner med adgang til materialet</span>
-            </div>
-            <span class="trans-amount trans-income" id="trans-licenses">0 kr/md</span>
-          </div>
-          <div class="trans-row">
-            <div class="trans-item">
               <span class="trans-name">Annoncer</span>
               <span class="trans-note">Vi sælger ikke annonceplads — aldrig</span>
             </div>
@@ -4981,21 +5022,19 @@ input.autofilled, textarea.autofilled {
           </div>
           <div class="trans-row trans-row-total">
             <span class="trans-name">Samlet månedlig indtægt</span>
-            <span class="trans-amount trans-income" id="trans-total-income">0 kr/md</span>
+            <span class="trans-amount trans-income">0 kr/md</span>
           </div>
         </div>
       </div>
 
-      <!-- STØT OS -->
+      <!-- HVORFOR -->
       <div class="trans-support">
         <div class="trans-support-inner">
           <div class="trans-support-text">
-            <strong>Vil du støtte SkærmTjek?</strong>
-            <p>Siden koster ~159 kr om måneden at drive — primært et Claude-abonnement til udvikling og AI-analyse. Hvis den har hjulpet dig, er en donation — stor eller lille — med til at holde den i luften og videreudvikle den.</p>
-          </div>
-          <div class="trans-support-actions">
-            <a href="https://mobilepay.dk" target="_blank" class="trans-donate-btn">📱 Støt med MobilePay →</a>
-            <div class="trans-donate-note">Frivilligt · Ingen forpligtelse · Fuld anonymitet</div>
+            <strong>Et frivilligt projekt — bygget for at lære og gøre nytte</strong>
+            <p>SkærmTjek er ikke et firma. Det er ikke en forretning. Det er et frivilligt projekt jeg laver fordi det giver mening — som forælder og som læring i hvordan AI kan bruges til at løse konkrete problemer i dagligdagen.</p>
+            <p style="margin-top:8px">Driftsomkostningerne dækker jeg selv. Det er en investering i et projekt jeg tror på, og en mulighed for at lære noget jeg gerne vil forstå bedre.</p>
+            <p style="margin-top:8px"><strong>Den bedste måde du kan støtte SkærmTjek på er at bruge det, dele det, og tilføje dine egne vurderinger.</strong> Det gør platformen mere værdifuld for alle.</p>
           </div>
         </div>
       </div>
@@ -5008,17 +5047,38 @@ input.autofilled, textarea.autofilled {
     <!-- JACOB'S STORY -->
     <div class="jacob-story">
       <div class="jacob-header">
-        <div class="jacob-avatar">JBJ</div>
+        <img src="assets/jacob-portraet.jpg" alt="Jacob Benedictus Jørgensen" class="jacob-portrait">
         <div>
           <div class="jacob-name">Jacob Benedictus Jørgensen</div>
           <div class="jacob-desc">46 år · Far til en teenager, en 10-årig og en toårig</div>
+          <div class="jacob-share-row">
+            <span class="jacob-share-label">Del min historie:</span>
+            <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fskaermtjek.dk%2F%23page-om" target="_blank" class="jacob-share-btn" aria-label="Del på LinkedIn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
+              LinkedIn
+            </a>
+            <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fskaermtjek.dk%2F%23page-om" target="_blank" class="jacob-share-btn" aria-label="Del på Facebook">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.04c-5.5 0-10 4.49-10 10.02c0 5 3.66 9.15 8.44 9.9v-7H7.9v-2.9h2.54V9.85c0-2.51 1.49-3.89 3.78-3.89c1.09 0 2.23.19 2.23.19v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.45 2.9h-2.33v7a10 10 0 0 0 8.44-9.9c0-5.53-4.5-10.02-10-10.02z"/></svg>
+              Facebook
+            </a>
+            <button onclick="copyShareLink()" class="jacob-share-btn" aria-label="Kopier link">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M10.59 13.41c.41.39.41 1.03 0 1.42c-.39.39-1.03.39-1.42 0a5.003 5.003 0 0 1 0-7.07l3.54-3.54a5.003 5.003 0 0 1 7.07 0a5.003 5.003 0 0 1 0 7.07l-1.49 1.49c.01-.82-.12-1.64-.4-2.42l.47-.48a2.982 2.982 0 0 0 0-4.24a2.982 2.982 0 0 0-4.24 0l-3.53 3.53a2.982 2.982 0 0 0 0 4.24m2.82-4.24c.39-.39 1.03-.39 1.42 0a5.003 5.003 0 0 1 0 7.07l-3.54 3.54a5.003 5.003 0 0 1-7.07 0a5.003 5.003 0 0 1 0-7.07l1.49-1.49c-.01.82.12 1.64.4 2.43l-.47.47a2.982 2.982 0 0 0 0 4.24a2.982 2.982 0 0 0 4.24 0l3.53-3.53a2.982 2.982 0 0 0 0-4.24a.973.973 0 0 1 0-1.42z"/></svg>
+              Kopier link
+            </button>
+          </div>
         </div>
       </div>
 
       <div class="jacob-intro">
-        <p>Jeg er ikke tekniker. Jeg er ikke udvikler. Jeg er en far der en dag sad ved poolen på ferie og tænkte: <em>"Hvorfor findes der ikke en dansk hjemmeside der fortæller mig hvad mine drenge egentlig ser?"</em></p>
-        <p>Det er dem der er grunden til at SkærmTjek eksisterer.</p>
-        <p>Tre drenge. Tre helt forskellige skærmuniverser. Og ingen samlet dansk ressource der kunne hjælpe mig med at navigere i det.</p>
+        <p>Jeg er ikke tekniker. Jeg er ikke udvikler. Jeg er en far der en dag sad ved poolen på ferie og tænkte: <em>"Hvorfor findes der ikke en dansk hjemmeside der fortæller mig hvad mine drenge egentlig ser — og hjælper os med at tale med dem om det?"</em></p>
+
+        <p>Skærmtidsdebatten i Danmark er ofte sort/hvid: Enten skal børnene væk fra skærmen, eller også giver vi op og lader dem se hvad de vil. <strong>Sandheden er nuanceret.</strong> En time med Bluey og en time med groft TikTok-indhold tæller begge som "skærmtid" — men er vidt forskelligt for et barn.</p>
+
+        <p>Jeg ville gerne være med til at <strong>nuancere debatten</strong>. Give forældre konkrete redskaber. Hjælpe dem med at vælge kvalitetstid frem for fyldindhold. Og give et grundlag for de samtaler vi alle gerne vil have med vores børn — om hvad de ser, hvad de spiller, og hvilke sociale medier der er værd at være på.</p>
+
+        <p><strong>Min vision er at SkærmTjek bliver et go-to-sted</strong> hvor man starter sit barns "skærmrejse": Hvilke apps må de spille om eftermiddagen? Hvilken film kan vi se sammen fredag aften? Hvad bør jeg vide om de sociale medier mit barn snakker om?</p>
+
+        <p>Jeg har bygget det, fordi det fyldte meget i min egen hverdag som far. Og fordi jeg ville lære om hvordan AI rent faktisk kan hjælpe almindelige mennesker med at løse helt almindelige problemer.</p>
       </div>
 
       <div class="jacob-divider">
@@ -8568,6 +8628,30 @@ function openFullPage() {
   if (!item) return;
   const slug = makeSlug(item.title);
   window.location.href = '/vurdering/' + slug;
+}
+
+// Share-link kopiering for Jacob's story
+function copyShareLink() {
+  const url = window.location.origin + window.location.pathname + '#page-om';
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(url).then(() => {
+      alert('Link kopieret! 📋\n\n' + url);
+    }).catch(() => fallbackCopy(url));
+  } else {
+    fallbackCopy(url);
+  }
+}
+
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.left = '-9999px';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); alert('Link kopieret! 📋'); }
+  catch(e) { prompt('Kopier link:', text); }
+  document.body.removeChild(ta);
 }
 
 function showPage(page) {
