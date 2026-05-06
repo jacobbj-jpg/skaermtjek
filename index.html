@@ -422,21 +422,37 @@ nav {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--muted);
-  margin-bottom: 10px;
-  padding-left: 2px;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .quick-filters-label {
+    text-align: left;
+    padding-left: 2px;
+    margin-bottom: 10px;
+  }
 }
 
 .quick-filters-row {
   display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
   padding-bottom: 4px;
 }
 
-.quick-filters-row::-webkit-scrollbar {
-  display: none;
+@media (max-width: 768px) {
+  .quick-filters-row {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .quick-filters-row::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 .quick-filter-btn {
@@ -4458,23 +4474,14 @@ input.autofilled, textarea.autofilled {
       <button class="quick-filter-btn" onclick="applyQuickFilter('fredagsfilm', this)" aria-label="Fredagsfilm til familien">
         <span class="qf-icon">🍿</span> Fredagsfilm til familien
       </button>
-      <button class="quick-filter-btn" onclick="applyQuickFilter('regnvejr', this)" aria-label="Til regnvejrsdage">
-        <span class="qf-icon">🌧️</span> Til regnvejrsdage
-      </button>
       <button class="quick-filter-btn" onclick="applyQuickFilter('sma', this)" aria-label="Til de mindste">
         <span class="qf-icon">👶</span> Til de mindste (0-4 år)
       </button>
       <button class="quick-filter-btn" onclick="applyQuickFilter('apps', this)" aria-label="iPad-apps med god samvittighed">
-        <span class="qf-icon">📱</span> iPad-apps med god samvittighed
-      </button>
-      <button class="quick-filter-btn" onclick="applyQuickFilter('spil', this)" aria-label="Spil-tjek">
-        <span class="qf-icon">🎮</span> Spil-tjek
+        <span class="qf-icon">📱</span> iPad-apps de små kan trygt
       </button>
       <button class="quick-filter-btn" onclick="applyQuickFilter('social', this)" aria-label="Sociale medier-tjek">
         <span class="qf-icon">📲</span> Sociale medier-tjek
-      </button>
-      <button class="quick-filter-btn" onclick="applyQuickFilter('paafarten', this)" aria-label="På farten">
-        <span class="qf-icon">🚗</span> På farten
       </button>
       <button class="quick-filter-btn" onclick="applyQuickFilter('fraraded', this)" aria-label="Vis det der frarådes">
         <span class="qf-icon">🚫</span> Vis det der frarådes
@@ -9926,7 +9933,7 @@ function quickShowFraraded() {
   if (browseSection) browseSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-// QUICK FILTER-KNAPPER på forsiden
+// QUICK FILTER-KNAPPER på forsiden — stramme kriterier for kvalitet
 function applyQuickFilter(type, btn) {
   // Ryd alle andre filtre først
   clearAllFilters();
@@ -9939,34 +9946,23 @@ function applyQuickFilter(type, btn) {
 
   switch(type) {
     case 'fredagsfilm':
-      // Film, alle aldre, fællesoplevelse, sikkerhed=Egnet/Med forbehold
+      // Strammere kriterier: kun film, sikkerhed=Egnet, fællesoplevelse-tag, alder 5+
       currentTypeFilter = 'film';
       currentSafeties.add('safe');
-      currentSafeties.add('careful');
+      currentValueTags.add('fællesoplevelse');
       const safAllF = document.getElementById('saf-all');
       const safSafeF = document.getElementById('saf-safe');
-      const safCarefulF = document.getElementById('saf-careful');
       if (safAllF) safAllF.classList.remove('s-active');
       if (safSafeF) safSafeF.classList.add('s-active');
-      if (safCarefulF) safCarefulF.classList.add('s-active');
+      // Marker fællesoplevelse-tag
+      const valFelles = document.getElementById('val-fællesoplevelse');
+      if (valFelles) valFelles.classList.add('active');
+      currentSort = 'best-score';
       title = '🍿 Fredagsfilm til familien';
       break;
 
-    case 'regnvejr':
-      // Lange film/serier, sikkerhed=Egnet/Med forbehold, alle aldre
-      currentSafeties.add('safe');
-      currentSafeties.add('careful');
-      const safAllR = document.getElementById('saf-all');
-      const safSafeR = document.getElementById('saf-safe');
-      const safCarefulR = document.getElementById('saf-careful');
-      if (safAllR) safAllR.classList.remove('s-active');
-      if (safSafeR) safSafeR.classList.add('s-active');
-      if (safCarefulR) safCarefulR.classList.add('s-active');
-      title = '🌧️ Til regnvejrsdage';
-      break;
-
     case 'sma':
-      // Aldersgruppe 0-4 (vi bruger 2-4 som primær)
+      // Stramt: kun alder 0-4, sikkerhed=Egnet
       currentAgeFilter = '2-4';
       const ageBtnSma = document.querySelector('[onclick*="setAgeFilter(this,\'2-4\')"]');
       const ageAllSma = document.getElementById('age-all');
@@ -9977,50 +9973,36 @@ function applyQuickFilter(type, btn) {
       const safSafeS = document.getElementById('saf-safe');
       if (safAllS) safAllS.classList.remove('s-active');
       if (safSafeS) safSafeS.classList.add('s-active');
+      currentSort = 'best-score';
       title = '👶 Til de mindste (0-4 år)';
       break;
 
     case 'apps':
-      // Apps på mobile platforme, sikkerhed=Egnet, små børn
+      // Stramt: apps + mobile_apps + sikkerhed=Egnet + alder 4-6 (de små)
       currentTypeFilter = 'app';
       currentPlatforms.add('mobile_apps');
       currentSafeties.add('safe');
+      currentAgeFilter = '4-6';
+      const ageBtnApps = document.querySelector('[onclick*="setAgeFilter(this,\'4-6\')"]');
+      const ageAllApps = document.getElementById('age-all');
+      if (ageBtnApps) ageBtnApps.classList.add('active');
+      if (ageAllApps) ageAllApps.classList.remove('active');
       const safAllA = document.getElementById('saf-all');
       const safSafeA = document.getElementById('saf-safe');
       if (safAllA) safAllA.classList.remove('s-active');
       if (safSafeA) safSafeA.classList.add('s-active');
-      title = '📱 iPad-apps med god samvittighed';
-      break;
-
-    case 'spil':
-      // Alle gaming-titler
-      currentTypeFilter = 'app';
-      currentPlatforms.add('gaming');
-      currentPlatforms.add('switch');
-      currentPlatforms.add('mobile_apps');
-      title = '🎮 Spil-tjek';
+      currentSort = 'best-score';
+      title = '📱 iPad-apps de små kan trygt';
       break;
 
     case 'social':
-      // Alle social-platforme
+      // Alle social-platforme — research-mode
       currentPlatforms.add('youtube');
       currentPlatforms.add('tiktok');
       currentPlatforms.add('instagram');
       currentPlatforms.add('snapchat');
       currentPlatforms.add('discord');
       title = '📲 Sociale medier-tjek';
-      break;
-
-    case 'paafarten':
-      // Apps + offline-content til rejser
-      currentTypeFilter = 'app';
-      currentPlatforms.add('mobile_apps');
-      currentSafeties.add('safe');
-      const safAllP = document.getElementById('saf-all');
-      const safSafeP = document.getElementById('saf-safe');
-      if (safAllP) safAllP.classList.remove('s-active');
-      if (safSafeP) safSafeP.classList.add('s-active');
-      title = '🚗 På farten';
       break;
 
     case 'fraraded':
@@ -10036,6 +10018,10 @@ function applyQuickFilter(type, btn) {
       title = '🚫 Indhold der frarådes';
       break;
   }
+
+  // Synkroniser sort-select hvis sat
+  const sortSel = document.getElementById('sortSelect');
+  if (sortSel && currentSort) sortSel.value = currentSort;
 
   filterAndRender();
   const browseTitle = document.getElementById('browseTitle');
