@@ -9946,17 +9946,19 @@ function applyQuickFilter(type, btn) {
 
   switch(type) {
     case 'fredagsfilm':
-      // Strammere kriterier: kun film, sikkerhed=Egnet, fællesoplevelse-tag, alder 5+
+      // Strammere kriterier: kun film, sikkerhed=Egnet, alder 7-9 (kan ses af hele familien)
+      // Sorteret efter bedst score først for kvalitet
       currentTypeFilter = 'film';
       currentSafeties.add('safe');
-      currentValueTags.add('fællesoplevelse');
+      currentAgeFilter = '7-9';
+      const ageBtnFilm = document.querySelector('[onclick*="setAgeFilter(this,\'7-9\')"]');
+      const ageAllFilm = document.getElementById('age-all');
+      if (ageBtnFilm) ageBtnFilm.classList.add('active');
+      if (ageAllFilm) ageAllFilm.classList.remove('active');
       const safAllF = document.getElementById('saf-all');
       const safSafeF = document.getElementById('saf-safe');
       if (safAllF) safAllF.classList.remove('s-active');
       if (safSafeF) safSafeF.classList.add('s-active');
-      // Marker fællesoplevelse-tag
-      const valFelles = document.getElementById('val-fællesoplevelse');
-      if (valFelles) valFelles.classList.add('active');
       currentSort = 'best-score';
       title = '🍿 Fredagsfilm til familien';
       break;
@@ -9996,8 +9998,8 @@ function applyQuickFilter(type, btn) {
       break;
 
     case 'social':
-      // Alle social-platforme — research-mode
-      currentPlatforms.add('youtube');
+      // Sociale medier — TikTok, Instagram, Snapchat, Discord
+      // YouTube er bevidst udeladt fordi det primært er passivt børneindhold (Bamse, Ramasjang osv.)
       currentPlatforms.add('tiktok');
       currentPlatforms.add('instagram');
       currentPlatforms.add('snapchat');
