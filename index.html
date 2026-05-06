@@ -347,6 +347,148 @@ nav {
   max-width: 600px;
 }
 
+/* "Baseret på viden fra"-sektion på Om-siden */
+.om-sources-section {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px 20px;
+  margin: 32px 0 24px;
+  text-align: center;
+}
+
+.om-sources-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+
+.om-sources-logos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.om-source-pill {
+  display: inline-block;
+  padding: 6px 12px;
+  background: var(--warm);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  font-size: 13px;
+  color: var(--ink);
+  text-decoration: none;
+  transition: all 0.15s;
+}
+
+.om-source-pill:hover {
+  background: var(--ink);
+  color: white;
+  border-color: var(--ink);
+}
+
+.om-sources-note {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+  max-width: 540px;
+  margin: 0 auto;
+}
+
+/* QUICK FILTER-KNAPPER på forsiden */
+.quick-filters-section {
+  background: var(--cream);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 0;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.quick-filters-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.quick-filters-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+  padding-left: 2px;
+}
+
+.quick-filters-row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 4px;
+}
+
+.quick-filters-row::-webkit-scrollbar {
+  display: none;
+}
+
+.quick-filter-btn {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 14px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+  font-family: inherit;
+}
+
+.quick-filter-btn:hover {
+  background: var(--ink);
+  color: white;
+  border-color: var(--ink);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.quick-filter-btn.active {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+.quick-filter-btn .qf-icon {
+  font-size: 15px;
+}
+
+@media (max-width: 768px) {
+  .quick-filters-section {
+    padding: 12px 0;
+    position: static;
+  }
+  .quick-filters-inner {
+    padding: 0 16px;
+  }
+  .quick-filter-btn {
+    padding: 8px 12px;
+    font-size: 12.5px;
+  }
+}
+
 /* PAKKE 2: "Hvad bør de IKKE se" research-link på forsiden */
 .hero-research-row {
   margin-top: 14px;
@@ -4300,24 +4442,43 @@ input.autofilled, textarea.autofilled {
       <span class="hero-age-chip" onclick="quickAge(this,'13+')">13+ år</span>
     </div>
     <div class="hero-age-help">Klik på en aldersgruppe — vi viser indhold der er egnet, og skjuler det der er vurderet til ældre børn.</div>
-    <!-- PAKKE 2: Hurtig adgang til "hvad bør de ikke se" -->
-    <div class="hero-research-row">
-      <span class="hero-research-link" onclick="quickShowFraraded()">🚫 Vis det der frarådes — orientér dig om hvad børnene måske allerede har set</span>
-    </div>
     <div class="hero-stats">
       <div class="stat"><strong id="statCount">—</strong>Vurderinger</div>
       <div class="stat"><strong id="statPlatforms">14</strong>Platforme</div>
       <div class="stat"><strong>Gratis</strong>Altid</div>
     </div>
-    <div class="hero-sources hero-sources-subtle">
-      <span class="hero-sources-label">Baseret på viden fra</span>
-      <div class="hero-sources-logos">
-        <a href="https://medieraadet.dk" target="_blank" rel="noopener" class="source-pill">Medierådet</a>
-        <a href="https://www.sst.dk" target="_blank" rel="noopener" class="source-pill">Sundhedsstyrelsen</a>
-        <a href="https://bornsvilkaar.dk" target="_blank" rel="noopener" class="source-pill">Børns Vilkår</a>
-        <a href="https://iris.who.int" target="_blank" rel="noopener" class="source-pill">WHO</a>
-        <a href="https://taenk.dk" target="_blank" rel="noopener" class="source-pill">Tænk</a>
-      </div>
+  </div>
+</div>
+
+<!-- QUICK FILTER-KNAPPER -->
+<div class="quick-filters-section" id="quickFiltersSection">
+  <div class="quick-filters-inner">
+    <div class="quick-filters-label">⚡ Hurtigvalg — find det rigtige med ét klik</div>
+    <div class="quick-filters-row">
+      <button class="quick-filter-btn" onclick="applyQuickFilter('fredagsfilm', this)" aria-label="Fredagsfilm til familien">
+        <span class="qf-icon">🍿</span> Fredagsfilm til familien
+      </button>
+      <button class="quick-filter-btn" onclick="applyQuickFilter('regnvejr', this)" aria-label="Til regnvejrsdage">
+        <span class="qf-icon">🌧️</span> Til regnvejrsdage
+      </button>
+      <button class="quick-filter-btn" onclick="applyQuickFilter('sma', this)" aria-label="Til de mindste">
+        <span class="qf-icon">👶</span> Til de mindste (0-4 år)
+      </button>
+      <button class="quick-filter-btn" onclick="applyQuickFilter('apps', this)" aria-label="iPad-apps med god samvittighed">
+        <span class="qf-icon">📱</span> iPad-apps med god samvittighed
+      </button>
+      <button class="quick-filter-btn" onclick="applyQuickFilter('spil', this)" aria-label="Spil-tjek">
+        <span class="qf-icon">🎮</span> Spil-tjek
+      </button>
+      <button class="quick-filter-btn" onclick="applyQuickFilter('social', this)" aria-label="Sociale medier-tjek">
+        <span class="qf-icon">📲</span> Sociale medier-tjek
+      </button>
+      <button class="quick-filter-btn" onclick="applyQuickFilter('paafarten', this)" aria-label="På farten">
+        <span class="qf-icon">🚗</span> På farten
+      </button>
+      <button class="quick-filter-btn" onclick="applyQuickFilter('fraraded', this)" aria-label="Vis det der frarådes">
+        <span class="qf-icon">🚫</span> Vis det der frarådes
+      </button>
     </div>
   </div>
 </div>
@@ -4863,6 +5024,21 @@ input.autofilled, textarea.autofilled {
           <p>Som far til tre savnede jeg selv en platform der kunne hjælpe mig med at navigere i børnenes skærmunivers. Samtidig var det en mulighed for at lære hvordan AI kan bruges til at løse helt konkrete hverdagsproblemer. Det er ikke et firma og ikke en forretning — det er et projekt drevet af et reelt behov og personlig nysgerrighed.</p>
         </div>
       </div>
+    </div>
+
+    <!-- BASERET PÅ VIDEN — flyttet fra forsiden -->
+    <div class="om-sources-section">
+      <div class="om-sources-label">Baseret på viden fra</div>
+      <div class="om-sources-logos">
+        <a href="https://medieraadet.dk" target="_blank" rel="noopener" class="om-source-pill">Medierådet</a>
+        <a href="https://www.sst.dk" target="_blank" rel="noopener" class="om-source-pill">Sundhedsstyrelsen</a>
+        <a href="https://bornsvilkaar.dk" target="_blank" rel="noopener" class="om-source-pill">Børns Vilkår</a>
+        <a href="https://iris.who.int" target="_blank" rel="noopener" class="om-source-pill">WHO</a>
+        <a href="https://taenk.dk" target="_blank" rel="noopener" class="om-source-pill">Tænk</a>
+        <a href="https://redbarnet.dk" target="_blank" rel="noopener" class="om-source-pill">Red Barnet</a>
+        <a href="https://datatilsynet.dk" target="_blank" rel="noopener" class="om-source-pill">Datatilsynet</a>
+      </div>
+      <p class="om-sources-note">Vores vurderinger og artikler bygger på officielle anbefalinger og forskning fra danske og internationale autoriteter inden for børns trivsel og digitalt indhold.</p>
     </div>
 
     <!-- CTA -->
@@ -8915,6 +9091,8 @@ function showPage(page) {
   if (navEl) navEl.classList.add('active');
   document.getElementById('heroSection').style.display = page === 'browse' ? 'block' : 'none';
   document.getElementById('filtersBar').style.display = page === 'browse' ? 'block' : 'none';
+  const qfSection = document.getElementById('quickFiltersSection');
+  if (qfSection) qfSection.style.display = page === 'browse' ? 'block' : 'none';
   document.getElementById('filterPanel').classList.remove('open');
   document.getElementById('filterToggleBtn').classList.remove('open');
   if (page === 'viden') renderArticles();
@@ -9746,6 +9924,130 @@ function quickShowFraraded() {
   // Scroll til resultaterne
   const browseSection = document.getElementById('page-browse');
   if (browseSection) browseSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// QUICK FILTER-KNAPPER på forsiden
+function applyQuickFilter(type, btn) {
+  // Ryd alle andre filtre først
+  clearAllFilters();
+
+  // Marker den klikkede knap som aktiv (visuel feedback)
+  document.querySelectorAll('.quick-filter-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+
+  let title = 'Anbefalinger';
+
+  switch(type) {
+    case 'fredagsfilm':
+      // Film, alle aldre, fællesoplevelse, sikkerhed=Egnet/Med forbehold
+      currentTypeFilter = 'film';
+      currentSafeties.add('safe');
+      currentSafeties.add('careful');
+      const safAllF = document.getElementById('saf-all');
+      const safSafeF = document.getElementById('saf-safe');
+      const safCarefulF = document.getElementById('saf-careful');
+      if (safAllF) safAllF.classList.remove('s-active');
+      if (safSafeF) safSafeF.classList.add('s-active');
+      if (safCarefulF) safCarefulF.classList.add('s-active');
+      title = '🍿 Fredagsfilm til familien';
+      break;
+
+    case 'regnvejr':
+      // Lange film/serier, sikkerhed=Egnet/Med forbehold, alle aldre
+      currentSafeties.add('safe');
+      currentSafeties.add('careful');
+      const safAllR = document.getElementById('saf-all');
+      const safSafeR = document.getElementById('saf-safe');
+      const safCarefulR = document.getElementById('saf-careful');
+      if (safAllR) safAllR.classList.remove('s-active');
+      if (safSafeR) safSafeR.classList.add('s-active');
+      if (safCarefulR) safCarefulR.classList.add('s-active');
+      title = '🌧️ Til regnvejrsdage';
+      break;
+
+    case 'sma':
+      // Aldersgruppe 0-4 (vi bruger 2-4 som primær)
+      currentAgeFilter = '2-4';
+      const ageBtnSma = document.querySelector('[onclick*="setAgeFilter(this,\'2-4\')"]');
+      const ageAllSma = document.getElementById('age-all');
+      if (ageBtnSma) ageBtnSma.classList.add('active');
+      if (ageAllSma) ageAllSma.classList.remove('active');
+      currentSafeties.add('safe');
+      const safAllS = document.getElementById('saf-all');
+      const safSafeS = document.getElementById('saf-safe');
+      if (safAllS) safAllS.classList.remove('s-active');
+      if (safSafeS) safSafeS.classList.add('s-active');
+      title = '👶 Til de mindste (0-4 år)';
+      break;
+
+    case 'apps':
+      // Apps på mobile platforme, sikkerhed=Egnet, små børn
+      currentTypeFilter = 'app';
+      currentPlatforms.add('mobile_apps');
+      currentSafeties.add('safe');
+      const safAllA = document.getElementById('saf-all');
+      const safSafeA = document.getElementById('saf-safe');
+      if (safAllA) safAllA.classList.remove('s-active');
+      if (safSafeA) safSafeA.classList.add('s-active');
+      title = '📱 iPad-apps med god samvittighed';
+      break;
+
+    case 'spil':
+      // Alle gaming-titler
+      currentTypeFilter = 'app';
+      currentPlatforms.add('gaming');
+      currentPlatforms.add('switch');
+      currentPlatforms.add('mobile_apps');
+      title = '🎮 Spil-tjek';
+      break;
+
+    case 'social':
+      // Alle social-platforme
+      currentPlatforms.add('youtube');
+      currentPlatforms.add('tiktok');
+      currentPlatforms.add('instagram');
+      currentPlatforms.add('snapchat');
+      currentPlatforms.add('discord');
+      title = '📲 Sociale medier-tjek';
+      break;
+
+    case 'paafarten':
+      // Apps + offline-content til rejser
+      currentTypeFilter = 'app';
+      currentPlatforms.add('mobile_apps');
+      currentSafeties.add('safe');
+      const safAllP = document.getElementById('saf-all');
+      const safSafeP = document.getElementById('saf-safe');
+      if (safAllP) safAllP.classList.remove('s-active');
+      if (safSafeP) safSafeP.classList.add('s-active');
+      title = '🚗 På farten';
+      break;
+
+    case 'fraraded':
+      // Brug eksisterende quickShowFraraded-logik
+      currentSafeties.add('notrec');
+      const btnF = document.getElementById('saf-notrec');
+      const safAllFr = document.getElementById('saf-all');
+      if (btnF) btnF.classList.add('s-active');
+      if (safAllFr) safAllFr.classList.remove('s-active');
+      currentSort = 'ai-high';
+      const sortSelF = document.getElementById('sortSelect');
+      if (sortSelF) sortSelF.value = 'ai-high';
+      title = '🚫 Indhold der frarådes';
+      break;
+  }
+
+  filterAndRender();
+  const browseTitle = document.getElementById('browseTitle');
+  if (browseTitle) browseTitle.textContent = title;
+
+  // Scroll til resultaterne
+  setTimeout(() => {
+    const browseSection = document.getElementById('page-browse') || document.querySelector('.cards-grid');
+    if (browseSection) {
+      browseSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, 100);
 }
 
 // Sprint 3a-fix: Vælg/fravælg alle platforme i en kategori
