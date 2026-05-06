@@ -346,6 +346,53 @@ nav {
   margin-bottom: 1.5rem;
 }
 
+.ai-bullets-box {
+  background: linear-gradient(135deg, #fff8f0 0%, #ffeedb 100%);
+  border: 1px solid #f0d9b5;
+  border-radius: 14px;
+  padding: 1.1rem 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.ai-bullets-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #c05621;
+  margin-bottom: 12px;
+}
+
+.ai-bullets-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ai-bullet-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+.ai-bullet-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+  line-height: 1.2;
+}
+
+.ai-bullet-text {
+  flex: 1;
+}
+
+.ai-bullet-text strong {
+  font-weight: 700;
+  color: var(--ink);
+}
+
 .ai-analyse-label {
   font-size: 10px;
   font-weight: 500;
@@ -1115,6 +1162,11 @@ nav {
 
   <!-- OVERBLIK -->
   <div class="tab-panel active" id="panel-overblik">
+    <div id="aiBulletsBox" class="ai-bullets-box" style="display:none">
+      <div class="ai-bullets-label">⚡ Hurtigt overblik</div>
+      <div class="ai-bullets-list" id="aiBulletsList"></div>
+    </div>
+
     <div class="ai-analyse-box">
       <div class="ai-analyse-label">✦ AI-analyse</div>
       <div class="ai-analyse-source" id="aiSource"></div>
@@ -1364,6 +1416,19 @@ function renderPage(item, allData) {
   // Age
   const ab = document.getElementById('ageBadge');
   ab.textContent = item.recommended_age ? `✓ Egnet fra ${item.recommended_age} år` : `✓ ${item.age_group || ''}`;
+
+  // AI bullets — hurtigt overblik
+  const bulletsBox = document.getElementById('aiBulletsBox');
+  const bulletsList = document.getElementById('aiBulletsList');
+  if (item.ai_bullets && Array.isArray(item.ai_bullets) && item.ai_bullets.length > 0) {
+    bulletsBox.style.display = 'block';
+    bulletsList.innerHTML = item.ai_bullets.slice(0, 4).map(b => `
+      <div class="ai-bullet-row">
+        <span class="ai-bullet-icon">${b.icon || '•'}</span>
+        <div class="ai-bullet-text"><strong>${b.highlight || ''}</strong> ${b.text || ''}</div>
+      </div>
+    `).join('');
+  }
 
   // AI analyse
   document.getElementById('aiSource').textContent = 'Baseret på offentlig tilgængelig information om kanalen, mediepædagogisk vurdering';
