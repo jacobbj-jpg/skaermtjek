@@ -347,6 +347,115 @@ nav {
   max-width: 600px;
 }
 
+/* SMART STANDARD KONTEKSTBJÆLKE */
+.smart-standard-section {
+  background: linear-gradient(135deg, #fff8f0 0%, #ffeedb 100%);
+  border-bottom: 1px solid #f0d9b5;
+  padding: 14px 0;
+}
+
+.smart-standard-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.smart-standard-icon {
+  font-size: 28px;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.smart-standard-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.smart-standard-heading {
+  font-family: 'Fraunces', serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.2;
+  margin-bottom: 2px;
+}
+
+.smart-standard-text {
+  font-size: 13px;
+  color: var(--ink2);
+  line-height: 1.4;
+}
+
+.smart-standard-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.smart-standard-cta {
+  padding: 8px 14px;
+  background: var(--ink);
+  color: white;
+  border: none;
+  border-radius: 18px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.smart-standard-cta:hover {
+  background: var(--accent);
+}
+
+.smart-standard-close {
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+
+.smart-standard-close:hover {
+  background: var(--warm);
+  color: var(--ink);
+}
+
+@media (max-width: 768px) {
+  .smart-standard-inner {
+    padding: 0 16px;
+    gap: 10px;
+  }
+  .smart-standard-icon {
+    font-size: 22px;
+  }
+  .smart-standard-heading {
+    font-size: 14px;
+  }
+  .smart-standard-text {
+    font-size: 12px;
+  }
+  .smart-standard-cta {
+    padding: 7px 12px;
+    font-size: 12px;
+  }
+}
+
 /* "Baseret på viden fra"-sektion på Om-siden */
 .om-sources-section {
   background: white;
@@ -4462,6 +4571,21 @@ input.autofilled, textarea.autofilled {
       <div class="stat"><strong id="statCount">—</strong>Vurderinger</div>
       <div class="stat"><strong id="statPlatforms">14</strong>Platforme</div>
       <div class="stat"><strong>Gratis</strong>Altid</div>
+    </div>
+  </div>
+</div>
+
+<!-- SMART STANDARD KONTEKSTBJÆLKE -->
+<div class="smart-standard-section" id="smartStandardSection" style="display:none">
+  <div class="smart-standard-inner">
+    <div class="smart-standard-icon" id="smartStandardIcon">🍿</div>
+    <div class="smart-standard-content">
+      <div class="smart-standard-heading" id="smartStandardHeading"></div>
+      <div class="smart-standard-text" id="smartStandardText"></div>
+    </div>
+    <div class="smart-standard-actions">
+      <button class="smart-standard-cta" id="smartStandardCta" onclick="applySmartStandard()"></button>
+      <button class="smart-standard-close" onclick="dismissSmartStandard()" aria-label="Luk">✕</button>
     </div>
   </div>
 </div>
@@ -8853,6 +8977,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('submitBanner').style.display = 'flex';
   }
   animateOnScroll();
+  // Vis smart standard kontekstbjælke (hvis relevant tidspunkt)
+  showSmartStandard();
 });
 
 // Handle browser back/forward
@@ -9102,6 +9228,8 @@ function showPage(page) {
   document.getElementById('filtersBar').style.display = page === 'browse' ? 'block' : 'none';
   const qfSection = document.getElementById('quickFiltersSection');
   if (qfSection) qfSection.style.display = page === 'browse' ? 'block' : 'none';
+  const smartSection = document.getElementById('smartStandardSection');
+  if (smartSection && page !== 'browse') smartSection.style.display = 'none';
   document.getElementById('filterPanel').classList.remove('open');
   document.getElementById('filterToggleBtn').classList.remove('open');
   if (page === 'viden') renderArticles();
@@ -9936,6 +10064,168 @@ function quickShowFraraded() {
   // Scroll til resultaterne
   const browseSection = document.getElementById('page-browse');
   if (browseSection) browseSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// SMART STANDARD — kontekstuel velkomst baseret på dato/tid
+const SMART_STANDARDS = {
+  jul: {
+    icon: '🎄',
+    heading: 'Glædelig december',
+    text: 'Det er julekalender-tid. Vi har samlet de bedste julefilm og julekalendere til familien.',
+    cta: 'Vis julehyggen',
+    filterType: 'fredagsfilm', // viser film for hele familien
+    title: '🎄 Julehygge — film og julekalendere'
+  },
+  sommerferie: {
+    icon: '☀️',
+    heading: 'Sommerferie-streamingguide',
+    text: 'Sommerferien er længere end vi husker fra egen barndom. Her er det vi har samlet til regnvejrsdage og lange aftener.',
+    cta: 'Vis sommeranbefalinger',
+    filterType: 'fredagsfilm',
+    title: '☀️ Sommerferie — film og serier'
+  },
+  fredagsfilm: {
+    icon: '🍿',
+    heading: 'Det er fredag aften',
+    text: 'Her er filmene hele familien kan blive enige om at se sammen.',
+    cta: 'Vis fredagsfilm',
+    filterType: 'fredagsfilm',
+    title: '🍿 Fredagsfilm til familien'
+  },
+  weekend_morgen: {
+    icon: '🌞',
+    heading: 'God lørdag morgen',
+    text: 'Lørdag formiddag er ofte familiehygge i sofaen. Her er det vi kan se sammen — på tværs af aldersgrupper.',
+    cta: 'Vis lørdagshygge',
+    filterType: 'fredagsfilm',
+    title: '🌞 Lørdagshygge'
+  },
+  sondag_morgen: {
+    icon: '🌳',
+    heading: 'God søndag',
+    text: 'Mange forældre bruger søndag på at lave skærmaftaler for ugen. Vi har samlet det forskningen siger om hvad der virker.',
+    cta: 'Læs vores guide',
+    filterType: 'viden',
+    title: 'Skærmaftaler i hverdagen'
+  },
+  weekend_aften: {
+    icon: '🎬',
+    heading: 'Weekend-aften',
+    text: 'Weekend-aften er perfekt til en længere film eller en sæson af noget alle vil se.',
+    cta: 'Vis weekendanbefalinger',
+    filterType: 'fredagsfilm',
+    title: '🎬 Weekend-aften'
+  },
+  hverdag_aften: {
+    icon: '🌙',
+    heading: 'Tid til at vinde ned',
+    text: '30 minutter inden sengetid? Korte, beroligende ting fungerer bedst — så søvnen ikke får kamp med dopaminen.',
+    cta: 'Vis vinde-ned-anbefalinger',
+    filterType: 'sma',
+    title: '🌙 Til at vinde ned før sengetid'
+  },
+  hverdag_eftermiddag: {
+    icon: '🥕',
+    heading: 'God eftermiddag',
+    text: 'Travl eftermiddag? Her er rolige, korte ting der lader dig nå dagens øvrige opgaver — uden voldsomme dopamin-kicks.',
+    cta: 'Vis rolige anbefalinger',
+    filterType: 'sma',
+    title: '🥕 Rolige hverdagsanbefalinger'
+  },
+  morgen: {
+    icon: '🌅',
+    heading: 'Godmorgen',
+    text: 'Skærm-aftaler holder bedre når de er lavet sammen — på en stille søndag, ikke en stresset mandag morgen.',
+    cta: 'Læs vores guide',
+    filterType: 'viden',
+    title: 'Guide til skærmaftaler'
+  }
+};
+
+// Find den rette smart standard baseret på tid og dato
+function getSmartStandard() {
+  const now = new Date();
+  const hour = now.getHours();
+  const day = now.getDay(); // 0=søndag, 5=fredag, 6=lørdag
+  const month = now.getMonth() + 1; // 1-12
+
+  // Højeste prioritet: sæson
+  if (month === 12) return SMART_STANDARDS.jul;
+  if (month >= 6 && month <= 8) return SMART_STANDARDS.sommerferie;
+
+  // Fredag aften (17-22)
+  if (day === 5 && hour >= 17 && hour < 22) return SMART_STANDARDS.fredagsfilm;
+
+  // Lørdag/søndag formiddag (8-13)
+  if ((day === 6 || day === 0) && hour >= 8 && hour < 13) {
+    return day === 0 ? SMART_STANDARDS.sondag_morgen : SMART_STANDARDS.weekend_morgen;
+  }
+
+  // Lørdag/søndag aften (17-22)
+  if ((day === 6 || day === 0) && hour >= 17 && hour < 22) return SMART_STANDARDS.weekend_aften;
+
+  // Hverdage aften (17-20)
+  if (day >= 1 && day <= 5 && hour >= 17 && hour < 20) return SMART_STANDARDS.hverdag_aften;
+
+  // Hverdage eftermiddag (14-17)
+  if (day >= 1 && day <= 5 && hour >= 14 && hour < 17) return SMART_STANDARDS.hverdag_eftermiddag;
+
+  // Hverdage morgen (6-9) — generel hygge-tip
+  if (day >= 1 && day <= 5 && hour >= 6 && hour < 9) return SMART_STANDARDS.morgen;
+
+  return null; // Ingen smart standard på dette tidspunkt
+}
+
+// Vis smart standard hvis relevant
+function showSmartStandard() {
+  // Tjek om brugeren har lukket den i denne session
+  if (sessionStorage.getItem('smartStandardDismissed') === '1') return;
+
+  const standard = getSmartStandard();
+  if (!standard) return;
+
+  const section = document.getElementById('smartStandardSection');
+  const icon = document.getElementById('smartStandardIcon');
+  const heading = document.getElementById('smartStandardHeading');
+  const text = document.getElementById('smartStandardText');
+  const cta = document.getElementById('smartStandardCta');
+
+  if (!section || !icon || !heading || !text || !cta) return;
+
+  icon.textContent = standard.icon;
+  heading.textContent = standard.heading;
+  text.textContent = standard.text;
+  cta.textContent = standard.cta;
+  cta.dataset.filterType = standard.filterType;
+  cta.dataset.title = standard.title;
+
+  section.style.display = 'block';
+}
+
+// Anvend filter når brugeren klikker CTA
+function applySmartStandard() {
+  const cta = document.getElementById('smartStandardCta');
+  if (!cta) return;
+  const filterType = cta.dataset.filterType;
+
+  // Special-case: viden-link
+  if (filterType === 'viden') {
+    showPage('viden');
+    return;
+  }
+
+  // Brug den eksisterende quick-filter-logik
+  applyQuickFilter(filterType, null);
+
+  // Skjul smart standard efter klik
+  dismissSmartStandard();
+}
+
+// Luk smart standard
+function dismissSmartStandard() {
+  const section = document.getElementById('smartStandardSection');
+  if (section) section.style.display = 'none';
+  sessionStorage.setItem('smartStandardDismissed', '1');
 }
 
 // QUICK FILTER-KNAPPER på forsiden — stramme kriterier for kvalitet
