@@ -2524,6 +2524,78 @@ input[type="range"]::-webkit-slider-thumb {
   font-weight: 300;
 }
 
+/* AGENT-REDAKTION */
+.agent-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.agent-card {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px;
+  padding: 18px 16px;
+  transition: all 0.2s;
+}
+
+.agent-card:hover {
+  background: rgba(255,255,255,0.10);
+  border-color: rgba(255,255,255,0.20);
+}
+
+.agent-icon {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.agent-name {
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: white;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.agent-role {
+  font-size: 12px;
+  color: rgba(255,255,255,0.6);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.agent-desc {
+  font-size: 13px;
+  color: rgba(255,255,255,0.85);
+  line-height: 1.5;
+}
+
+.agent-process {
+  background: rgba(255,255,255,0.04);
+  border-left: 3px solid var(--accent);
+  border-radius: 8px;
+  padding: 16px 18px;
+  margin-top: 8px;
+}
+
+.agent-process-title {
+  font-weight: 600;
+  color: white;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.agent-process p {
+  font-size: 13px;
+  color: rgba(255,255,255,0.85);
+  line-height: 1.5;
+  margin: 0;
+}
+
 /* TRANSPARENCY BLOCK */
 .transparency-block {
   margin-bottom: 48px;
@@ -4743,6 +4815,54 @@ input.autofilled, textarea.autofilled {
       <h3>Hjælp os at gøre SkærmTjek bedre</h3>
       <p>Den mest værdifulde ting du kan gøre er at dele din egen oplevelse. Det tager 2 minutter og hjælper hundredvis af andre forældre.</p>
       <button class="btn-submit" style="max-width:280px;margin:0 auto" onclick="showPage('submit')">✏️ Tilføj en vurdering →</button>
+    </div>
+
+    <!-- AI-REDAKTION -->
+    <div class="om-section om-section-dark" id="ai-redaktion">
+      <div class="om-dark-inner">
+        <div class="om-dark-title">Mød vores AI-redaktion</div>
+        <p style="color:rgba(255,255,255,0.85);font-size:15px;line-height:1.6;margin-bottom:24px;">
+          Bag SkærmTjeks artikler og vurderinger står fem AI-skribenter — hver med sit eget fagområde og sin egen stil. Vi er fuldt transparente: alt indhold er AI-genereret og gennemgået af både flere AI-redaktører som intern kvalitetstjek og af et menneske før udgivelse.
+        </p>
+
+        <div class="agent-grid">
+          <div class="agent-card">
+            <div class="agent-icon">🌱</div>
+            <div class="agent-name">ALF</div>
+            <div class="agent-role">Den Pædagogiske</div>
+            <div class="agent-desc">Fagligt fokus på børneindhold, mediepædagogik og samtale-tips mellem forældre og børn. Trækker på forskning fra Sundhedsstyrelsen, Medierådet og Børns Vilkår.</div>
+          </div>
+          <div class="agent-card">
+            <div class="agent-icon">🎬</div>
+            <div class="agent-name">RØD</div>
+            <div class="agent-role">Den Direkte</div>
+            <div class="agent-desc">Skriver om film og serier med en skarp, ærlig stil. Tager stilling — alt er ikke "lidt godt og lidt dårligt". Specialist i streaming-guides og kulturelle øjeblikke.</div>
+          </div>
+          <div class="agent-card">
+            <div class="agent-icon">👥</div>
+            <div class="agent-name">PEER</div>
+            <div class="agent-role">Den Sociale Læser</div>
+            <div class="agent-desc">Fokus på sociale medier — TikTok, Snapchat, Instagram, BeReal, Discord. Empatisk og jordnær tone der genkender forældrefrustrationer uden at dømme.</div>
+          </div>
+          <div class="agent-card">
+            <div class="agent-icon">🎮</div>
+            <div class="agent-name">CACHE</div>
+            <div class="agent-role">Faktatjekkeren</div>
+            <div class="agent-desc">Specialist i spil og apps. Datadreven og præcis — fortæller dig konkret om in-app køb, chat-funktioner, sværhedsgrad og PEGI-rating.</div>
+          </div>
+          <div class="agent-card">
+            <div class="agent-icon">📚</div>
+            <div class="agent-name">SCROLL</div>
+            <div class="agent-role">Forskeren</div>
+            <div class="agent-desc">Skriver dybdegående artikler om skærmtid, dopamin og mental sundhed. Bygger på peer-reviewed forskning og officielle anbefalinger — aldrig clickbait.</div>
+          </div>
+        </div>
+
+        <div class="agent-process">
+          <div class="agent-process-title">Sådan kvalitetssikrer vi</div>
+          <p>Hver artikel går igennem 2-3 agenter som intern review før udgivelse. En spil-anmeldelse skrevet af CACHE bliver tjekket af RØD og PEER. En forskningsartikel af SCROLL bliver gennemgået af ALF og RØD. Det er en simpel måde at fange fejl, blinde vinkler og overdrevne påstande på — før de når læseren.</p>
+        </div>
+      </div>
     </div>
 
     <!-- ØKONOMI & TRANSPARENS -->
@@ -9544,14 +9664,16 @@ function _doFilterAndRender() {
     });
 
   } else {
-    // Default: channels/series first sorted by most parent votes, episodes after
-    const channels = data.filter(d => d.content_type === 'channel');
-    const films = data.filter(d => d.content_type === 'film');
+    // Default: sortér med channels/series først, derefter film og apps, episoder sidst
+    // Behold alle content_types (channel, serie, film, app, episode)
+    const channels = data.filter(d => d.content_type === 'channel' || d.content_type === 'serie');
+    const filmsAndApps = data.filter(d => d.content_type === 'film' || d.content_type === 'app');
     const episodes = data.filter(d => d.content_type === 'episode');
+    const others = data.filter(d => !['channel', 'serie', 'film', 'app', 'episode'].includes(d.content_type));
     channels.sort((a, b) => (b.parent_votes || 0) - (a.parent_votes || 0));
-    films.sort((a, b) => (b.parent_votes || 0) - (a.parent_votes || 0));
+    filmsAndApps.sort((a, b) => (b.parent_votes || 0) - (a.parent_votes || 0));
     episodes.sort((a, b) => (b.parent_votes || 0) - (a.parent_votes || 0));
-    data = [...channels, ...films, ...episodes];
+    data = [...channels, ...filmsAndApps, ...others, ...episodes];
   }
 
   // Update browse title
