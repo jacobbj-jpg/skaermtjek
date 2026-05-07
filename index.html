@@ -347,6 +347,52 @@ nav {
   max-width: 600px;
 }
 
+/* AKTIV QUICK-FILTER CHIP */
+.active-qf-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: var(--accent);
+  color: white;
+  border-radius: 18px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-left: 12px;
+  vertical-align: middle;
+}
+
+.active-qf-clear {
+  background: rgba(255,255,255,0.25);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 11px;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.active-qf-clear:hover {
+  background: rgba(255,255,255,0.5);
+}
+
+@media (max-width: 768px) {
+  .active-qf-chip {
+    display: flex;
+    margin-left: 0;
+    margin-top: 8px;
+    width: fit-content;
+    font-size: 12px;
+    padding: 5px 10px;
+  }
+}
+
 /* SMART STANDARD KONTEKSTBJÆLKE */
 .smart-standard-section {
   background: linear-gradient(135deg, #fff8f0 0%, #ffeedb 100%);
@@ -1406,7 +1452,11 @@ nav {
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  .section-head .count { display: none; } /* skjul count på mobil — info findes i sort-knap */
+  .section-head .count {
+    display: inline-block;
+    font-size: 12px;
+    margin-left: 6px;
+  }
 }
 
 /* CARD GRID */
@@ -4793,6 +4843,10 @@ input.autofilled, textarea.autofilled {
     <div class="section-head">
       <h2 id="browseTitle">Anbefalinger</h2>
       <span class="count" id="browseCount"></span>
+      <div id="activeQuickFilterChip" class="active-qf-chip" style="display:none">
+        <span id="activeQfText"></span>
+        <button class="active-qf-clear" onclick="clearActiveQuickFilter()" aria-label="Nulstil filter">✕</button>
+      </div>
       <div class="sort-wrap">
         <label for="sortSelect" class="sort-label">Sortér:</label>
         <select id="sortSelect" onchange="setSortOrder(this.value)">
@@ -9877,6 +9931,9 @@ function updateClearButtons() {
 }
 
 function setPlatform(el, platform) {
+  // Hvis brugeren manuelt ændrer filter efter en quick-filter, fjern chippen
+  if (activeQuickFilter) hideActiveQuickFilterChip();
+
   if (platform === 'all') {
     // "Alle platforme" — ryd alle valg
     document.querySelectorAll('#filterPanel .filter-pill').forEach(p => {
@@ -9925,6 +9982,9 @@ function setPlatform(el, platform) {
 }
 
 function setAgeFilter(el, age) {
+  // Hvis brugeren manuelt ændrer filter efter en quick-filter, fjern chippen
+  if (activeQuickFilter) hideActiveQuickFilterChip();
+
   document.querySelectorAll('#filtersBar .filter-pill').forEach(p => {
     if (p.onclick && p.onclick.toString().includes('setAgeFilter')) p.classList.remove('active');
   });
@@ -9972,6 +10032,9 @@ function updateSafetySection(age, ageLabel) {
 }
 
 function setSafety(el, safety) {
+  // Hvis brugeren manuelt ændrer filter efter en quick-filter, fjern chippen
+  if (activeQuickFilter) hideActiveQuickFilterChip();
+
   if (safety === 'all') {
     // "Alle" — ryd alle valg
     document.querySelectorAll('.safety-btn').forEach(b => b.classList.remove('s-active'));
@@ -10012,6 +10075,9 @@ function toggleCategory(headerEl) {
 
 // Sprint 4: Toggle positiv værdi-tag (multi-select OR-logik)
 function setValueTag(el, tagId) {
+  // Hvis brugeren manuelt ændrer filter efter en quick-filter, fjern chippen
+  if (activeQuickFilter) hideActiveQuickFilterChip();
+
   if (currentValueTags.has(tagId)) {
     currentValueTags.delete(tagId);
     el.classList.remove('active');
@@ -10118,11 +10184,11 @@ const SMART_STANDARDS = {
   },
   hverdag_aften: {
     icon: '🌙',
-    heading: 'Tid til at vinde ned',
+    heading: 'Tid til ro før sengetid',
     text: '30 minutter inden sengetid? Korte, beroligende ting fungerer bedst — så søvnen ikke får kamp med dopaminen.',
-    cta: 'Vis vinde-ned-anbefalinger',
+    cta: 'Vis rolige anbefalinger',
     filterType: 'sma',
-    title: '🌙 Til at vinde ned før sengetid'
+    title: '🌙 Rolige ting før sengetid'
   },
   hverdag_eftermiddag: {
     icon: '🥕',
@@ -10142,12 +10208,24 @@ const SMART_STANDARDS = {
   }
 };
 
-// Find den rette smart standard baseret på tid og dato
+// Find den rette smart standard baseret på tid og dato (dansk tid)
 function getSmartStandard() {
   const now = new Date();
-  const hour = now.getHours();
-  const day = now.getDay(); // 0=søndag, 5=fredag, 6=lørdag
-  const month = now.getMonth() + 1; // 1-12
+  // Tving dansk tid (Europe/Copenhagen) — virker uanset brugerens enhed
+  const dkFormatter = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Europe/Copenhagen',
+    hour: 'numeric',
+    weekday: 'short',
+    month: 'numeric',
+    hour12: false
+  });
+  const parts = dkFormatter.formatToParts(now);
+  const hour = parseInt(parts.find(p => p.type === 'hour').value, 10);
+  const month = parseInt(parts.find(p => p.type === 'month').value, 10);
+  const weekday = parts.find(p => p.type === 'weekday').value;
+  // Konverter weekday til 0-6 (0=søndag som JS)
+  const dayMap = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+  const day = dayMap[weekday] !== undefined ? dayMap[weekday] : now.getDay();
 
   // Højeste prioritet: sæson
   if (month === 12) return SMART_STANDARDS.jul;
@@ -10324,6 +10402,15 @@ function applyQuickFilter(type, btn) {
   const browseTitle = document.getElementById('browseTitle');
   if (browseTitle) browseTitle.textContent = title;
 
+  // Vis aktiv quick-filter chip
+  const chip = document.getElementById('activeQuickFilterChip');
+  const chipText = document.getElementById('activeQfText');
+  if (chip && chipText) {
+    chipText.textContent = title;
+    chip.style.display = '';
+    activeQuickFilter = type;
+  }
+
   // Scroll til resultaterne
   setTimeout(() => {
     const browseSection = document.getElementById('page-browse') || document.querySelector('.cards-grid');
@@ -10331,6 +10418,27 @@ function applyQuickFilter(type, btn) {
       browseSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }, 100);
+}
+
+// Track aktiv quick-filter
+let activeQuickFilter = null;
+
+// Nulstil alle filtre fra chip-X
+function clearActiveQuickFilter() {
+  clearAllFilters();
+  hideActiveQuickFilterChip();
+  document.querySelectorAll('.quick-filter-btn').forEach(b => b.classList.remove('active'));
+  const browseTitle = document.getElementById('browseTitle');
+  if (browseTitle) browseTitle.textContent = 'Anbefalinger';
+  filterAndRender();
+}
+
+// Skjul chip (kaldes også når brugeren ændrer almindelige filtre)
+function hideActiveQuickFilterChip() {
+  const chip = document.getElementById('activeQuickFilterChip');
+  if (chip) chip.style.display = 'none';
+  activeQuickFilter = null;
+  document.querySelectorAll('.quick-filter-btn').forEach(b => b.classList.remove('active'));
 }
 
 // Sprint 3a-fix: Vælg/fravælg alle platforme i en kategori
@@ -10628,8 +10736,11 @@ function _doFilterAndRender() {
 
   updateFilterSummary();
   if (typeof updateClearButtons === 'function') updateClearButtons();
-  // PAKKE 2: Sortering
-  data = applySort(data);
+  // PAKKE 2: Sortering — men kun hvis brugeren IKKE søger
+  // (Søgning har sin egen relevans-sortering der ikke må overskrives)
+  if (!currentSearch) {
+    data = applySort(data);
+  }
   renderCards(data);
 }
 
