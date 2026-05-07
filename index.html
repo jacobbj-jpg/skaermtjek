@@ -10323,54 +10323,24 @@ function applyQuickFilter(type, btn) {
 
   switch(type) {
     case 'fredagsfilm':
-      // Strammere kriterier: kun film, sikkerhed=Egnet, alder 7-9 (kan ses af hele familien)
-      // Sorteret efter bedst score først for kvalitet
-      currentContentType = 'film';
-      currentSafeties.add('safe');
-      currentAgeFilter = '7-9';
-      const ageBtnFilm = document.querySelector('[onclick*="setAgeFilter(this,\'7-9\')"]');
-      const ageAllFilm = document.getElementById('age-all');
-      if (ageBtnFilm) ageBtnFilm.classList.add('active');
-      if (ageAllFilm) ageAllFilm.classList.remove('active');
-      const safAllF = document.getElementById('saf-all');
-      const safSafeF = document.getElementById('saf-safe');
-      if (safAllF) safAllF.classList.remove('s-active');
-      if (safSafeF) safSafeF.classList.add('s-active');
-      currentSort = 'best-score';
+      // Kuratéret: 8 håndplukkede film — danske klassikere + Pixar/Disney
+      // Krummerne, Antboy, Brødrene Løvehjerte, Coco, De Utrolige, Frost, Find Nemo, Min Søsters Børn
+      currentCuratedIds = [1332, 1336, 1105, 1043, 1392, 1040, 1383, 1335];
       title = '🍿 Fredagsfilm til familien';
       break;
 
     case 'sma':
-      // Stramt: kun alder 0-4, sikkerhed=Egnet
-      currentAgeFilter = '2-4';
-      const ageBtnSma = document.querySelector('[onclick*="setAgeFilter(this,\'2-4\')"]');
-      const ageAllSma = document.getElementById('age-all');
-      if (ageBtnSma) ageBtnSma.classList.add('active');
-      if (ageAllSma) ageAllSma.classList.remove('active');
-      currentSafeties.add('safe');
-      const safAllS = document.getElementById('saf-all');
-      const safSafeS = document.getElementById('saf-safe');
-      if (safAllS) safAllS.classList.remove('s-active');
-      if (safSafeS) safSafeS.classList.add('s-active');
-      currentSort = 'best-score';
+      // Kuratéret: 8 håndplukkede titler for 0-4 år
+      // Bluey, DR Ramasjang-appen, Cirkeline, Bamse og Kylling, Daniel Tiger,
+      // Alphablocks, Ben and Holly's, Berenstain Bears
+      currentCuratedIds = [904, 992, 1349, 1084, 1435, 1121, 1936, 1922];
       title = '👶 Til de mindste (0-4 år)';
       break;
 
     case 'apps':
-      // Stramt: apps + mobile_apps + sikkerhed=Egnet + alder 4-6 (de små)
-      currentContentType = 'app';
-      currentPlatforms.add('mobile_apps');
-      currentSafeties.add('safe');
-      currentAgeFilter = '4-6';
-      const ageBtnApps = document.querySelector('[onclick*="setAgeFilter(this,\'4-6\')"]');
-      const ageAllApps = document.getElementById('age-all');
-      if (ageBtnApps) ageBtnApps.classList.add('active');
-      if (ageAllApps) ageAllApps.classList.remove('active');
-      const safAllA = document.getElementById('saf-all');
-      const safSafeA = document.getElementById('saf-safe');
-      if (safAllA) safAllA.classList.remove('s-active');
-      if (safSafeA) safSafeA.classList.add('s-active');
-      currentSort = 'best-score';
+      // Kuratéret: 6 håndplukkede apps de små kan spille trygt
+      // Endless Alphabet, Lingokids, Epic Books, ABCmouse, Code.org, Apple Arcade
+      currentCuratedIds = [1722, 1715, 1713, 1714, 1949, 1755];
       title = '📱 iPad-apps de små kan trygt';
       break;
 
