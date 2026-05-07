@@ -4732,8 +4732,8 @@ input.autofilled, textarea.autofilled {
       <button class="quick-filter-btn" onclick="applyQuickFilter('sma', this)" aria-label="Til de mindste">
         <span class="qf-icon">👶</span> Til de mindste (0-4 år)
       </button>
-      <button class="quick-filter-btn" onclick="applyQuickFilter('apps', this)" aria-label="iPad-apps med god samvittighed">
-        <span class="qf-icon">📱</span> iPad-apps de små kan trygt
+      <button class="quick-filter-btn" onclick="applyQuickFilter('apps', this)" aria-label="Apps til de mindste">
+        <span class="qf-icon">📱</span> Apps til de mindste
       </button>
       <button class="quick-filter-btn" onclick="applyQuickFilter('social', this)" aria-label="Sociale medier-tjek">
         <span class="qf-icon">📲</span> Sociale medier-tjek
@@ -10556,7 +10556,7 @@ function applyQuickFilter(type, btn) {
       // Kuratéret: 6 håndplukkede apps de små kan spille trygt
       // Endless Alphabet, Lingokids, Epic Books, ABCmouse, Code.org, Apple Arcade
       currentCuratedIds = [1722, 1715, 1713, 1714, 1949, 1755];
-      title = '📱 iPad-apps de små kan trygt';
+      title = '📱 Apps til de mindste';
       break;
 
     case 'social':
@@ -10605,11 +10605,17 @@ function applyQuickFilter(type, btn) {
     hideCurationBanner();
   }
 
-  // Scroll til resultaterne
+  // Scroll til titlen så hele resultatområdet (inkl. curation banner) er synligt
   setTimeout(() => {
-    const browseSection = document.getElementById('page-browse') || document.querySelector('.cards-grid');
-    if (browseSection) {
-      browseSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const target = document.getElementById('browseTitle') || document.querySelector('.section-head');
+    if (target) {
+      const rect = target.getBoundingClientRect();
+      // Offset så filterBar (sticky) ikke skjuler titlen
+      const offset = window.innerWidth > 768 ? 120 : 80;
+      window.scrollTo({
+        top: window.scrollY + rect.top - offset,
+        behavior: 'smooth'
+      });
     }
   }, 100);
 }
