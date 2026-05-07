@@ -347,6 +347,87 @@ nav {
   max-width: 600px;
 }
 
+/* CURATION BANNER — forklarer at lister er redaktionelt valgt */
+.curation-banner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: linear-gradient(135deg, #fff8f0 0%, #ffeedb 100%);
+  border: 1px solid #f0d9b5;
+  border-radius: 14px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+}
+
+.curation-banner-icon {
+  font-size: 28px;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.curation-banner-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.curation-banner-heading {
+  font-family: 'Fraunces', serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+
+.curation-banner-text {
+  font-size: 13px;
+  color: var(--ink2);
+  line-height: 1.45;
+}
+
+.curation-banner-cta {
+  flex-shrink: 0;
+  padding: 8px 14px;
+  background: white;
+  border: 1px solid var(--ink);
+  border-radius: 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.curation-banner-cta:hover {
+  background: var(--ink);
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .curation-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 14px 16px;
+  }
+  .curation-banner-icon {
+    font-size: 22px;
+  }
+  .curation-banner-heading {
+    font-size: 14px;
+  }
+  .curation-banner-text {
+    font-size: 12.5px;
+  }
+  .curation-banner-cta {
+    width: 100%;
+    text-align: center;
+    padding: 9px 14px;
+  }
+}
+
 /* AKTIV QUICK-FILTER CHIP */
 .active-qf-chip {
   display: inline-flex;
@@ -4857,6 +4938,15 @@ input.autofilled, textarea.autofilled {
           <option value="parent-votes">Flest forældre-stemmer</option>
         </select>
       </div>
+    </div>
+    <!-- CURATION BANNER — vises kun når en kuratéret quick filter er aktiv -->
+    <div id="curationBanner" class="curation-banner" style="display:none">
+      <div class="curation-banner-icon" id="curationBannerIcon">✨</div>
+      <div class="curation-banner-content">
+        <div class="curation-banner-heading" id="curationBannerHeading"></div>
+        <div class="curation-banner-text" id="curationBannerText"></div>
+      </div>
+      <button class="curation-banner-cta" id="curationBannerCta" onclick="showAllForCuration()">Vis alle →</button>
     </div>
     <div id="cardGrid" class="card-grid"></div>
   </div>
@@ -10311,6 +10401,131 @@ function dismissSmartStandard() {
 }
 
 // QUICK FILTER-KNAPPER på forsiden — stramme kriterier for kvalitet
+
+// Banner-tekster der forklarer kuratering
+const CURATION_BANNERS = {
+  fredagsfilm: {
+    icon: '🍿',
+    heading: 'Redaktionens 8 fredagsfilm-favoritter',
+    text: 'Vi har håndplukket disse 8 film vi tror giver den bedste fredagsaften med hele familien — en blanding af danske og nordiske klassikere og udvalgte Pixar/Disney-titler. Listen opdateres løbende.',
+    showAllType: 'all-films'
+  },
+  sma: {
+    icon: '👶',
+    heading: 'Redaktionens 8 favoritter til de mindste',
+    text: 'Disse 8 har vi håndplukket som vores tryggeste anbefalinger til 0-4-årige — fra Bluey og Bamse til Daniel Tiger. Reklamefri eller næsten-reklamefri, gode værdier, og dansk indhold prioriteret.',
+    showAllType: 'all-small'
+  },
+  apps: {
+    icon: '📱',
+    heading: 'Redaktionens 6 trygge iPad-apps',
+    text: 'Vi har håndplukket disse 6 apps vi mener du kan give dit lille barn med god samvittighed. Ingen aggressive køb-knapper, ingen vanedannende loop-mekanik — bare ting der lærer eller leger.',
+    showAllType: 'all-apps'
+  }
+};
+
+// Vis banner når en kuratéret quick filter aktiveres
+function showCurationBanner(type) {
+  const banner = document.getElementById('curationBanner');
+  if (!banner) return;
+  const config = CURATION_BANNERS[type];
+  if (!config) {
+    banner.style.display = 'none';
+    return;
+  }
+  document.getElementById('curationBannerIcon').textContent = config.icon;
+  document.getElementById('curationBannerHeading').textContent = config.heading;
+  document.getElementById('curationBannerText').textContent = config.text;
+  document.getElementById('curationBannerCta').dataset.showAllType = config.showAllType;
+  banner.style.display = '';
+}
+
+// Skjul banner
+function hideCurationBanner() {
+  const banner = document.getElementById('curationBanner');
+  if (banner) banner.style.display = 'none';
+}
+
+// "Vis alle" — udvider fra kuratéret liste til bredt resultat
+function showAllForCuration() {
+  const cta = document.getElementById('curationBannerCta');
+  if (!cta) return;
+  const showAllType = cta.dataset.showAllType;
+
+  // Fjern curated IDs men behold relevante grundfiltre
+  currentCuratedIds = null;
+  hideCurationBanner();
+
+  let title = 'Anbefalinger';
+
+  switch(showAllType) {
+    case 'all-films':
+      // Alle film for hele familien
+      currentContentType = 'film';
+      currentSafeties.add('safe');
+      currentSafeties.add('careful');
+      const safAllAF = document.getElementById('saf-all');
+      const safSafeAF = document.getElementById('saf-safe');
+      const safCarefulAF = document.getElementById('saf-careful');
+      if (safAllAF) safAllAF.classList.remove('s-active');
+      if (safSafeAF) safSafeAF.classList.add('s-active');
+      if (safCarefulAF) safCarefulAF.classList.add('s-active');
+      currentSort = 'best-score';
+      title = '🍿 Alle familievenlige film';
+      break;
+
+    case 'all-small':
+      // Alle for 0-4 år
+      currentAgeFilter = '2-4';
+      const ageBtnSm = document.querySelector('[onclick*="setAgeFilter(this,\'2-4\')"]');
+      const ageAllSm = document.getElementById('age-all');
+      if (ageBtnSm) ageBtnSm.classList.add('active');
+      if (ageAllSm) ageAllSm.classList.remove('active');
+      currentSafeties.add('safe');
+      const safAllSm = document.getElementById('saf-all');
+      const safSafeSm = document.getElementById('saf-safe');
+      if (safAllSm) safAllSm.classList.remove('s-active');
+      if (safSafeSm) safSafeSm.classList.add('s-active');
+      currentSort = 'best-score';
+      title = '👶 Alle anbefalinger for 0-4 år';
+      break;
+
+    case 'all-apps':
+      // Alle apps for små
+      currentContentType = 'app';
+      currentPlatforms.add('mobile_apps');
+      currentSafeties.add('safe');
+      currentAgeFilter = '4-6';
+      const ageBtnAp = document.querySelector('[onclick*="setAgeFilter(this,\'4-6\')"]');
+      const ageAllAp = document.getElementById('age-all');
+      if (ageBtnAp) ageBtnAp.classList.add('active');
+      if (ageAllAp) ageAllAp.classList.remove('active');
+      const safAllAp = document.getElementById('saf-all');
+      const safSafeAp = document.getElementById('saf-safe');
+      if (safAllAp) safAllAp.classList.remove('s-active');
+      if (safSafeAp) safSafeAp.classList.add('s-active');
+      currentSort = 'best-score';
+      title = '📱 Alle apps for 4-6 år';
+      break;
+  }
+
+  // Synkroniser sort
+  const sortSel = document.getElementById('sortSelect');
+  if (sortSel && currentSort) sortSel.value = currentSort;
+
+  filterAndRender();
+
+  // Opdater chip og titel
+  const chip = document.getElementById('activeQuickFilterChip');
+  const chipText = document.getElementById('activeQfText');
+  if (chip && chipText) {
+    chipText.textContent = title;
+    chip.style.display = '';
+  }
+  const browseTitle = document.getElementById('browseTitle');
+  if (browseTitle) browseTitle.textContent = title;
+}
+
 function applyQuickFilter(type, btn) {
   // Ryd alle andre filtre først
   clearAllFilters();
@@ -10383,6 +10598,13 @@ function applyQuickFilter(type, btn) {
     activeQuickFilter = type;
   }
 
+  // Vis curation banner hvis det er en kuratéret type
+  if (CURATION_BANNERS[type]) {
+    showCurationBanner(type);
+  } else {
+    hideCurationBanner();
+  }
+
   // Scroll til resultaterne
   setTimeout(() => {
     const browseSection = document.getElementById('page-browse') || document.querySelector('.cards-grid');
@@ -10411,6 +10633,7 @@ function hideActiveQuickFilterChip() {
   if (chip) chip.style.display = 'none';
   activeQuickFilter = null;
   document.querySelectorAll('.quick-filter-btn').forEach(b => b.classList.remove('active'));
+  hideCurationBanner();
 }
 
 // Sprint 3a-fix: Vælg/fravælg alle platforme i en kategori
