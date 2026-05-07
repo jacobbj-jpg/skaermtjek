@@ -8951,6 +8951,8 @@ let currentFilter = 'all';
 let currentAgeFilter = 'all';
 // Quick filter: content_type-begrænsning ('film', 'app', 'channel', 'serie' eller null)
 let currentContentType = null;
+// Quick filter: kuratéret ID-liste (i specifik rækkefølge)
+let currentCuratedIds = null;
 // Sprint 3a: multi-select for safety og platform
 let currentSafeties = new Set(); // tom = "alle"
 let currentPlatforms = new Set(); // tom = "alle"
@@ -9871,6 +9873,8 @@ function clearAllFilters() {
 
   // Quick filter content_type
   currentContentType = null;
+  // Quick filter kuratéret ID-liste
+  currentCuratedIds = null;
 
   // Alder
   currentAgeFilter = 'all';
@@ -10371,12 +10375,10 @@ function applyQuickFilter(type, btn) {
       break;
 
     case 'social':
-      // Sociale medier — TikTok, Instagram, Snapchat, Discord
-      // YouTube er bevidst udeladt fordi det primært er passivt børneindhold (Bamse, Ramasjang osv.)
-      currentPlatforms.add('tiktok');
-      currentPlatforms.add('instagram');
-      currentPlatforms.add('snapchat');
-      currentPlatforms.add('discord');
+      // Kuratéret: kun de 6 vigtigste hovedplatforme i forældre-relevans-rækkefølge
+      // TikTok først (mest forældrefrygt), derefter Snapchat, Instagram, Discord, Reels, Pinterest
+      // Vi springer subniveau-titler over (fitness, dans, stories, influencer osv.)
+      currentCuratedIds = [916, 926, 919, 966, 1013, 967];
       title = '📲 Sociale medier-tjek';
       break;
 
@@ -10555,6 +10557,22 @@ function _doFilterAndRender() {
   // QUICK FILTER: content_type-begrænsning (kun film, kun apps osv.)
   if (currentContentType) {
     data = data.filter(d => d.content_type === currentContentType);
+  }
+
+  // QUICK FILTER: kuratéret ID-liste (eksplicit rækkefølge bevares)
+  if (currentCuratedIds && Array.isArray(currentCuratedIds)) {
+    const idSet = new Set(currentCuratedIds.map(String));
+    data = data.filter(d => idSet.has(String(d.id)));
+    // Sortér i den rækkefølge IDs er listet
+    data.sort((a, b) => {
+      const aIdx = currentCuratedIds.indexOf(Number(a.id)) >= 0 
+        ? currentCuratedIds.indexOf(Number(a.id))
+        : currentCuratedIds.indexOf(String(a.id));
+      const bIdx = currentCuratedIds.indexOf(Number(b.id)) >= 0
+        ? currentCuratedIds.indexOf(Number(b.id))
+        : currentCuratedIds.indexOf(String(b.id));
+      return aIdx - bIdx;
+    });
   }
 
   // PLATFORM — multi-select med JSONB-array support
@@ -10736,9 +10754,9 @@ function _doFilterAndRender() {
 
   updateFilterSummary();
   if (typeof updateClearButtons === 'function') updateClearButtons();
-  // PAKKE 2: Sortering — men kun hvis brugeren IKKE søger
-  // (Søgning har sin egen relevans-sortering der ikke må overskrives)
-  if (!currentSearch) {
+  // PAKKE 2: Sortering — men kun hvis brugeren IKKE søger eller bruger kuratéret liste
+  // (Søgning og kuratering har deres egne rækkefølger der ikke må overskrives)
+  if (!currentSearch && !currentCuratedIds) {
     data = applySort(data);
   }
   renderCards(data);
