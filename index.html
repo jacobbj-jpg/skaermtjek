@@ -9039,6 +9039,8 @@ let currentAgeFilter = 'all';
 let currentContentType = null;
 // Quick filter: kuratéret ID-liste (i specifik rækkefølge)
 let currentCuratedIds = null;
+// Quick filter: aldersgruppe-range fra "Vis alle" på aldersgrupper
+let currentAgeRange = null; // {min, max} eller null
 // Sprint 3a: multi-select for safety og platform
 let currentSafeties = new Set(); // tom = "alle"
 let currentPlatforms = new Set(); // tom = "alle"
@@ -9961,6 +9963,8 @@ function clearAllFilters() {
   currentContentType = null;
   // Quick filter kuratéret ID-liste
   currentCuratedIds = null;
+  // Quick filter aldersgruppe-range
+  currentAgeRange = null;
 
   // Alder
   currentAgeFilter = 'all';
@@ -10455,9 +10459,13 @@ function showAgeCurationBanner(ageKey) {
   // innerHTML for at understøtte links i tekst (11-13 og 14+ har links til andre quick filters)
   document.getElementById('curationBannerText').innerHTML = config.text;
 
-  // Skjul "Vis alle"-knappen på aldersgrupper — banneret peger på andre quick filters via tekst-links i stedet
+  // Vis "Vis alle"-knap der udvider fra kuratéret liste til alle vurderinger i aldersgruppen
   const cta = document.getElementById('curationBannerCta');
-  if (cta) cta.style.display = 'none';
+  if (cta) {
+    cta.style.display = '';
+    cta.dataset.showAllType = 'age-' + ageKey;
+    cta.textContent = 'Vis alle for ' + config.label + ' →';
+  }
 
   banner.style.display = '';
 }
@@ -10621,6 +10629,37 @@ function showAllForCuration() {
       if (safSafeAp) safSafeAp.classList.add('s-active');
       currentSort = 'best-score';
       title = '📱 Alle apps for 4-6 år';
+      break;
+
+    // ALDERSGRUPPE-CASES — udvider fra kuraterede 20 til alle vurderinger i aldersgruppen
+    case 'age-under4':
+      currentAgeRange = { min: 2, max: 4 };
+      currentSort = 'best-score';
+      title = '👶 Alle vurderinger for under 4 år';
+      break;
+
+    case 'age-5-7':
+      currentAgeRange = { min: 5, max: 7 };
+      currentSort = 'best-score';
+      title = '🌳 Alle vurderinger for 5–7 år';
+      break;
+
+    case 'age-8-10':
+      currentAgeRange = { min: 8, max: 10 };
+      currentSort = 'best-score';
+      title = '🌲 Alle vurderinger for 8–10 år';
+      break;
+
+    case 'age-11-13':
+      currentAgeRange = { min: 11, max: 13 };
+      currentSort = 'best-score';
+      title = '🎮 Alle vurderinger for 11–13 år';
+      break;
+
+    case 'age-14plus':
+      currentAgeRange = { min: 14, max: 99 };
+      currentSort = 'best-score';
+      title = '🎯 Alle vurderinger for 14+ år';
       break;
   }
 
@@ -10886,6 +10925,15 @@ function _doFilterAndRender() {
         ? currentCuratedIds.indexOf(Number(b.id))
         : currentCuratedIds.indexOf(String(b.id));
       return aIdx - bIdx;
+    });
+  }
+
+  // QUICK FILTER: aldersgruppe-range fra "Vis alle" på aldersgrupper
+  if (currentAgeRange && currentAgeRange.min !== undefined) {
+    data = data.filter(d => {
+      const age = d.recommended_age;
+      if (age == null) return false;
+      return age >= currentAgeRange.min && age <= currentAgeRange.max;
     });
   }
 
