@@ -4734,8 +4734,8 @@ input.autofilled, textarea.autofilled {
       <button class="quick-filter-btn" onclick="applyQuickFilter('social', this)" aria-label="Sociale medier-tjek">
         <span class="qf-icon">📲</span> Sociale medier-tjek
       </button>
-      <button class="quick-filter-btn" onclick="applyQuickFilter('fraraded', this)" aria-label="Vis det der frarådes">
-        <span class="qf-icon">🚫</span> Vis det der frarådes
+      <button class="quick-filter-btn" onclick="applyQuickFilter('fraraded', this)" aria-label="Høj risiko-score">
+        <span class="qf-icon">🚫</span> Høj risiko-score
       </button>
     </div>
   </div>
@@ -10226,7 +10226,7 @@ function quickShowFraraded() {
   const sortSel = document.getElementById('sortSelect');
   if (sortSel) sortSel.value = 'ai-high';
   filterAndRender();
-  document.getElementById('browseTitle').textContent = 'Indhold der frarådes';
+  document.getElementById('browseTitle').textContent = 'Høj risiko-score';
   // Scroll til resultaterne
   const browseSection = document.getElementById('page-browse');
   if (browseSection) browseSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -10437,7 +10437,7 @@ const AGE_CURATION = {
     label: '11–13 år',
     title: '🎮 11–13 år',
     heading: 'De 20 mest omtalte titler hos 11-13-årige',
-    text: 'Det her er ikke "vi anbefaler" — det er hvad der reelt fylder hos aldersgruppen lige nu. Mange af titlerne er populære blandt eleverne i klassen, ikke nødvendigvis noget vi mener alle 11-13-årige bør se. Brug listen til at gå informeret ind i samtalen — og se også vores oversigt over <a href="javascript:void(0)" onclick="applyQuickFilter(\'social\', null)" style="color:var(--accent);font-weight:600;text-decoration:underline">📲 sociale medier-tjek</a> og <a href="javascript:void(0)" onclick="applyQuickFilter(\'fraraded\', null)" style="color:var(--accent);font-weight:600;text-decoration:underline">🚫 indhold der frarådes</a>.',
+    text: 'Det her er ikke "vi anbefaler" — det er hvad der reelt fylder hos aldersgruppen lige nu. Mange af titlerne er populære blandt eleverne i klassen, ikke nødvendigvis noget vi mener alle 11-13-årige bør se. Brug listen til at gå informeret ind i samtalen — og se også vores oversigt over <a href="javascript:void(0)" onclick="applyQuickFilter(\'social\', null)" style="color:var(--accent);font-weight:600;text-decoration:underline">📲 sociale medier-tjek</a> og <a href="javascript:void(0)" onclick="applyQuickFilter(\'fraraded\', null)" style="color:var(--accent);font-weight:600;text-decoration:underline">🚫 høj risiko-score</a>.',
     ids: [1596, 1008, 901, 956, 903, 908, 1059, 1969, 878, 1565, 1101, 1724, 1721, 966, 1830, 945, 942, 1405, 1396, 1829],
     showLinks: true
   },
@@ -10446,7 +10446,7 @@ const AGE_CURATION = {
     label: '14+ år',
     title: '🎯 14+ år',
     heading: 'De 20 mest omtalte titler hos 14+',
-    text: 'En oversigt over hvad teenagere reelt bruger tid på — ikke en liste over hvad vi mener alle 14+ bør se. Listen findes så du som forælder kan være orienteret og forberedt på samtalen, uanset om du selv vil se titlen sammen med dit barn eller ej. Få også overblik via vores <a href="javascript:void(0)" onclick="applyQuickFilter(\'social\', null)" style="color:var(--accent);font-weight:600;text-decoration:underline">📲 sociale medier-tjek</a> og <a href="javascript:void(0)" onclick="applyQuickFilter(\'fraraded\', null)" style="color:var(--accent);font-weight:600;text-decoration:underline">🚫 indhold der frarådes</a>.',
+    text: 'En oversigt over hvad teenagere reelt bruger tid på — ikke en liste over hvad vi mener alle 14+ bør se. Listen findes så du som forælder kan være orienteret og forberedt på samtalen, uanset om du selv vil se titlen sammen med dit barn eller ej. Få også overblik via vores <a href="javascript:void(0)" onclick="applyQuickFilter(\'social\', null)" style="color:var(--accent);font-weight:600;text-decoration:underline">📲 sociale medier-tjek</a> og <a href="javascript:void(0)" onclick="applyQuickFilter(\'fraraded\', null)" style="color:var(--accent);font-weight:600;text-decoration:underline">🚫 høj risiko-score</a>.',
     ids: [916, 926, 919, 965, 927, 906, 998, 1195, 911, 1695, 895, 900, 918, 1988, 1123, 1110, 948, 1077, 941, 1078],
     showLinks: true
   }
@@ -10750,7 +10750,7 @@ function applyQuickFilter(type, btn) {
       currentSort = 'ai-high';
       const sortSelF = document.getElementById('sortSelect');
       if (sortSelF) sortSelF.value = 'ai-high';
-      title = '🚫 Indhold der frarådes';
+      title = '🚫 Høj risiko-score';
       break;
   }
 
