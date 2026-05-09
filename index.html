@@ -9041,6 +9041,8 @@ let currentContentType = null;
 let currentCuratedIds = null;
 // Quick filter: aldersgruppe-range fra "Vis alle" på aldersgrupper
 let currentAgeRange = null; // {min, max} eller null
+// Quick filter: minimum AI-score (bruges af "Vis det der frarådes")
+let currentMinScore = null; // null = ingen filtrering, ellers tal (fx 7)
 // Sprint 3a: multi-select for safety og platform
 let currentSafeties = new Set(); // tom = "alle"
 let currentPlatforms = new Set(); // tom = "alle"
@@ -9965,6 +9967,8 @@ function clearAllFilters() {
   currentCuratedIds = null;
   // Quick filter aldersgruppe-range
   currentAgeRange = null;
+  // Quick filter minimum AI-score
+  currentMinScore = null;
 
   // Alder
   currentAgeFilter = 'all';
@@ -10019,7 +10023,9 @@ function updateClearButtons() {
       currentAgeFilter !== 'all' ||
       currentSafeties.size > 0 ||
       currentPlatforms.size > 0 ||
-      currentValueTags.size > 0;
+      currentValueTags.size > 0 ||
+      currentMinScore !== null ||
+      currentCuratedIds !== null;
     filterClear.style.display = hasActiveFilter ? 'inline-flex' : 'none';
   }
 }
@@ -10539,6 +10545,16 @@ const CURATION_BANNERS = {
     heading: 'Redaktionens 6 trygge iPad-apps',
     text: 'Vi har håndplukket disse 6 apps vi mener du kan give dit lille barn med god samvittighed. Ingen aggressive køb-knapper, ingen vanedannende loop-mekanik — bare ting der lærer eller leger.',
     showAllType: 'all-apps'
+  },
+  social: {
+    icon: '📲',
+    heading: 'Vores tjek af de 8 mest brugte platforme',
+    text: 'Hver titel er en gennemgang af hvad platformen faktisk indeholder, hvad forskningen viser, og hvad du som forælder kan være forberedt på. Det er ikke en liste over hvad vi anbefaler — det er en liste over hvad børn og unge faktisk bruger.'
+  },
+  fraraded: {
+    icon: '🚫',
+    heading: 'Titler med høj AI-score (7+)',
+    text: 'Disse titler er vurderet som problematiske ud fra de 10 kategorier vi måler på — ofte fordi de scorer højt på vanedannelse, kommercielt pres, voldeligt eller upassende indhold. Brug listen som forberedelse til samtalen om hvorfor noget frarådes — ikke som en "no go"-liste der diskuterer sig selv.'
   }
 };
 
@@ -10556,9 +10572,15 @@ function showCurationBanner(type) {
   document.getElementById('curationBannerText').textContent = config.text;
   const ctaEl = document.getElementById('curationBannerCta');
   if (ctaEl) {
-    ctaEl.dataset.showAllType = config.showAllType;
-    ctaEl.style.display = ''; // Genvis CTA (kan have været skjult af aldersgruppe-banner)
-    ctaEl.textContent = 'Vis alle →';
+    if (config.showAllType) {
+      // Banner med "Vis alle"-knap (fredagsfilm, sma, apps)
+      ctaEl.dataset.showAllType = config.showAllType;
+      ctaEl.style.display = '';
+      ctaEl.textContent = 'Vis alle →';
+    } else {
+      // Banner uden "Vis alle"-knap (social, fraraded — listen er allerede komplet)
+      ctaEl.style.display = 'none';
+    }
   }
   banner.style.display = '';
 }
@@ -10722,12 +10744,9 @@ function applyQuickFilter(type, btn) {
       break;
 
     case 'fraraded':
-      // Brug eksisterende quickShowFraraded-logik
-      currentSafeties.add('notrec');
-      const btnF = document.getElementById('saf-notrec');
-      const safAllFr = document.getElementById('saf-all');
-      if (btnF) btnF.classList.add('s-active');
-      if (safAllFr) safAllFr.classList.remove('s-active');
+      // Strammet filter: kun titler med AI-score >= 7 (ikke baseret på recommended_age alene)
+      // Dette undgår at "for gammelt til mit barn"-titler med score 5-6 vises som "frarådes"
+      currentMinScore = 7;
       currentSort = 'ai-high';
       const sortSelF = document.getElementById('sortSelect');
       if (sortSelF) sortSelF.value = 'ai-high';
@@ -10992,6 +11011,16 @@ function _doFilterAndRender() {
 
   // Safety — multi-select. Hvis tom Set, betyder det "alle"
   const getScore = d => (d.parent_votes > 0 && d.parent_score) ? d.parent_score : calcAvg(d.ai_scores || d.scores);
+
+  // QUICK FILTER: minimum AI-score (bruges af "Vis det der frarådes")
+  // Filtrerer kun på AI-score (ikke parent_score) for at sikre konsistens
+  if (currentMinScore !== null) {
+    data = data.filter(d => {
+      const aiScore = calcAvg(d.ai_scores || d.scores);
+      return aiScore >= currentMinScore;
+    });
+  }
+
   const ageMaxMap = {'0-2':2, '2-4':4, '4-6':6, '7-9':9, '10-12':12, '13+':17};
   const chosenMaxAge = currentAgeFilter !== 'all' ? (ageMaxMap[currentAgeFilter] || 99) : null;
 
