@@ -10553,7 +10553,7 @@ const CURATION_BANNERS = {
   },
   fraraded: {
     icon: '🚫',
-    heading: 'Titler med høj AI-score (7+)',
+    heading: 'Titler med høj AI-score (6+)',
     text: 'Disse titler er vurderet som problematiske ud fra de 10 kategorier vi måler på — ofte fordi de scorer højt på vanedannelse, kommercielt pres, voldeligt eller upassende indhold. Brug listen som forberedelse til samtalen om hvorfor noget frarådes — ikke som en "no go"-liste der diskuterer sig selv.'
   }
 };
@@ -10744,9 +10744,9 @@ function applyQuickFilter(type, btn) {
       break;
 
     case 'fraraded':
-      // Strammet filter: kun titler med AI-score >= 7 (ikke baseret på recommended_age alene)
-      // Dette undgår at "for gammelt til mit barn"-titler med score 5-6 vises som "frarådes"
-      currentMinScore = 7;
+      // Strammet filter: kun titler med AI-score >= 6 (ikke baseret på recommended_age alene)
+      // Dette undgår at "for gammelt til mit barn"-titler med lav score vises som "frarådes"
+      currentMinScore = 6;
       currentSort = 'ai-high';
       const sortSelF = document.getElementById('sortSelect');
       if (sortSelF) sortSelF.value = 'ai-high';
