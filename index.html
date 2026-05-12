@@ -4725,8 +4725,8 @@ input.autofilled, textarea.autofilled {
   <div class="quick-filters-inner">
     <div class="quick-filters-label">⚡ Hurtigvalg — find det rigtige med ét klik</div>
     <div class="quick-filters-row">
-      <button class="quick-filter-btn" onclick="applyQuickFilter('fredagsfilm', this)" aria-label="Fredagsfilm til familien">
-        <span class="qf-icon">🍿</span> Fredagsfilm til familien
+      <button class="quick-filter-btn" onclick="applyQuickFilter('fredagsfilm', this)" aria-label="Familiefilm til weekenden">
+        <span class="qf-icon">🍿</span> Familiefilm til weekenden
       </button>
       <button class="quick-filter-btn" onclick="applyQuickFilter('apps', this)" aria-label="Apps til de mindste">
         <span class="qf-icon">📱</span> Apps til de mindste
@@ -10237,7 +10237,7 @@ const SMART_STANDARDS = {
   jul: {
     icon: '🎄',
     heading: 'Glædelig december',
-    text: 'Julemåned med skole-pauser og hyggetid. Vi henter snart en kurateret julekalender- og julefilm-liste — indtil da kan du udforske fredagsfilm-favoritterne.',
+    text: 'Julemåned med skole-pauser og hyggetid. Vi henter snart en kurateret julekalender- og julefilm-liste — indtil da kan du udforske familiefilm-favoritterne.',
     cta: 'Vis familiefilm',
     filterType: 'fredagsfilm',
     title: '🍿 Familiefilm'
@@ -10245,7 +10245,7 @@ const SMART_STANDARDS = {
   sommerferie: {
     icon: '☀️',
     heading: 'Sommerferie',
-    text: 'Sommerferien er længere end vi husker fra egen barndom. Her er fredagsfilm-favoritterne — gode til regnvejrsdage og lange aftener.',
+    text: 'Sommerferien er længere end vi husker fra egen barndom. Her er familiefilm-favoritterne — gode til regnvejrsdage og lange aftener.',
     cta: 'Vis familiefilm',
     filterType: 'fredagsfilm',
     title: '🍿 Familiefilm'
@@ -10254,9 +10254,9 @@ const SMART_STANDARDS = {
     icon: '🍿',
     heading: 'Det er fredag aften',
     text: 'Her er filmene hele familien kan blive enige om at se sammen.',
-    cta: 'Vis fredagsfilm',
+    cta: 'Vis familiefilm',
     filterType: 'fredagsfilm',
-    title: '🍿 Fredagsfilm til familien'
+    title: '🍿 Familiefilm til weekenden'
   },
   weekend_morgen: {
     icon: '🌞',
@@ -10278,9 +10278,9 @@ const SMART_STANDARDS = {
     icon: '🎬',
     heading: 'Weekend-aften',
     text: 'Weekend-aften er perfekt til en længere film eller en sæson af noget alle vil se.',
-    cta: 'Vis fredagsfilm',
+    cta: 'Vis familiefilm',
     filterType: 'fredagsfilm',
-    title: '🍿 Fredagsfilm til familien'
+    title: '🍿 Familiefilm til weekenden'
   },
   hverdag_aften: {
     icon: '🌙',
@@ -10546,8 +10546,8 @@ function applyAgeCuration(el, ageKey) {
 const CURATION_BANNERS = {
   fredagsfilm: {
     icon: '🍿',
-    heading: 'Redaktionens 8 fredagsfilm-favoritter',
-    text: 'Vi har håndplukket disse 8 film vi tror giver den bedste fredagsaften med hele familien — en blanding af danske og nordiske klassikere og udvalgte Pixar/Disney-titler. Listen opdateres løbende.',
+    heading: 'Redaktionens 8 familiefilm-favoritter',
+    text: 'Vi har håndplukket disse 8 film vi tror giver den bedste filmaften med hele familien — en blanding af danske og nordiske klassikere og udvalgte Pixar/Disney-titler. Listen opdateres løbende.',
     showAllType: 'all-films'
   },
   sma: {
@@ -10733,7 +10733,7 @@ function applyQuickFilter(type, btn) {
       // Kuratéret: 8 håndplukkede film — danske klassikere + Pixar/Disney
       // Krummerne, Antboy, Brødrene Løvehjerte, Coco, De Utrolige, Frost, Find Nemo, Min Søsters Børn
       currentCuratedIds = [1332, 1336, 1105, 1043, 1392, 1040, 1383, 1335];
-      title = '🍿 Fredagsfilm til familien';
+      title = '🍿 Familiefilm til weekenden';
       break;
 
     case 'sma':
