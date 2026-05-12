@@ -4696,7 +4696,7 @@ input.autofilled, textarea.autofilled {
       <span class="hero-age-chip" onclick="applyAgeCuration(this,'11-13')">11–13 år</span>
       <span class="hero-age-chip" onclick="applyAgeCuration(this,'14plus')">14+ år</span>
     </div>
-    <div class="hero-age-help">Klik på en aldersgruppe — vi viser vores håndplukkede top 20 til netop den alder.</div>
+    <div class="hero-age-help">Klik på en aldersgruppe — vi viser 20 titler, mange børn ser i den alder.</div>
     <div class="hero-stats">
       <div class="stat"><strong id="statCount">—</strong>Vurderinger</div>
       <div class="stat"><strong id="statPlatforms">14</strong>Platforme</div>
@@ -4771,12 +4771,11 @@ input.autofilled, textarea.autofilled {
       </div>
       <div class="filter-pills-wrap">
         <span class="filter-pill active" id="age-all" onclick="setAgeFilter(this,'all')">Alle</span>
-        <span class="filter-pill" onclick="setAgeFilter(this,'0-2')">👶 0–2 år</span>
-        <span class="filter-pill" onclick="setAgeFilter(this,'2-4')">🧒 2–4 år</span>
-        <span class="filter-pill" onclick="setAgeFilter(this,'4-6')">4–6 år</span>
-        <span class="filter-pill" onclick="setAgeFilter(this,'7-9')">7–9 år</span>
-        <span class="filter-pill" onclick="setAgeFilter(this,'10-12')">10–12 år</span>
-        <span class="filter-pill" onclick="setAgeFilter(this,'13+')">13+ år</span>
+        <span class="filter-pill" onclick="setAgeFilter(this,'under4')">👶 Under 4 år</span>
+        <span class="filter-pill" onclick="setAgeFilter(this,'5-7')">🌳 5–7 år</span>
+        <span class="filter-pill" onclick="setAgeFilter(this,'8-10')">🌲 8–10 år</span>
+        <span class="filter-pill" onclick="setAgeFilter(this,'11-13')">🎮 11–13 år</span>
+        <span class="filter-pill" onclick="setAgeFilter(this,'14plus')">🎯 14+ år</span>
       </div>
     </div>
 
@@ -4784,7 +4783,7 @@ input.autofilled, textarea.autofilled {
     <div class="filter-section" id="safetySection">
       <div class="filter-section-title">
         <span class="filter-step">2</span> <span id="safetyTitle">Sikkerhed</span>
-        <span style="font-size:11px;color:var(--muted);font-weight:400;font-style:italic" id="safetyHint">— vælg barnets alder først for personlige anbefalinger</span>
+        <span style="font-size:11px;color:var(--muted);font-weight:400;font-style:italic" id="safetyHint">— vælg barnets alder først for personlige resultater</span>
       </div>
       <div class="filter-pills-wrap">
         <span class="safety-btn s-active" id="saf-all" onclick="setSafety(this,'all')">Alle</span>
@@ -4803,25 +4802,10 @@ input.autofilled, textarea.autofilled {
       </div>
     </div>
 
-    <!-- TRIN 3: VÆRDIER (multi-select, OR-logik) -->
+    <!-- TRIN 3: PLATFORM (multi-select, foldbare grupper) -->
     <div class="filter-section">
       <div class="filter-section-title">
-        <span class="filter-step">3</span> Hvad leder du efter?
-        <span style="font-size:11px;color:var(--muted);font-weight:400;font-style:italic">— vælg flere</span>
-      </div>
-      <div class="filter-pills-wrap">
-        <span class="value-btn" id="val-laering" onclick="setValueTag(this,'laering')">🌱 Læring</span>
-        <span class="value-btn" id="val-kreativitet" onclick="setValueTag(this,'kreativitet')">🎨 Kreativitet</span>
-        <span class="value-btn" id="val-aktiv" onclick="setValueTag(this,'aktiv')">🏃 Aktiv</span>
-        <span class="value-btn" id="val-socialt" onclick="setValueTag(this,'socialt')">🤝 Socialt & empati</span>
-        <span class="value-btn" id="val-fordybelse" onclick="setValueTag(this,'fordybelse')">🧩 Fordybelse</span>
-      </div>
-    </div>
-
-    <!-- TRIN 4: PLATFORM (multi-select, foldbare grupper) -->
-    <div class="filter-section">
-      <div class="filter-section-title">
-        <span class="filter-step">4</span> Hvor ses indholdet?
+        <span class="filter-step">3</span> Hvor ses indholdet?
         <span style="font-size:11px;color:var(--muted);font-weight:400;font-style:italic">— vælg flere</span>
       </div>
       <div class="filter-pills-wrap">
@@ -4895,6 +4879,21 @@ input.autofilled, textarea.autofilled {
       </div>
     </div>
 
+    <!-- TRIN 4: VÆRDIER (multi-select, OR-logik) -->
+    <div class="filter-section">
+      <div class="filter-section-title">
+        <span class="filter-step">4</span> Hvad leder du efter?
+        <span style="font-size:11px;color:var(--muted);font-weight:400;font-style:italic">— vælg flere</span>
+      </div>
+      <div class="filter-pills-wrap">
+        <span class="value-btn" id="val-laering" onclick="setValueTag(this,'laering')">🌱 Læring</span>
+        <span class="value-btn" id="val-kreativitet" onclick="setValueTag(this,'kreativitet')">🎨 Kreativitet</span>
+        <span class="value-btn" id="val-aktiv" onclick="setValueTag(this,'aktiv')">🏃 Aktiv</span>
+        <span class="value-btn" id="val-socialt" onclick="setValueTag(this,'socialt')">🤝 Socialt & empati</span>
+        <span class="value-btn" id="val-fordybelse" onclick="setValueTag(this,'fordybelse')">🧩 Fordybelse</span>
+      </div>
+    </div>
+
     <div class="filter-actions">
       <button class="filter-close-btn" onclick="toggleFilters()">✕ Luk</button>
       <button class="filter-reset-btn" onclick="clearAllFilters()" title="Nulstil alle filtre">Nulstil</button>
@@ -4918,7 +4917,7 @@ input.autofilled, textarea.autofilled {
       </div>
     </div>
     <div class="section-head">
-      <h2 id="browseTitle">Anbefalinger</h2>
+      <h2 id="browseTitle">Vurderinger</h2>
       <span class="count" id="browseCount"></span>
       <div id="activeQuickFilterChip" class="active-qf-chip" style="display:none">
         <span id="activeQfText"></span>
@@ -9590,7 +9589,8 @@ function updateFilterSummary() {
 
   // Alder først (vigtigste)
   if (currentAgeFilter !== 'all') {
-    parts.push('👶 ' + currentAgeFilter + ' år');
+    const ageLabels = {'under4':'👶 Under 4 år', '5-7':'🌳 5–7 år', '8-10':'🌲 8–10 år', '11-13':'🎮 11–13 år', '14plus':'🎯 14+ år'};
+    parts.push(ageLabels[currentAgeFilter] || ('👶 ' + currentAgeFilter + ' år'));
   }
 
   // Værdi-tags
@@ -9929,7 +9929,7 @@ function doSearch() {
   currentSearch = document.getElementById('heroSearch').value.trim().toLowerCase();
   filterAndRender();
   if (currentSearch) document.getElementById('browseTitle').textContent = `Resultater for "${currentSearch}"`;
-  else document.getElementById('browseTitle').textContent = 'Anbefalinger';
+  else document.getElementById('browseTitle').textContent = 'Vurderinger';
   updateClearButtons();
 }
 
@@ -9952,7 +9952,7 @@ function clearSearch() {
   currentSearch = '';
   filterAndRender();
   updateClearButtons();
-  document.getElementById('browseTitle').textContent = 'Anbefalinger';
+  document.getElementById('browseTitle').textContent = 'Vurderinger';
 }
 
 // PAKKE 2: Ryd alle filtre på én gang (alder, sikkerhed, platforme, værdier, søgning)
@@ -10011,7 +10011,7 @@ function clearAllFilters() {
 
   filterAndRender();
   updateClearButtons();
-  document.getElementById('browseTitle').textContent = 'Anbefalinger';
+  document.getElementById('browseTitle').textContent = 'Vurderinger';
 }
 
 // PAKKE 2: Vis/skjul ryd-knap (filter-bjælke) baseret på om filtre er aktive
@@ -10110,7 +10110,7 @@ function updateSafetySection(age, ageLabel) {
     section.classList.remove('aged-context');
     title.textContent = 'Sikkerhed';
     if (hint) {
-      hint.textContent = '— vælg barnets alder først for personlige anbefalinger';
+      hint.textContent = '— vælg barnets alder først for personlige resultater';
       hint.style.fontStyle = 'italic';
     }
     labels.forEach(l => {
@@ -10237,18 +10237,18 @@ const SMART_STANDARDS = {
   jul: {
     icon: '🎄',
     heading: 'Glædelig december',
-    text: 'Det er julekalender-tid. Vi har samlet de bedste julefilm og julekalendere til familien.',
-    cta: 'Vis julehyggen',
-    filterType: 'fredagsfilm', // viser film for hele familien
-    title: '🎄 Julehygge — film og julekalendere'
+    text: 'Julemåned med skole-pauser og hyggetid. Vi henter snart en kurateret julekalender- og julefilm-liste — indtil da kan du udforske fredagsfilm-favoritterne.',
+    cta: 'Vis familiefilm',
+    filterType: 'fredagsfilm',
+    title: '🍿 Familiefilm'
   },
   sommerferie: {
     icon: '☀️',
-    heading: 'Sommerferie-streamingguide',
-    text: 'Sommerferien er længere end vi husker fra egen barndom. Her er det vi har samlet til regnvejrsdage og lange aftener.',
-    cta: 'Vis sommeranbefalinger',
+    heading: 'Sommerferie',
+    text: 'Sommerferien er længere end vi husker fra egen barndom. Her er fredagsfilm-favoritterne — gode til regnvejrsdage og lange aftener.',
+    cta: 'Vis familiefilm',
     filterType: 'fredagsfilm',
-    title: '☀️ Sommerferie — film og serier'
+    title: '🍿 Familiefilm'
   },
   fredagsfilm: {
     icon: '🍿',
@@ -10261,10 +10261,10 @@ const SMART_STANDARDS = {
   weekend_morgen: {
     icon: '🌞',
     heading: 'God lørdag morgen',
-    text: 'Lørdag formiddag er ofte familiehygge i sofaen. Her er det vi kan se sammen — på tværs af aldersgrupper.',
-    cta: 'Vis lørdagshygge',
-    filterType: 'fredagsfilm',
-    title: '🌞 Lørdagshygge'
+    text: 'Familiehygge i sofaen? Tjek titler vi har vurderet til 5-7-årige — gode startpunkter for fælles morgen-tv.',
+    cta: 'Vis titler til 5-7 år',
+    filterType: 'age-5-7',
+    title: '🌳 5–7 år'
   },
   sondag_morgen: {
     icon: '🌳',
@@ -10278,25 +10278,25 @@ const SMART_STANDARDS = {
     icon: '🎬',
     heading: 'Weekend-aften',
     text: 'Weekend-aften er perfekt til en længere film eller en sæson af noget alle vil se.',
-    cta: 'Vis weekendanbefalinger',
+    cta: 'Vis fredagsfilm',
     filterType: 'fredagsfilm',
-    title: '🎬 Weekend-aften'
+    title: '🍿 Fredagsfilm til familien'
   },
   hverdag_aften: {
     icon: '🌙',
     heading: 'Tid til ro før sengetid',
-    text: '30 minutter inden sengetid? Korte, beroligende ting fungerer bedst — så søvnen ikke får kamp med dopaminen.',
-    cta: 'Vis rolige anbefalinger',
-    filterType: 'sma',
-    title: '🌙 Rolige ting før sengetid'
+    text: '30 minutter inden sengetid? Korte, rolige ting fungerer bedst — så søvnen ikke får kamp med dopaminen. Tjek titler vi har vurderet til 5-7-årige som et roligt startpunkt.',
+    cta: 'Vis titler til 5-7 år',
+    filterType: 'age-5-7',
+    title: '🌳 5–7 år'
   },
   hverdag_eftermiddag: {
     icon: '🥕',
     heading: 'God eftermiddag',
-    text: 'Travl eftermiddag? Her er rolige, korte ting der lader dig nå dagens øvrige opgaver — uden voldsomme dopamin-kicks.',
-    cta: 'Vis rolige anbefalinger',
-    filterType: 'sma',
-    title: '🥕 Rolige hverdagsanbefalinger'
+    text: 'Travl eftermiddag? Tjek titler vi har vurderet til 5-7-årige — korte, rolige ting uden voldsomme dopamin-kicks.',
+    cta: 'Vis titler til 5-7 år',
+    filterType: 'age-5-7',
+    title: '🌳 5–7 år'
   },
   morgen: {
     icon: '🌅',
@@ -10392,6 +10392,22 @@ function applySmartStandard() {
     return;
   }
 
+  // Special-case: aldersgruppe (peg på AGE_CURATION via hero-chip)
+  if (filterType && filterType.startsWith('age-')) {
+    const ageKey = filterType.replace('age-', '');
+    // Find tilsvarende hero-chip og kald applyAgeCuration
+    const chips = document.querySelectorAll('.hero-age-chip');
+    let chipEl = null;
+    chips.forEach(c => {
+      if (c.onclick && c.onclick.toString().includes(`'${ageKey}'`)) chipEl = c;
+    });
+    if (chipEl && typeof applyAgeCuration === 'function') {
+      applyAgeCuration(chipEl, ageKey);
+      dismissSmartStandard();
+      return;
+    }
+  }
+
   // Brug den eksisterende quick-filter-logik
   applyQuickFilter(filterType, null);
 
@@ -10412,31 +10428,31 @@ const AGE_CURATION = {
     icon: '👶',
     label: 'Under 4 år',
     title: '👶 Under 4 år',
-    heading: 'Redaktionens 20 favoritter til de mindste',
-    text: 'Vores håndplukkede anbefalinger til 0-4-årige — fra Bluey og Bamse til Cirkeline og Toca Boca. Sundhedsstyrelsen anbefaler at 0-2-årige helst undgår skærme, og at 2-4-årige bruger maks 1 time om dagen. Dette er de tryggeste valg vi kan give dig.',
+    heading: '20 titler, mange børn ser i denne alder',
+    text: 'En oversigt over titler vi har vurderet til 0-4-årige — fra Bluey og Bamse til Cirkeline og Toca Boca. Sundhedsstyrelsen anbefaler at 0-2-årige helst undgår skærme, og at 2-4-årige bruger maks 1 time om dagen. Brug listen som inspiration og som forberedelse til samtalen — ikke som en facit-liste.',
     ids: [992, 904, 912, 1349, 1084, 1353, 1064, 1004, 1435, 1433, 1005, 1350, 1722, 1411, 885, 973, 1372, 1352, 1252, 1882]
   },
   '5-7': {
     icon: '🌳',
     label: '5–7 år',
     title: '🌳 5–7 år',
-    heading: 'Redaktionens 20 favoritter til 5-7-årige',
-    text: 'En god blanding af klassiske familiefilm, første spil til Switch og iPad, samt udvalgte YouTube-kanaler vi mener leverer noget reelt værdifuldt til denne aldersgruppe.',
+    heading: '20 titler, mange børn ser i denne alder',
+    text: 'En blanding af klassiske familiefilm, første spil til Switch og iPad, samt YouTube-kanaler der fylder hos aldersgruppen. Brug listen som inspiration og forberedelse — ikke som en liste over hvad alle 5-7-årige bør se.',
     ids: [1332, 1040, 1043, 1362, 921, 962, 898, 1452, 1093, 937, 1325, 1218, 1322, 1355, 1337, 1625, 1646, 1734, 1755, 1331]
   },
   '8-10': {
     icon: '🌲',
     label: '8–10 år',
     title: '🌲 8–10 år',
-    heading: 'Redaktionens 20 favoritter til 8-10-årige',
-    text: 'Børnene er nu klar til større fortællinger og rigtige spil. Vi har samlet et mix af stærke film, populære spil som Minecraft og Roblox, samt YouTubere der både underholder og lærer.',
+    heading: '20 titler, mange børn ser i denne alder',
+    text: 'Børnene er nu klar til større fortællinger og rigtige spil. Listen samler titler der fylder hos aldersgruppen — film, populære spil som Minecraft og Roblox, samt YouTubere. Brug den som inspiration og samtalegrundlag — ikke som en facit-liste.',
     ids: [1363, 1105, 1336, 1759, 1333, 1060, 890, 892, 1010, 894, 884, 1100, 1560, 939, 1709, 889, 1116, 902, 1146, 1334]
   },
   '11-13': {
     icon: '🎮',
     label: '11–13 år',
     title: '🎮 11–13 år',
-    heading: 'De 20 mest omtalte titler hos 11-13-årige',
+    heading: '20 titler, mange børn ser i denne alder',
     text: 'Det her er ikke "vi anbefaler" — det er hvad der reelt fylder hos aldersgruppen lige nu. Mange af titlerne er populære blandt eleverne i klassen, ikke nødvendigvis noget vi mener alle 11-13-årige bør se. Brug listen til at gå informeret ind i samtalen — og se også vores oversigt over <a href="javascript:void(0)" onclick="applyQuickFilter(\'social\', null)" style="color:var(--accent);font-weight:600;text-decoration:underline">📲 sociale medier-tjek</a> og <a href="javascript:void(0)" onclick="applyQuickFilter(\'fraraded\', null)" style="color:var(--accent);font-weight:600;text-decoration:underline">🚫 høj risiko-score</a>.',
     ids: [1596, 1008, 901, 956, 903, 908, 1059, 1969, 878, 1565, 1101, 1724, 1721, 966, 1830, 945, 942, 1405, 1396, 1829],
     showLinks: true
@@ -10445,7 +10461,7 @@ const AGE_CURATION = {
     icon: '🎯',
     label: '14+ år',
     title: '🎯 14+ år',
-    heading: 'De 20 mest omtalte titler hos 14+',
+    heading: '20 titler, mange unge ser i denne alder',
     text: 'En oversigt over hvad teenagere reelt bruger tid på — ikke en liste over hvad vi mener alle 14+ bør se. Listen findes så du som forælder kan være orienteret og forberedt på samtalen, uanset om du selv vil se titlen sammen med dit barn eller ej. Få også overblik via vores <a href="javascript:void(0)" onclick="applyQuickFilter(\'social\', null)" style="color:var(--accent);font-weight:600;text-decoration:underline">📲 sociale medier-tjek</a> og <a href="javascript:void(0)" onclick="applyQuickFilter(\'fraraded\', null)" style="color:var(--accent);font-weight:600;text-decoration:underline">🚫 høj risiko-score</a>.',
     ids: [916, 926, 919, 965, 927, 906, 998, 1195, 911, 1695, 895, 900, 918, 1988, 1123, 1110, 948, 1077, 941, 1078],
     showLinks: true
@@ -10601,7 +10617,7 @@ function showAllForCuration() {
   currentCuratedIds = null;
   hideCurationBanner();
 
-  let title = 'Anbefalinger';
+  let title = 'Vurderinger';
 
   switch(showAllType) {
     case 'all-films':
@@ -10632,7 +10648,7 @@ function showAllForCuration() {
       if (safAllSm) safAllSm.classList.remove('s-active');
       if (safSafeSm) safSafeSm.classList.add('s-active');
       currentSort = 'best-score';
-      title = '👶 Alle anbefalinger for 0-4 år';
+      title = '👶 Alle vurderinger for 0-4 år';
       break;
 
     case 'all-apps':
@@ -10710,7 +10726,7 @@ function applyQuickFilter(type, btn) {
   document.querySelectorAll('.quick-filter-btn').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
 
-  let title = 'Anbefalinger';
+  let title = 'Vurderinger';
 
   switch(type) {
     case 'fredagsfilm':
@@ -10758,6 +10774,22 @@ function applyQuickFilter(type, btn) {
   const sortSel = document.getElementById('sortSelect');
   if (sortSel && currentSort) sortSel.value = currentSort;
 
+  // BUG-FIX: Når en kurateret liste er aktiv, bevarer vi den specifikke rækkefølge.
+  // Brugeren kan ikke ændre sortering uden at gå ud af quick-filter først.
+  if (sortSel) {
+    if (currentCuratedIds) {
+      sortSel.disabled = true;
+      sortSel.style.opacity = '0.4';
+      sortSel.style.cursor = 'not-allowed';
+      sortSel.title = 'Sortering er låst i kuraterede lister — klik X på chippen for at vælge anden sortering';
+    } else {
+      sortSel.disabled = false;
+      sortSel.style.opacity = '';
+      sortSel.style.cursor = '';
+      sortSel.title = '';
+    }
+  }
+
   filterAndRender();
   const browseTitle = document.getElementById('browseTitle');
   if (browseTitle) browseTitle.textContent = title;
@@ -10802,7 +10834,15 @@ function clearActiveQuickFilter() {
   hideActiveQuickFilterChip();
   document.querySelectorAll('.quick-filter-btn').forEach(b => b.classList.remove('active'));
   const browseTitle = document.getElementById('browseTitle');
-  if (browseTitle) browseTitle.textContent = 'Anbefalinger';
+  if (browseTitle) browseTitle.textContent = 'Vurderinger';
+  // Genaktivér sorteringen
+  const sortSel = document.getElementById('sortSelect');
+  if (sortSel) {
+    sortSel.disabled = false;
+    sortSel.style.opacity = '';
+    sortSel.style.cursor = '';
+    sortSel.title = '';
+  }
   filterAndRender();
 }
 
@@ -10987,14 +11027,17 @@ function _doFilterAndRender() {
 
   // Age — filter on AI recommended_age OR legacy age_group
   if (currentAgeFilter !== 'all') {
-    const ageMap = {'0-2':[0,2], '2-4':[2,4], '4-6':[4,6], '7-9':[7,9], '10-12':[10,12], '13+':[13,99]};
+    const ageMap = {'under4':[0,4], '5-7':[5,7], '8-10':[8,10], '11-13':[11,13], '14plus':[14,99]};
+    // Legacy age_group fallback-værdier i databasen (gamle keys)
+    const legacyAgeGroups = {'under4':['0-2','2-4','4-6'], '5-7':['4-6','7-9'], '8-10':['7-9','10-12'], '11-13':['10-12','13+'], '14plus':['13+']};
     const [minA, maxA] = ageMap[currentAgeFilter] || [0, 99];
+    const legacyGroups = legacyAgeGroups[currentAgeFilter] || [];
     data = data.filter(d => {
       if (d.recommended_age) {
         return d.recommended_age >= minA && d.recommended_age <= maxA;
       }
-      // fallback to age_group
-      return d.age_group === currentAgeFilter;
+      // fallback to age_group (legacy data)
+      return legacyGroups.includes(d.age_group);
     });
   }
 
@@ -11021,7 +11064,7 @@ function _doFilterAndRender() {
     });
   }
 
-  const ageMaxMap = {'0-2':2, '2-4':4, '4-6':6, '7-9':9, '10-12':12, '13+':17};
+  const ageMaxMap = {'under4':4, '5-7':7, '8-10':10, '11-13':13, '14plus':18};
   const chosenMaxAge = currentAgeFilter !== 'all' ? (ageMaxMap[currentAgeFilter] || 99) : null;
 
   // Hjælpefunktion: returner sikkerhedskategori for en titel
@@ -11123,7 +11166,10 @@ function _doFilterAndRender() {
 
   // Update browse title
   const parts = [];
-  if (currentAgeFilter !== 'all') parts.push(currentAgeFilter + ' år');
+  if (currentAgeFilter !== 'all') {
+    const ageLbls = {'under4':'Under 4 år', '5-7':'5–7 år', '8-10':'8–10 år', '11-13':'11–13 år', '14plus':'14+ år'};
+    parts.push(ageLbls[currentAgeFilter] || (currentAgeFilter + ' år'));
+  }
   if (currentSafety === 'safe') parts.push('kun trygge');
   if (currentSafety === 'caution') parts.push('med forbehold');
   if (currentSafety === 'mature') parts.push('til de ældre');
@@ -11131,7 +11177,7 @@ function _doFilterAndRender() {
   if (currentSearch) parts.push('"' + currentSearch + '"');
   document.getElementById('browseTitle').textContent = parts.length
     ? 'Filtreret: ' + parts.join(' · ')
-    : 'Anbefalinger';
+    : 'Vurderinger';
 
   // Sprint 3a: dynamisk tæller på "Vis resultater" knap
   const countEl = document.getElementById('resultCount');
@@ -11139,8 +11185,8 @@ function _doFilterAndRender() {
     countEl.textContent = data.length === 0
       ? 'Ingen resultater'
       : data.length === 1
-        ? 'Vis 1 anbefaling'
-        : `Vis ${data.length} anbefalinger`;
+        ? 'Vis 1 vurdering'
+        : `Vis ${data.length} vurderinger`;
   }
 
   updateFilterSummary();
@@ -11149,6 +11195,24 @@ function _doFilterAndRender() {
   // (Søgning og kuratering har deres egne rækkefølger der ikke må overskrives)
   if (!currentSearch && !currentCuratedIds) {
     data = applySort(data);
+  }
+
+  // UX: Disable sort-dropdown når kuratéret liste er aktiv (forhindrer forvirring
+  // om at sort-valg ikke virker pga. kuratéret rækkefølge)
+  const sortSelEl = document.getElementById('sortSelect');
+  const sortWrapEl = document.querySelector('.sort-wrap');
+  if (sortSelEl) {
+    if (currentCuratedIds) {
+      sortSelEl.disabled = true;
+      sortSelEl.style.opacity = '0.4';
+      sortSelEl.style.cursor = 'not-allowed';
+      if (sortWrapEl) sortWrapEl.title = 'Sortering deaktiveret — kuratéret rækkefølge er aktiv';
+    } else {
+      sortSelEl.disabled = false;
+      sortSelEl.style.opacity = '';
+      sortSelEl.style.cursor = '';
+      if (sortWrapEl) sortWrapEl.title = '';
+    }
   }
   renderCards(data);
 }
@@ -12223,8 +12287,8 @@ function scoreColor(v) {
 
 function getVerdict(avg, item) {
   // Aldersrelativ vurdering hvis bruger har valgt alder OG vi har recommended_age
-  const ageMaxMap = {'0-2':2, '2-4':4, '4-6':6, '7-9':9, '10-12':12, '13+':17};
-  const ageLabels = {'0-2':'0-2 år', '2-4':'2-4 år', '4-6':'4-6 år', '7-9':'7-9 år', '10-12':'10-12 år', '13+':'13+ år'};
+  const ageMaxMap = {'under4':4, '5-7':7, '8-10':10, '11-13':13, '14plus':18};
+  const ageLabels = {'under4':'Under 4 år', '5-7':'5–7 år', '8-10':'8–10 år', '11-13':'11–13 år', '14plus':'14+ år'};
   const chosenMaxAge = currentAgeFilter !== 'all' ? (ageMaxMap[currentAgeFilter] || null) : null;
   const ageLabel = currentAgeFilter !== 'all' ? ageLabels[currentAgeFilter] : null;
   const recAge = item?.recommended_age;
