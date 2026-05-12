@@ -3748,6 +3748,94 @@ input[type="range"]::-webkit-slider-thumb {
   gap: 16px;
 }
 
+/* UDFORSK TEMAER */
+.temaer-header {
+  margin-bottom: 32px;
+}
+
+.temaer-header h2 {
+  font-family: 'Fraunces', serif;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
+}
+
+.temaer-header p {
+  color: var(--muted);
+  font-size: 15px;
+  font-weight: 300;
+  max-width: 640px;
+}
+
+.temaer-section {
+  margin-bottom: 36px;
+}
+
+.temaer-section-title {
+  font-family: 'Fraunces', serif;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 14px;
+  color: var(--ink);
+}
+
+.temaer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.tema-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tema-card:hover {
+  box-shadow: 0 6px 20px var(--shadow);
+  transform: translateY(-2px);
+  border-color: rgba(200,90,42,0.3);
+}
+
+.tema-card-icon {
+  font-size: 32px;
+  line-height: 1;
+}
+
+.tema-card-title {
+  font-family: 'Fraunces', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-top: 4px;
+}
+
+.tema-card-desc {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.45;
+  flex: 1;
+}
+
+.tema-card-count {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--accent);
+  margin-top: 6px;
+}
+
+.tema-card-current {
+  border: 2px solid var(--accent);
+  background: linear-gradient(135deg, #fff 0%, #fff5ee 100%);
+}
+
 .article-card {
   background: white;
   border: 1px solid var(--border);
@@ -4655,6 +4743,7 @@ input.autofilled, textarea.autofilled {
   <div class="nav-logo" onclick="showPage('browse')">Skærm<span>Tjek</span></div>
   <div class="nav-links">
     <button class="nav-btn active" id="nav-browse" onclick="showPage('browse')">🔍<span class="nav-btn-text"> Søg</span></button>
+    <button class="nav-btn" id="nav-temaer" onclick="showPage('temaer')">🎨<span class="nav-btn-text"> Udforsk</span></button>
     <button class="nav-btn" id="nav-viden" onclick="showPage('viden')">📚<span class="nav-btn-text"> Viden</span></button>
     <button class="nav-btn" id="nav-blog" onclick="showPage('blog')">✍️<span class="nav-btn-text"> Blog</span></button>
     <button class="nav-btn" id="nav-om" onclick="showPage('om')">💬<span class="nav-btn-text"> Om</span></button>
@@ -5697,6 +5786,26 @@ input.autofilled, textarea.autofilled {
       <div id="adminQueue" style="display:flex;flex-direction:column;gap:12px">
         <div style="color:var(--muted);font-size:14px;text-align:center;padding:40px">Henter...</div>
       </div>
+    </div>
+  </div>
+
+  <!-- UDFORSK TEMAER PAGE -->
+  <div class="page" id="page-temaer">
+    <div class="temaer-header">
+      <h2>🎨 Udforsk temaer</h2>
+      <p>Kuraterede lister samlet omkring tema, sæson eller indholdstype. Brug dem som inspiration eller som udgangspunkt for samtale med dit barn.</p>
+    </div>
+    <div id="temaerCurrentSection" class="temaer-section" style="display:none">
+      <h3 class="temaer-section-title">⭐ Aktuelt</h3>
+      <div id="temaerCurrentGrid" class="temaer-grid"></div>
+    </div>
+    <div class="temaer-section">
+      <h3 class="temaer-section-title">📅 Sæson & højtider</h3>
+      <div id="temaerSeasonGrid" class="temaer-grid"></div>
+    </div>
+    <div class="temaer-section">
+      <h3 class="temaer-section-title">🎬 Indhold & format</h3>
+      <div id="temaerContentGrid" class="temaer-grid"></div>
     </div>
   </div>
 
@@ -9083,9 +9192,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const afsnilParam = urlParams.get('afsnit');
   const pageParam = urlParams.get('page');
   const postParam = urlParams.get('post');
+  const temaParam = urlParams.get('tema');
 
-  // Hvis ?page=om|viden|blog|browse|submit — naviger til den side
-  if (pageParam && ['om', 'viden', 'blog', 'browse', 'submit'].includes(pageParam)) {
+  // Hvis ?tema=XYZ — åbn det specifikke tema (tager prioritet over ?page)
+  if (temaParam) {
+    setTimeout(() => {
+      if (typeof openTema === 'function') openTema(temaParam);
+    }, 200);
+  } else if (pageParam && ['om', 'viden', 'blog', 'browse', 'submit', 'temaer'].includes(pageParam)) {
+    // Hvis ?page=om|viden|blog|browse|submit|temaer — naviger til den side
     setTimeout(() => {
       showPage(pageParam);
       // Hvis ?post=ID — åbn den specifikke blogpost
@@ -9380,6 +9495,100 @@ function showPage(page) {
   if (page === 'viden') renderArticles();
   if (page === 'blog') renderBlog();
   if (page === 'admin') loadAdminQueue();
+  if (page === 'temaer') renderTemaer();
+}
+
+// UDFORSK TEMAER — render alle kuraterede temaer som klikbare kort
+function renderTemaer() {
+  const currentSection = document.getElementById('temaerCurrentSection');
+  const currentGrid = document.getElementById('temaerCurrentGrid');
+  const seasonGrid = document.getElementById('temaerSeasonGrid');
+  const contentGrid = document.getElementById('temaerContentGrid');
+  if (!seasonGrid || !contentGrid) return;
+
+  // Find aktive temaer (tids-aktiverede der er relevante lige nu)
+  const activeKeys = [];
+  Object.entries(CURATED_THEMES).forEach(([key, theme]) => {
+    if (typeof theme.active === 'function' && theme.active()) {
+      activeKeys.push(key);
+    }
+  });
+
+  // Render "Aktuelt"-sektion (kun hvis der er aktive temaer)
+  if (activeKeys.length > 0) {
+    currentSection.style.display = '';
+    currentGrid.innerHTML = activeKeys.map(key => renderTemaCard(key, CURATED_THEMES[key], true)).join('');
+  } else {
+    currentSection.style.display = 'none';
+  }
+
+  // Render sæson-temaer (alle, ikke kun aktive — så brugeren kan se hvad der kommer)
+  const seasonKeys = Object.keys(CURATED_THEMES).filter(k => CURATED_THEMES[k].section === 'season');
+  seasonGrid.innerHTML = seasonKeys.map(key => renderTemaCard(key, CURATED_THEMES[key], false)).join('');
+
+  // Render content-temaer (altid synlige)
+  const contentKeys = Object.keys(CURATED_THEMES).filter(k => CURATED_THEMES[k].section === 'content');
+  contentGrid.innerHTML = contentKeys.map(key => renderTemaCard(key, CURATED_THEMES[key], false)).join('');
+}
+
+function renderTemaCard(key, theme, isCurrent) {
+  const count = (theme.ids && theme.ids.length) || 0;
+  const countText = count > 0 ? `${count} titler` : 'Kommer snart';
+  const cardClass = isCurrent ? 'tema-card tema-card-current' : 'tema-card';
+  return `
+    <div class="${cardClass}" onclick="openTema('${key}')">
+      <div class="tema-card-icon">${theme.icon}</div>
+      <div class="tema-card-title">${theme.title}</div>
+      <div class="tema-card-desc">${theme.desc}</div>
+      <div class="tema-card-count">${countText} →</div>
+    </div>
+  `;
+}
+
+// Åbn et tema — naviger til browse-side og aktivér kuratéret filter
+function openTema(themeKey) {
+  const theme = CURATED_THEMES[themeKey];
+  if (!theme) return;
+
+  // Hvis temaet ikke har IDs endnu, vis besked
+  if (!theme.ids || theme.ids.length === 0) {
+    alert('Dette tema er endnu ikke fyldt med titler. Vi arbejder på det!');
+    return;
+  }
+
+  // Naviger til browse-siden
+  showPage('browse');
+
+  // Ryd alle eksisterende filtre
+  if (typeof clearAllFilters === 'function') clearAllFilters();
+
+  // Aktivér det kuraterede tema
+  currentCuratedIds = theme.ids;
+
+  // Vis curation banner med temaets tekst
+  const banner = document.getElementById('curationBanner');
+  if (banner) {
+    document.getElementById('curationBannerIcon').textContent = theme.icon;
+    document.getElementById('curationBannerHeading').textContent = theme.heading;
+    document.getElementById('curationBannerText').textContent = theme.text;
+    const ctaEl = document.getElementById('curationBannerCta');
+    if (ctaEl) ctaEl.style.display = 'none'; // Temaer har ingen "Vis alle"-knap
+    banner.style.display = '';
+  }
+
+  // Opdater browseTitle og activeQuickFilterChip
+  const title = theme.icon + ' ' + theme.title;
+  document.getElementById('browseTitle').textContent = title;
+  if (typeof showActiveQuickFilterChip === 'function') {
+    showActiveQuickFilterChip(title);
+  }
+
+  // Render
+  if (typeof filterAndRender === 'function') filterAndRender();
+
+  // Scroll til toppen af resultatlisten
+  const browseSection = document.getElementById('page-browse');
+  if (browseSection) browseSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // ---- VIDEN / ARTICLES ----
@@ -10421,6 +10630,85 @@ function dismissSmartStandard() {
   if (section) section.style.display = 'none';
   sessionStorage.setItem('smartStandardDismissed', '1');
 }
+
+// CURATED_THEMES — temalister tilgængelige via "Udforsk"-siden og deep links
+// Hvert tema kan linkes til via skaermtjek.dk/?tema=XYZ
+// section: 'season' eller 'content' — bestemmer hvor på Udforsk-siden de vises
+// active: optional funktion der returnerer true hvis temaet skal vises som "Aktuelt"
+const CURATED_THEMES = {
+  danske_youtubere: {
+    icon: '🇩🇰',
+    title: 'Danske YouTubere',
+    desc: 'YouTube-kanaler på dansk — fra DR Ramasjang til de største teenager-favoritter. Sorteret efter alder så du nemt kan finde noget der passer.',
+    heading: 'Danske YouTubere — sorteret efter alder',
+    text: 'En oversigt over de danske YouTubere vi har vurderet, sorteret fra yngste til ældste publikum. Dansksproget indhold gør det nemmere at følge med, snakke om indholdet, og fange ting der er upassende. Brug listen som inspiration — ikke som en facit-liste over hvad alle børn bør se.',
+    ids: [969, 971, 920, 1533, 1546, 1545, 1093, 1555, 1091, 1021, 1554, 1556, 1548, 1550, 1534, 883, 882, 1020, 1537, 1540, 1539, 1552, 1532, 1090, 1535, 1092, 1094, 1553, 1549, 1551, 1542, 1536, 1538, 1543, 1541, 1022, 1089],
+    section: 'content'
+  },
+  halloween: {
+    icon: '🎃',
+    title: 'Halloween-film',
+    desc: 'Uhyggelige (men ikke for skræmmende) film til halloween-aften. Sorteret efter alder så du kan finde noget der passer.',
+    heading: 'Halloween-film',
+    text: 'En kuratéret liste til den mørke tid. Mange af titlerne er sjove-uhyggelige snarere end skræmmende — perfekte til at se sammen og snakke om bagefter.',
+    ids: [], // TODO
+    section: 'season',
+    active: () => {
+      const m = new Date().getMonth() + 1;
+      return m === 10; // Oktober
+    }
+  },
+  julehygge: {
+    icon: '🎄',
+    title: 'Jul & julekalendere',
+    desc: 'Danske og internationale julekalendere, julefilm og hyggelige titler til december.',
+    heading: 'Jul & julekalendere',
+    text: 'Den årlige tradition. En blanding af klassiske danske julekalendere, internationale julefilm og hyggelige titler der passer til den mørke tid.',
+    ids: [], // TODO
+    section: 'season',
+    active: () => new Date().getMonth() === 11 // December
+  },
+  sommerferie: {
+    icon: '☀️',
+    title: 'Sommerferie',
+    desc: 'Lange film, eventyrlige serier og spil til lange feriedage og regnvejrsdage.',
+    heading: 'Sommerferie',
+    text: 'Sommerferien er lang. Vi har samlet titler der holder hele dagen — eventyr, klassikere og spil med god gameplay-loop uden vanedannelse.',
+    ids: [], // TODO
+    section: 'season',
+    active: () => {
+      const m = new Date().getMonth() + 1;
+      return m >= 6 && m <= 8;
+    }
+  },
+  lego: {
+    icon: '🧱',
+    title: 'LEGO',
+    desc: 'LEGO-film, LEGO-serier og LEGO-spil. Universel kreativitet på tværs af medier.',
+    heading: 'LEGO på skærmen',
+    text: 'LEGO-universet strækker sig over film, serier og spil. Det er ofte humoristisk, ikke for voldsomt, og rummer plads til kreativitet. En god indgang til større fortællinger.',
+    ids: [], // TODO
+    section: 'content'
+  },
+  pixar: {
+    icon: '🎬',
+    title: 'Pixar-film',
+    desc: 'Pixars film er klassisk familieunderholdning med følelser, humor og dybde.',
+    heading: 'Pixar-film',
+    text: 'Pixars film tør tale om svære ting — sorg, vækst, identitet — uden at miste humøret. De fleste passer fra 4-5 år og opefter.',
+    ids: [], // TODO
+    section: 'content'
+  },
+  fortrolige_serier: {
+    icon: '🌙',
+    title: 'Før sengetid (rolige)',
+    desc: 'Korte, beroligende titler til de sidste 20-30 minutter inden sengetid. Lavt tempo, ingen voldsomme dopamin-kicks.',
+    heading: 'Rolige ting før sengetid',
+    text: 'Forskningen er klar: voldsomt indhold inden sengetid forstyrrer søvnen. Her er titler i lavt tempo der hjælper med at lande inden natten.',
+    ids: [], // TODO
+    section: 'content'
+  }
+};
 
 // ALDERSGRUPPE-KURATERING — 5 grupper med 20 håndplukkede titler hver
 const AGE_CURATION = {
