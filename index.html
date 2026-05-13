@@ -3830,6 +3830,14 @@ input[type="range"]::-webkit-slider-thumb {
   color: var(--ink);
 }
 
+.temaer-section-sub {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: -8px;
+  margin-bottom: 14px;
+  font-style: italic;
+}
+
 .temaer-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -5850,12 +5858,13 @@ input.autofilled, textarea.autofilled {
       <div id="temaerCurrentGrid" class="temaer-grid"></div>
     </div>
     <div class="temaer-section">
-      <h3 class="temaer-section-title">📅 Sæson & højtider</h3>
-      <div id="temaerSeasonGrid" class="temaer-grid"></div>
-    </div>
-    <div class="temaer-section">
       <h3 class="temaer-section-title">🎬 Indhold & format</h3>
       <div id="temaerContentGrid" class="temaer-grid"></div>
+    </div>
+    <div class="temaer-section">
+      <h3 class="temaer-section-title">📅 Sæson & højtider</h3>
+      <p class="temaer-section-sub">Disse temaer er især aktuelle i deres respektive måneder — fx Halloween i oktober og Jul i december.</p>
+      <div id="temaerSeasonGrid" class="temaer-grid"></div>
     </div>
   </div>
 
@@ -9249,12 +9258,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // Hvis ?tema=XYZ — åbn det specifikke tema (tager prioritet over ?page)
   if (temaParam) {
     setTimeout(() => {
-      if (typeof openTema === 'function') openTema(temaParam);
+      if (typeof openTema === 'function') openTema(temaParam, true);
     }, 200);
   } else if (pageParam && ['om', 'viden', 'blog', 'browse', 'submit', 'temaer'].includes(pageParam)) {
     // Hvis ?page=om|viden|blog|browse|submit|temaer — naviger til den side
     setTimeout(() => {
-      showPage(pageParam);
+      showPage(pageParam, true);
       // Hvis ?post=ID — åbn den specifikke blogpost
       if (pageParam === 'blog' && postParam) {
         setTimeout(() => openBlogPost(postParam), 200);
@@ -9278,11 +9287,11 @@ document.addEventListener('DOMContentLoaded', () => {
       if (item) openDetail(item.id);
     }, 400);
   }
-  // Vis demo-data øjeblikkeligt
+  // Vis demo-data øjeblikkeligt (men IKKE updateStats — det venter på rigtig data
+  // for at undgå at vise demo-tal som blinker forkert ved sideload)
   allData = DEMO_DATA;
-  updateStats();
   filterAndRender();
-  // Hent Supabase-data i baggrunden
+  // Hent Supabase-data i baggrunden — først DA vises statCount
   loadData();
   if (DEMO_MODE) {
     document.getElementById('setupBanner').style.display = 'flex';
@@ -9295,11 +9304,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Handle browser back/forward
 window.addEventListener('popstate', (e) => {
+  // Håndter vurderingsside-detail
   if (e.state && e.state.detailId) {
     openDetail(e.state.detailId);
+    return;
+  }
+
+  // Luk vurderingsside-overlay hvis åbent
+  document.getElementById('detailOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+
+  // Håndter tema-state (tilbage fra et tema → gå til forrige side eller udforsk)
+  if (e.state && e.state.themeKey) {
+    // Vi er stadig på et tema — re-aktivér det
+    openTema(e.state.themeKey, true);
+    return;
+  }
+
+  // Tjek URL for ?tema= eller ?page=
+  const params = new URLSearchParams(window.location.search);
+  const temaParam = params.get('tema');
+  const pageParam = params.get('page');
+
+  if (temaParam && CURATED_THEMES[temaParam]) {
+    openTema(temaParam, true);
+  } else if (pageParam && ['om', 'viden', 'blog', 'browse', 'submit', 'temaer'].includes(pageParam)) {
+    showPage(pageParam, true);
   } else {
-    document.getElementById('detailOverlay').classList.remove('open');
-    document.body.style.overflow = '';
+    // Default: gå til forsiden (browse)
+    showPage('browse', true);
+    // Ryd eventuelle aktive temaer
+    if (typeof clearAllFilters === 'function') clearAllFilters();
   }
 });
 
@@ -9530,7 +9565,7 @@ function fallbackCopy(text) {
   document.body.removeChild(ta);
 }
 
-function showPage(page) {
+function showPage(page, skipHistory) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('page-' + page).classList.add('active');
@@ -9548,6 +9583,19 @@ function showPage(page) {
   if (page === 'blog') renderBlog();
   if (page === 'admin') loadAdminQueue();
   if (page === 'temaer') renderTemaer();
+
+  // Opdater URL og browser history (undtagen hvis vi er kaldt fra popstate eller anden funktion der allerede har gjort det)
+  if (!skipHistory) {
+    const currentParams = new URLSearchParams(window.location.search);
+    const currentPage = currentParams.get('page');
+    const currentTema = currentParams.get('tema');
+    // Push kun hvis det er en faktisk navigation til en ny side (ikke en re-render af samme side)
+    const newUrl = page === 'browse' ? window.location.pathname : (window.location.pathname + '?page=' + page);
+    const isSamePage = (page === 'browse' && !currentPage && !currentTema) || (currentPage === page);
+    if (!isSamePage) {
+      history.pushState({ pageKey: page }, '', newUrl);
+    }
+  }
 }
 
 // UDFORSK TEMAER — render alle kuraterede temaer som klikbare kort
@@ -9609,7 +9657,7 @@ function renderTemaCard(key, theme, isCurrent) {
 }
 
 // Åbn et tema — naviger til browse-side og aktivér kuratéret filter
-function openTema(themeKey) {
+function openTema(themeKey, skipHistory) {
   const theme = CURATED_THEMES[themeKey];
   if (!theme) return;
 
@@ -9621,8 +9669,20 @@ function openTema(themeKey) {
     return;
   }
 
-  // Naviger til browse-siden
-  showPage('browse');
+  // Track previous page for browser back-knap-håndtering
+  const previousPage = document.querySelector('.page.active')?.id?.replace('page-', '') || 'browse';
+
+  // Tilføj til browser-history så "tilbage" virker korrekt (medmindre vi er kaldt fra popstate)
+  if (!skipHistory) {
+    history.pushState(
+      { themeKey: themeKey, previousPage: previousPage },
+      '',
+      '?tema=' + themeKey
+    );
+  }
+
+  // Naviger til browse-siden (skipHistory: openTema håndterer history selv)
+  showPage('browse', true);
 
   // Ryd alle eksisterende filtre
   if (typeof clearAllFilters === 'function') clearAllFilters();
@@ -9636,7 +9696,8 @@ function openTema(themeKey) {
   if (banner) {
     document.getElementById('curationBannerIcon').textContent = theme.icon;
     document.getElementById('curationBannerHeading').textContent = theme.heading;
-    document.getElementById('curationBannerText').textContent = theme.text;
+    // innerHTML for at understøtte links i banner-teksten (fx link til DR's komplette A-Å oversigt)
+    document.getElementById('curationBannerText').innerHTML = theme.text;
     const ctaEl = document.getElementById('curationBannerCta');
     if (ctaEl) ctaEl.style.display = 'none'; // Temaer har ingen "Vis alle"-knap
     banner.style.display = '';
@@ -9979,7 +10040,8 @@ async function loadData() {
       if (item && !document.getElementById('detailOverlay').classList.contains('open')) openDetail(item.id);
     }
   } catch(e) {
-    // Fallback — demo data allerede vist, ingen action nødvendig
+    // Fallback — Supabase fejlede, vis demo-tællet i stedet for at hænge på "—"
+    updateStats();
   }
 }
 
@@ -11086,7 +11148,8 @@ function showCurationBanner(type) {
   }
   document.getElementById('curationBannerIcon').textContent = config.icon;
   document.getElementById('curationBannerHeading').textContent = config.heading;
-  document.getElementById('curationBannerText').textContent = config.text;
+  // innerHTML for at understøtte links i banner-tekst (fx social/fraraded kan have links)
+  document.getElementById('curationBannerText').innerHTML = config.text;
   const ctaEl = document.getElementById('curationBannerCta');
   if (ctaEl) {
     if (config.showAllType) {
