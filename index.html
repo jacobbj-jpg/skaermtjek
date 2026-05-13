@@ -1577,6 +1577,56 @@ nav {
   border-color: rgba(200,90,42,0.3);
 }
 
+/* "På vej"-kort — placeholder for endnu ikke vurderede titler */
+.pending-card {
+  background: linear-gradient(135deg, #fff 0%, #fdf6ee 100%);
+  border: 1px dashed rgba(200,90,42,0.35);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 160px;
+}
+
+.pending-card:hover {
+  border-color: rgba(200,90,42,0.7);
+  border-style: solid;
+}
+
+.pending-badge {
+  display: inline-block;
+  align-self: flex-start;
+  background: rgba(200,90,42,0.12);
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 12px;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.pending-card-title {
+  font-family: 'Fraunces', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.25;
+}
+
+.pending-card-meta {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.45;
+  flex: 1;
+}
+
+.pending-card-cta {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  margin-top: auto;
+}
+
 .card-top {
   display: flex;
   align-items: flex-start;
@@ -9147,6 +9197,8 @@ let currentAgeFilter = 'all';
 let currentContentType = null;
 // Quick filter: kuratéret ID-liste (i specifik rækkefølge)
 let currentCuratedIds = null;
+// Pending-titler vist som "på vej"-kort i bunden af en kuratéret liste
+let currentPendingItems = [];
 // Quick filter: aldersgruppe-range fra "Vis alle" på aldersgrupper
 let currentAgeRange = null; // {min, max} eller null
 // Quick filter: minimum AI-score (bruges af "Vis det der frarådes")
@@ -9532,8 +9584,19 @@ function renderTemaer() {
 }
 
 function renderTemaCard(key, theme, isCurrent) {
-  const count = (theme.ids && theme.ids.length) || 0;
-  const countText = count > 0 ? `${count} titler` : 'Kommer snart';
+  const idsCount = (theme.ids && theme.ids.length) || 0;
+  const pendingCount = (theme.pending && theme.pending.length) || 0;
+  const totalCount = idsCount + pendingCount;
+  let countText;
+  if (totalCount === 0) {
+    countText = 'Kommer snart';
+  } else if (pendingCount > 0 && idsCount > 0) {
+    countText = `${idsCount} titler + ${pendingCount} på vej`;
+  } else if (pendingCount > 0) {
+    countText = `${pendingCount} på vej`;
+  } else {
+    countText = `${idsCount} titler`;
+  }
   const cardClass = isCurrent ? 'tema-card tema-card-current' : 'tema-card';
   return `
     <div class="${cardClass}" onclick="openTema('${key}')">
@@ -9550,8 +9613,10 @@ function openTema(themeKey) {
   const theme = CURATED_THEMES[themeKey];
   if (!theme) return;
 
-  // Hvis temaet ikke har IDs endnu, vis besked
-  if (!theme.ids || theme.ids.length === 0) {
+  // Tjek om temaet har enten IDs eller pending-titler
+  const hasIds = theme.ids && theme.ids.length > 0;
+  const hasPending = theme.pending && theme.pending.length > 0;
+  if (!hasIds && !hasPending) {
     alert('Dette tema er endnu ikke fyldt med titler. Vi arbejder på det!');
     return;
   }
@@ -9563,7 +9628,8 @@ function openTema(themeKey) {
   if (typeof clearAllFilters === 'function') clearAllFilters();
 
   // Aktivér det kuraterede tema
-  currentCuratedIds = theme.ids;
+  currentCuratedIds = theme.ids || [];
+  currentPendingItems = theme.pending || [];
 
   // Vis curation banner med temaets tekst
   const banner = document.getElementById('curationBanner');
@@ -9586,9 +9652,19 @@ function openTema(themeKey) {
   // Render
   if (typeof filterAndRender === 'function') filterAndRender();
 
-  // Scroll til toppen af resultatlisten
-  const browseSection = document.getElementById('page-browse');
-  if (browseSection) browseSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  // Scroll til titlen så hele resultatområdet (inkl. curation banner) er synligt
+  // (samme tilgang som applyQuickFilter — tager højde for sticky filter-bar)
+  setTimeout(() => {
+    const target = document.getElementById('browseTitle') || document.querySelector('.section-head');
+    if (target) {
+      const rect = target.getBoundingClientRect();
+      const offset = window.innerWidth > 768 ? 120 : 80;
+      window.scrollTo({
+        top: window.scrollY + rect.top - offset,
+        behavior: 'smooth'
+      });
+    }
+  }, 100);
 }
 
 // ---- VIDEN / ARTICLES ----
@@ -9914,7 +9990,9 @@ function updateStats() {
 // ---- RENDER CARDS ----
 function renderCards(data) {
   const grid = document.getElementById('cardGrid');
-  if (!data.length) {
+  const hasPending = currentPendingItems && currentPendingItems.length > 0;
+
+  if (!data.length && !hasPending) {
     const searchTerm = currentSearch || '';
     const encodedTitle = encodeURIComponent(searchTerm);
     grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1">
@@ -9936,12 +10014,19 @@ function renderCards(data) {
     document.getElementById('browseCount').textContent = '';
     return;
   }
-  document.getElementById('browseCount').textContent = data.length + ' vurderinger';
 
-  // PAKKE 2: Performance-optimering for mobil
-  // Tidligere: 200+ setTimeout per kort med stagger animation = stort lag på mobil
-  // Nu: Direkte rendering, ingen stagger — animation klares via CSS in-view
-  grid.innerHTML = data.map(item => cardHTML(item)).join('');
+  // Count: vis både rigtige vurderinger og pending
+  const totalCount = data.length + (hasPending ? currentPendingItems.length : 0);
+  let countText = data.length + ' vurderinger';
+  if (hasPending) countText += ' + ' + currentPendingItems.length + ' på vej';
+  document.getElementById('browseCount').textContent = countText;
+
+  // Bygg HTML — normale kort først, så pending-kort
+  let html = data.map(item => cardHTML(item)).join('');
+  if (hasPending) {
+    html += currentPendingItems.map(item => pendingCardHTML(item)).join('');
+  }
+  grid.innerHTML = html;
 
   // Tilføj fade-in straks (uden stagger delay)
   // Brug requestAnimationFrame for at lade browseren rendere først
@@ -9968,6 +10053,23 @@ function getRelatedLink(item) {
   );
   if (!related) return '';
   const div = document.createElement('div'); div.className = 'card-read-more'; div.setAttribute('onclick', 'event.stopPropagation();openArticle(' + JSON.stringify(related.id) + ')'); div.textContent = '📚 ' + related.title + ' →'; return div.outerHTML;
+}
+
+// "På vej"-kort: rendres for titler i CURATED_THEMES.pending arrays
+// Repræsenterer titler vi ved er relevante for et tema, men endnu ikke har vurderet
+function pendingCardHTML(item) {
+  const ageText = item.age ? ' · ca. ' + item.age + '+' : '';
+  const platformText = item.platform ? ' · ' + item.platform : '';
+  const safeTitle = (item.title || '').replace(/'/g, "\\'");
+  const platformArg = item.platform ? "'" + item.platform + "'" : 'null';
+  return `
+    <div class="content-card pending-card" onclick="prefillAndGo('${safeTitle}', null, ${platformArg})">
+      <div class="pending-badge">⏳ Vurdering på vej</div>
+      <div class="pending-card-title">${item.title}</div>
+      <div class="pending-card-meta">${item.note || 'Vi har ikke vurderet denne endnu'}${ageText}${platformText}</div>
+      <div class="pending-card-cta">✏️ Vær den første til at vurdere →</div>
+    </div>
+  `;
 }
 
 function cardHTML(item) {
@@ -10174,6 +10276,8 @@ function clearAllFilters() {
   currentContentType = null;
   // Quick filter kuratéret ID-liste
   currentCuratedIds = null;
+  // Pending-titler vist som "på vej"-kort
+  currentPendingItems = [];
   // Quick filter aldersgruppe-range
   currentAgeRange = null;
   // Quick filter minimum AI-score
@@ -10646,10 +10750,42 @@ const CURATED_THEMES = {
   danske_youtubere: {
     icon: '🇩🇰',
     title: 'Danske YouTubere',
-    desc: 'YouTube-kanaler på dansk — fra DR Ramasjang til de største teenager-favoritter. Sorteret efter alder så du nemt kan finde noget der passer.',
+    desc: 'YouTube-kanaler på dansk — sorteret efter alder så du nemt kan finde noget der passer. Listen opdateres løbende.',
     heading: 'Danske YouTubere — sorteret efter alder',
-    text: 'En oversigt over de danske YouTubere vi har vurderet, sorteret fra yngste til ældste publikum. Dansksproget indhold gør det nemmere at følge med, snakke om indholdet, og fange ting der er upassende. Brug listen som inspiration — ikke som en facit-liste over hvad alle børn bør se.',
-    ids: [969, 971, 920, 1533, 1546, 1545, 1093, 1555, 1091, 1021, 1554, 1556, 1548, 1550, 1534, 883, 882, 1020, 1537, 1540, 1539, 1552, 1532, 1090, 1535, 1092, 1094, 1553, 1549, 1551, 1542, 1536, 1538, 1543, 1541, 1022, 1089],
+    text: 'En oversigt over de danske YouTubere vi har vurderet, sorteret fra yngste til ældste publikum. Dansksproget indhold gør det nemmere at følge med, snakke om indholdet, og fange ting der er upassende. Brug listen som inspiration — ikke som en facit-liste over hvad alle børn bør se. Vi opdaterer løbende — savner du nogen? Skriv til os.',
+    ids: [1093, 1555, 1556, 882, 1554, 1550, 883, 1091, 1021, 1548, 1534, 1020, 1539, 1551, 1549, 1542, 1535, 1536, 1090, 1553, 1541, 1543, 1540, 1092, 1094, 1532, 1552, 1538, 1022, 1089],
+    pending: [
+      { title: 'Morten Münster', age: 8, platform: 'youtube', note: 'En af Danmarks største — sketches og humor for 8-12-årige' },
+      { title: 'Naja Münster', age: 6, platform: 'youtube', note: 'Mortens lillesøster — populær blandt mindre piger' },
+      { title: 'Rasmus Brohave', age: 11, platform: 'youtube', note: 'Top-vlogger med "Hvad kan jeg blive"-serie' },
+      { title: 'Julia Sofia Aastrup', age: 13, platform: 'youtube', note: 'Lifestyle for teenagepiger, åben om angst og selvværd' },
+      { title: 'Alexander Husum', age: 11, platform: 'youtube', note: 'Pranks og humor — Guldtuben-vinder' },
+      { title: 'Lakserytteren (Rasmus Kolbe)', age: 7, platform: 'youtube', note: 'Kreativ — tegner og læser højt' },
+      { title: 'Maria Jarjis (WTF er det?!)', age: 9, platform: 'youtube', note: 'Sjælden videnskabskanal for børn' },
+      { title: 'Johannes Matzen', age: 9, platform: 'youtube', note: 'Bygger ting, opfinder — kreativ' },
+      { title: 'Niki Topgaard', age: 11, platform: 'youtube', note: 'Stor 2025-stigning blandt unge' },
+      { title: 'Coops GoCook', age: 8, platform: 'youtube', note: 'Madlavning med Gorm og Micki — klimavenligt fokus' },
+      { title: 'Kristine Sloth', age: 13, platform: 'youtube', note: 'Lifestyle for unge — autentisk tone' }
+    ],
+    section: 'content'
+  },
+  dr_ramasjang: {
+    icon: '📺',
+    title: 'DR Ramasjang-universet',
+    desc: 'DR Ramasjang er for 4-8-årige — dansksproget, reklamefrit og pædagogisk gennemtænkt. Et af de sikreste valg overhovedet.',
+    heading: 'DR Ramasjang-universet',
+    text: 'Ramasjang er DRs børnekanal for 4-8-årige — dansksproget, reklamefrit og pædagogisk gennemtænkt. Her finder du både vores vurderinger af enkelte serier og figurer, samt klassikere vi snart får vurderet. Brug listen som inspiration til hvad I kan udforske sammen.',
+    ids: [1065, 1349, 1084, 1350],
+    pending: [
+      { title: 'Motor Mille', age: 4, platform: 'dr', note: 'Ramasjang-figur — biler og motorer for de mindste' },
+      { title: 'John Dillermand', age: 5, platform: 'dr', note: 'Kontroversiel men populær — vi vurderer snart' },
+      { title: 'Pixeline', age: 4, platform: 'dr', note: 'Klassisk dansk animeret figur' },
+      { title: 'Krea', age: 5, platform: 'dr', note: 'Kreative aktiviteter og pyssel for børn' },
+      { title: 'Disko-Otto', age: 4, platform: 'dr', note: 'Musik og bevægelse på Ramasjang' },
+      { title: 'Mini Madkokken', age: 5, platform: 'dr', note: 'Madlavning for børn på Ramasjang' },
+      { title: 'Ramasjangs Køkken', age: 5, platform: 'dr', note: 'Ny serie om mad med børn' },
+      { title: 'Tassemaja', age: 4, platform: 'dr', note: 'Ramasjang-figur — co-star med Hr. Skæg' }
+    ],
     section: 'content'
   },
   halloween: {
