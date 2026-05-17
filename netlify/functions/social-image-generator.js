@@ -137,7 +137,7 @@ function scoreLabel(score) {
   const n = parseFloat(score);
   if (n <= 3) return 'Trygt valg';
   if (n <= 6) return 'Se sammen';
-  return 'Krav opmærksomhed';
+  return 'Kræver opmærksomhed';
 }
 
 // Escape HTML/XML special characters for SVG text
@@ -367,10 +367,30 @@ function generateHeadsUpCard(data) {
   const PAD = 70;
   const aiColor = scoreColor(data.aiScore);
 
-  // Top 2 bullets — typically positive + bekymring
-  const bullets = (data.bullets || []).slice(0, 2);
-  const positive = bullets[0];
-  const bekymring = bullets[1];
+  // Smart valg af positiv og bekymring fra bullets
+  // Positive ikoner (typisk associeret med positive ting): ✨💡🎨🧠📚🤝👥
+  // Bekymrings-ikoner: ⚔️🗣️🎰🔔💰🔞😨
+  const POSITIVE_ICONS = ['✨', '💡', '🎨', '🧠', '📚', '🤝', '👨‍👩‍👧', '⏱️', '🌱'];
+  const CONCERN_ICONS = ['⚔️', '🗣️', '🎰', '🔔', '💰', '🔞', '😨', '👥', '🌐'];
+
+  const allBullets = data.bullets || [];
+  let positive = allBullets.find(b => POSITIVE_ICONS.includes(b.icon));
+  let bekymring = allBullets.find(b => CONCERN_ICONS.includes(b.icon));
+
+  // Fallback: hvis ikke fundet via ikoner, brug fra ai_scores eller første/sidste bullet
+  if (!positive && allBullets.length > 0) {
+    // Tag den første der ikke er bekymring
+    positive = allBullets.find(b => !CONCERN_ICONS.includes(b.icon)) || allBullets[0];
+  }
+  if (!bekymring && allBullets.length > 1) {
+    // Tag den sidste der ikke er positiv (typisk de værste bullets er sidst i lange lister)
+    const reversed = [...allBullets].reverse();
+    bekymring = reversed.find(b => !POSITIVE_ICONS.includes(b.icon) && b !== positive) || allBullets[allBullets.length - 1];
+  }
+
+  // Hvis vi har høj AI-score (>6) men kun "positive" bullets, brug score-data direkte
+  const aiScoreNum = data.aiScore ? parseFloat(data.aiScore) : null;
+  const isHighRisk = aiScoreNum !== null && aiScoreNum > 6;
 
   const titleDisplay = shortenTitle(data.title, 22);
   const titleFontSize = data.title.length > 18 ? 80 : 100;
@@ -418,7 +438,12 @@ function generateHeadsUpCard(data) {
   <text x="${PAD + 30}" y="650" font-family="Inter, sans-serif" font-size="26" font-weight="400" fill="${COLORS.ink2}">
     ${escapeXml((positive.text || '').slice(0, 60))}
   </text>
-  ` : ''}
+  ` : `
+  <rect x="${PAD}" y="540" width="${W - 2 * PAD}" height="160" rx="12" fill="${COLORS.warm}" stroke="${COLORS.muted}" stroke-width="3"/>
+  <text x="${PAD + 30}" y="595" font-family="Inter, sans-serif" font-size="30" font-weight="700" fill="${COLORS.muted}">
+    Ingen klare styrker fremhævet
+  </text>
+  `}
   
   <!-- Bekymring -->
   ${bekymring ? `
@@ -429,7 +454,15 @@ function generateHeadsUpCard(data) {
   <text x="${PAD + 30}" y="840" font-family="Inter, sans-serif" font-size="26" font-weight="400" fill="${COLORS.ink2}">
     ${escapeXml((bekymring.text || '').slice(0, 60))}
   </text>
-  ` : ''}
+  ` : (isHighRisk ? `
+  <rect x="${PAD}" y="730" width="${W - 2 * PAD}" height="160" rx="12" fill="${COLORS.warm}" stroke="${COLORS.bad}" stroke-width="3"/>
+  <text x="${PAD + 30}" y="785" font-family="Inter, sans-serif" font-size="30" font-weight="700" fill="${COLORS.bad}">
+    ⚠️ Høj AI-score
+  </text>
+  <text x="${PAD + 30}" y="840" font-family="Inter, sans-serif" font-size="26" font-weight="400" fill="${COLORS.ink2}">
+    Score ${data.aiScore} indikerer flere bekymringspunkter
+  </text>
+  ` : '')}
   
   <!-- CTA -->
   <line x1="${PAD}" y1="${H - 110}" x2="${W - PAD}" y2="${H - 110}" stroke="${COLORS.border}" stroke-width="2"/>
