@@ -1,6 +1,6 @@
 // netlify/functions/social-post-generator.js
 // Tager rating-data via POST og genererer 3 social media-formater:
-// 1. Anbefaling (Instagram/Facebook hovedpost)
+// 1. Vurdering (Instagram/Facebook hovedpost)
 // 2. Uge-tip (Stories/kort post)
 // 3. Heads up (Facebook gruppe-stil)
 //
@@ -24,7 +24,7 @@ exports.handler = async (event, context) => {
     const body = JSON.parse(event.body || '{}');
     const {
       rating,           // Hele rating-objektet fra Supabase
-      formats = ['anbefaling', 'uge_tip', 'heads_up']
+      formats = ['vurdering', 'uge_tip', 'heads_up']
     } = body;
 
     if (!rating || !rating.title) {
@@ -75,16 +75,18 @@ exports.handler = async (event, context) => {
     };
 
     // Format-specifikke prompts
+    // VIGTIG TONE: Vi GIVER VURDERINGER, vi ANBEFALER IKKE.
+    // Forskel mellem "vi anbefaler X" (facit) og "vi har vurderet X" (grundlag for samtale).
     const FORMAT_PROMPTS = {
-      anbefaling: `Generer et Instagram/Facebook-opslag der anbefaler titlen.
+      vurdering: `Generer et Instagram/Facebook-opslag der formidler vores vurdering af titlen.
 
 Format:
 🎬 [TITEL]
-[Hook-sætning der fanger opmærksomhed]
+[Hook-sætning der fanger opmærksomhed — IKKE en anbefaling]
 
-[2-3 sætninger om hvad det er og hvorfor det er værd at se]
+[2-3 sætninger om hvad det er, hvad der fungerer, og hvad man skal være opmærksom på]
 
-✓ [Aldersanbefaling]
+✓ Vejledende fra [alder] år
 [Værdi-tags hvis relevante]
 
 📊 AI: X.X / Forældre: X.X (eller "Ingen forældrescore endnu")
@@ -92,15 +94,18 @@ Format:
 👉 Læs hele vurderingen på skaermtjek.dk
 
 Krav:
-- Skal være under 150 ord
+- MAX 150 ord
 - Hverdagsdansk, ingen fagsprog
+- VIGTIGT: Skriv aldrig "vi anbefaler" eller "anbefalet" — vi VURDERER, vi anbefaler ikke
+- Brug ord som "vi har vurderet", "fundet egnet til", "kan være et godt valg hvis"
 - Anerkend at børn ER online — vi hjælper navigere
-- Brug emojis sparsomt`,
+- Brug emojis sparsomt (max 3)
+- Tonen skal være: et grundlag for forældrenes samtale, ikke et facit`,
 
       uge_tip: `Generer en kort Instagram Stories-tekst (3-4 linjer max).
 
 Format:
-🌟 Ugens familieanbefaling
+🌟 Ugens familiefund
 "[Titel]"
 
 Tre ting du skal vide:
@@ -113,6 +118,8 @@ Tre ting du skal vide:
 Krav:
 - MAX 80 ord total
 - Skarpt og direkte — det skal læses på 5 sekunder
+- VIGTIGT: Brug IKKE ordet "anbefaling" eller "anbefaler"
+- Brug "fund", "vurdering", "tip", "egnet til", "kan være noget for"
 - Ingen unødvendige høflighedsfraser`,
 
       heads_up: `Generer et Facebook-gruppestil opslag der lyder som en forælder
@@ -126,15 +133,17 @@ Er dit barn begyndt at snakke om [titel]?
 Her er hvad I skal vide:
 [Kort sammendrag af hvad det er]
 
-✅ Det er godt fordi: [styrke]
+✅ Det kan være godt fordi: [styrke]
 ⚠️ Vær opmærksom på: [bekymring]
 
 Vurderingen findes på skaermtjek.dk
 
 Krav:
 - Lyd som en forælder — ikke en ekspert
+- VIGTIGT: Brug IKKE "anbefale" — brug "vurdering", "vi har set", "vi har vurderet"
 - Tag forældrenes side
-- Vær konkret og brugbar`
+- Vær konkret og brugbar
+- Tonen skal være information mellem forældre, ikke autoritet til underordnet`
     };
 
     const systemPrompt = `Du er social media-redaktør for SkærmTjek.dk.
@@ -145,6 +154,15 @@ Vores principper:
 - Vi anerkender at børn ER online
 - Vi er transparente om AI-genereret indhold
 - Vi prioriterer dansk indhold og dansk perspektiv
+
+KRITISK TONE-REGEL:
+SkærmTjek GIVER VURDERINGER, vi ANBEFALER IKKE.
+- "Vi anbefaler X" = en autoritet der fortæller forældre hvad de skal vælge (FORKERT)
+- "Vi har vurderet X" = neutralt grundlag for forældrenes samtale (KORREKT)
+
+Brug ALDRIG ordene "anbefaler" eller "anbefaling" eller "anbefalet" i den genererede tekst.
+Brug i stedet: "vurdering", "vurderet", "fundet egnet til", "kan være et godt valg hvis",
+"egnet for", "vejledende fra X år", "fund", "tip", "vi har set".
 
 Returnér KUN selve teksten — ingen indledning, ingen forklaring, ingen markdown.`;
 
