@@ -176,6 +176,61 @@ function shortenTitle(title, maxChars) {
 }
 
 // ──────────────────────────────────────────────
+// TAG-MAPPING: emoji + farve per kategori
+// ──────────────────────────────────────────────
+const TAG_STYLES = {
+  // Følelser & relationer
+  'empati': { emoji: '🤝', bg: '#fde8df', stroke: '#c85a2a', text: '#8a3d1a' },
+  'venskab': { emoji: '🫶', bg: '#fde8df', stroke: '#c85a2a', text: '#8a3d1a' },
+  'familieliv': { emoji: '👨‍👩‍👧', bg: '#fde8df', stroke: '#c85a2a', text: '#8a3d1a' },
+  'tryghed': { emoji: '🌙', bg: '#fde8df', stroke: '#c85a2a', text: '#8a3d1a' },
+  'kærlighed': { emoji: '💛', bg: '#fde8df', stroke: '#c85a2a', text: '#8a3d1a' },
+
+  // Læring & viden
+  'læring': { emoji: '🧠', bg: '#dcefe5', stroke: '#2a7a5c', text: '#1a5a40' },
+  'natur': { emoji: '🌱', bg: '#dcefe5', stroke: '#2a7a5c', text: '#1a5a40' },
+  'sprog': { emoji: '📚', bg: '#dcefe5', stroke: '#2a7a5c', text: '#1a5a40' },
+  'matematik': { emoji: '🔢', bg: '#dcefe5', stroke: '#2a7a5c', text: '#1a5a40' },
+  'historie': { emoji: '📜', bg: '#dcefe5', stroke: '#2a7a5c', text: '#1a5a40' },
+  'videnskab': { emoji: '🔬', bg: '#dcefe5', stroke: '#2a7a5c', text: '#1a5a40' },
+
+  // Kreativitet & udtryk
+  'kreativitet': { emoji: '🎨', bg: '#dde6f5', stroke: '#2a5a9a', text: '#1a4080' },
+  'musik': { emoji: '🎵', bg: '#dde6f5', stroke: '#2a5a9a', text: '#1a4080' },
+  'fantasi': { emoji: '✨', bg: '#dde6f5', stroke: '#2a5a9a', text: '#1a4080' },
+  'kunst': { emoji: '🖌️', bg: '#dde6f5', stroke: '#2a5a9a', text: '#1a4080' },
+  'fortælling': { emoji: '📖', bg: '#dde6f5', stroke: '#2a5a9a', text: '#1a4080' },
+
+  // Aktivitet & bevægelse
+  'aktivt': { emoji: '🏃', bg: '#fef0d5', stroke: '#c8882a', text: '#8a5a1a' },
+  'bevægelse': { emoji: '⚽', bg: '#fef0d5', stroke: '#c8882a', text: '#8a5a1a' },
+  'sport': { emoji: '🏆', bg: '#fef0d5', stroke: '#c8882a', text: '#8a5a1a' },
+
+  // Humor & glæde
+  'humor': { emoji: '😄', bg: '#fef0d5', stroke: '#c8882a', text: '#8a5a1a' },
+  'sjov': { emoji: '🎉', bg: '#fef0d5', stroke: '#c8882a', text: '#8a5a1a' },
+
+  // Dansk
+  'dansk': { emoji: '🇩🇰', bg: '#fde8df', stroke: '#c85a2a', text: '#8a3d1a' },
+  'dansksproget': { emoji: '🇩🇰', bg: '#fde8df', stroke: '#c85a2a', text: '#8a3d1a' },
+
+  // Default fallback
+  '_default': { emoji: '✨', bg: '#f0ead8', stroke: '#9a9186', text: '#3d3830' }
+};
+
+function getTagStyle(tagName) {
+  if (!tagName) return TAG_STYLES._default;
+  const normalized = String(tagName).toLowerCase().trim();
+  return TAG_STYLES[normalized] || TAG_STYLES._default;
+}
+
+// Estimer bredde af tag-chip baseret på tekst
+function tagChipWidth(tag) {
+  const len = String(tag).length;
+  return 100 + len * 18; // padding + cirka karakter-bredde
+}
+
+// ──────────────────────────────────────────────
 // CARD 1: VURDERING (1080x1080)
 // ──────────────────────────────────────────────
 function generateVurderingCard(data) {
@@ -189,15 +244,41 @@ function generateVurderingCard(data) {
   const titleFontSize = data.title.length > 25 ? 70 : data.title.length > 15 ? 88 : 100;
   const titleDisplay = shortenTitle(data.title, 40);
 
-  // Tags (max 3)
-  const tagsXml = data.tags.map((tag, i) => {
-    const x = PAD;
-    const y = 850 + (i * 60);
-    return `
-      <rect x="${x}" y="${y - 35}" width="${tag.length * 22 + 60}" height="48" rx="24" fill="${COLORS.warm}" stroke="${COLORS.border}" stroke-width="2"/>
-      <text x="${x + 30}" y="${y - 2}" font-family="Inter, sans-serif" font-size="24" font-weight="500" fill="${COLORS.ink2}">${escapeXml(tag)}</text>
+  // Værdier-sektion: smart layout der pakker chips horisontalt og wrapper hvis nødvendigt
+  let tagsSection = '';
+  if (data.tags && data.tags.length > 0) {
+    // Tag-label
+    tagsSection += `
+      <text x="${PAD}" y="830" font-family="Inter, sans-serif" font-size="22" font-weight="500" fill="${COLORS.muted}" letter-spacing="2">
+        VÆRDIER I FÅR MED
+      </text>
     `;
-  }).join('');
+
+    // Layout chips horisontalt
+    let currentX = PAD;
+    const chipY = 870;
+    const chipHeight = 56;
+    const gap = 14;
+    const maxWidth = W - 2 * PAD;
+
+    for (const tag of data.tags.slice(0, 4)) {
+      const style = getTagStyle(tag);
+      const chipText = tag.charAt(0).toUpperCase() + tag.slice(1);
+      const chipW = tagChipWidth(chipText);
+
+      if (currentX + chipW > W - PAD) break; // skip hvis ikke plads
+
+      tagsSection += `
+        <rect x="${currentX}" y="${chipY}" width="${chipW}" height="${chipHeight}" rx="28" 
+              fill="${style.bg}" stroke="${style.stroke}" stroke-width="2"/>
+        <text x="${currentX + 28}" y="${chipY + 38}" font-family="Inter, sans-serif" 
+              font-size="28" font-weight="500" fill="${style.text}">
+          ${style.emoji} ${escapeXml(chipText)}
+        </text>
+      `;
+      currentX += chipW + gap;
+    }
+  }
 
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}">
   <!-- Baggrund -->
@@ -257,8 +338,8 @@ function generateVurderingCard(data) {
     Skala 1-10 · Lavere tal = lavere bekymring
   </text>
   
-  <!-- Tags -->
-  ${tagsXml}
+  <!-- Tags-sektion -->
+  ${tagsSection}
   
   <!-- CTA i bunden -->
   <line x1="${PAD}" y1="${H - 110}" x2="${W - PAD}" y2="${H - 110}" stroke="${COLORS.border}" stroke-width="2"/>
