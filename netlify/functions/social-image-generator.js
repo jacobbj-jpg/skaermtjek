@@ -95,7 +95,12 @@ exports.handler = async (event, context) => {
           value: dims.width
         },
         font: {
-          loadSystemFonts: true
+          loadSystemFonts: true,
+          // Når SVG'en kalder Inter/Fraunces og de ikke findes,
+          // falder resvg tilbage til disse familier (rækkefølge = prioritet).
+          defaultFontFamily: 'DejaVu Sans',
+          serifFamily: 'DejaVu Serif',
+          sansSerifFamily: 'DejaVu Sans'
         }
       });
       const pngData = resvg.render();
@@ -278,7 +283,7 @@ function generateVurderingCard(data) {
   if (data.tags && data.tags.length > 0) {
     // Tag-label
     tagsSection += `
-      <text x="${PAD}" y="830" font-family="Inter, sans-serif" font-size="22" font-weight="500" fill="${COLORS.muted}" letter-spacing="2">
+      <text x="${PAD}" y="830" font-family="sans-serif" font-size="22" font-weight="500" fill="${COLORS.muted}" letter-spacing="2">
         VÆRDIER I FÅR MED
       </text>
     `;
@@ -300,7 +305,7 @@ function generateVurderingCard(data) {
       tagsSection += `
         <rect x="${currentX}" y="${chipY}" width="${chipW}" height="${chipHeight}" rx="28" 
               fill="${style.bg}" stroke="${style.stroke}" stroke-width="2"/>
-        <text x="${currentX + 28}" y="${chipY + 38}" font-family="Inter, sans-serif" 
+        <text x="${currentX + 28}" y="${chipY + 38}" font-family="sans-serif" 
               font-size="28" font-weight="500" fill="${style.text}">
           ${style.emoji} ${escapeXml(chipText)}
         </text>
@@ -317,23 +322,23 @@ function generateVurderingCard(data) {
   <rect x="0" y="0" width="${W}" height="8" fill="${COLORS.accent}"/>
   
   <!-- Skærmtjek logo -->
-  <text x="${PAD}" y="${PAD + 30}" font-family="Inter, sans-serif" font-size="28" font-weight="700" fill="${COLORS.ink}">
+  <text x="${PAD}" y="${PAD + 30}" font-family="sans-serif" font-size="28" font-weight="700" fill="${COLORS.ink}">
     Skærm<tspan fill="${COLORS.accent}">Tjek</tspan>
   </text>
   
   <!-- Platform-label -->
-  <text x="${W - PAD}" y="${PAD + 30}" text-anchor="end" font-family="Inter, sans-serif" font-size="22" font-weight="500" fill="${COLORS.muted}">
+  <text x="${W - PAD}" y="${PAD + 30}" text-anchor="end" font-family="sans-serif" font-size="22" font-weight="500" fill="${COLORS.muted}">
     ${escapeXml(data.platform.toUpperCase())}
   </text>
   
   <!-- Titel -->
-  <text x="${PAD}" y="320" font-family="Fraunces, Georgia, serif" font-size="${titleFontSize}" font-weight="700" fill="${COLORS.ink}" letter-spacing="-2">
+  <text x="${PAD}" y="320" font-family="serif" font-size="${titleFontSize}" font-weight="700" fill="${COLORS.ink}" letter-spacing="-2">
     ${escapeXml(titleDisplay)}
   </text>
   
   <!-- Aldersbadge -->
   <rect x="${PAD}" y="370" width="290" height="64" rx="32" fill="${COLORS.ink}"/>
-  <text x="${PAD + 145}" y="411" text-anchor="middle" font-family="Inter, sans-serif" font-size="26" font-weight="600" fill="${COLORS.cream}">
+  <text x="${PAD + 145}" y="411" text-anchor="middle" font-family="sans-serif" font-size="26" font-weight="600" fill="${COLORS.cream}">
     ${data.age ? `Vejledende fra ${data.age} år` : 'Alder ikke sat'}
   </text>
   
@@ -341,29 +346,29 @@ function generateVurderingCard(data) {
   <line x1="${PAD}" y1="510" x2="${W - PAD}" y2="510" stroke="${COLORS.border}" stroke-width="2"/>
   
   <!-- AI Score -->
-  <text x="${PAD}" y="580" font-family="Inter, sans-serif" font-size="22" font-weight="500" fill="${COLORS.muted}" letter-spacing="2">
+  <text x="${PAD}" y="580" font-family="sans-serif" font-size="22" font-weight="500" fill="${COLORS.muted}" letter-spacing="2">
     AI-VURDERING
   </text>
-  <text x="${PAD}" y="700" font-family="Fraunces, Georgia, serif" font-size="130" font-weight="700" fill="${aiColor}">
+  <text x="${PAD}" y="700" font-family="serif" font-size="130" font-weight="700" fill="${aiColor}">
     ${data.aiScore !== null ? data.aiScore : '—'}
   </text>
-  <text x="${PAD}" y="750" font-family="Inter, sans-serif" font-size="26" font-weight="500" fill="${aiColor}">
+  <text x="${PAD}" y="750" font-family="sans-serif" font-size="26" font-weight="500" fill="${aiColor}">
     ${aiLabel}
   </text>
   
   <!-- Forældre Score -->
-  <text x="${W / 2 + 30}" y="580" font-family="Inter, sans-serif" font-size="22" font-weight="500" fill="${COLORS.muted}" letter-spacing="2">
+  <text x="${W / 2 + 30}" y="580" font-family="sans-serif" font-size="22" font-weight="500" fill="${COLORS.muted}" letter-spacing="2">
     FORÆLDRE
   </text>
-  <text x="${W / 2 + 30}" y="700" font-family="Fraunces, Georgia, serif" font-size="130" font-weight="700" fill="${data.parentScore !== null ? scoreColor(data.parentScore) : COLORS.muted}">
+  <text x="${W / 2 + 30}" y="700" font-family="serif" font-size="130" font-weight="700" fill="${data.parentScore !== null ? scoreColor(data.parentScore) : COLORS.muted}">
     ${data.parentScore !== null ? data.parentScore : '—'}
   </text>
-  <text x="${W / 2 + 30}" y="750" font-family="Inter, sans-serif" font-size="26" font-weight="500" fill="${COLORS.muted}">
+  <text x="${W / 2 + 30}" y="750" font-family="sans-serif" font-size="26" font-weight="500" fill="${COLORS.muted}">
     ${data.parentVotes > 0 ? `${data.parentVotes} stemmer` : 'Vær den første'}
   </text>
   
   <!-- Skala-note -->
-  <text x="${PAD}" y="800" font-family="Inter, sans-serif" font-size="18" font-weight="400" fill="${COLORS.muted}" font-style="italic">
+  <text x="${PAD}" y="800" font-family="sans-serif" font-size="18" font-weight="400" fill="${COLORS.muted}" font-style="italic">
     Skala 1-10 · Lavere tal = lavere bekymring
   </text>
   
@@ -372,10 +377,10 @@ function generateVurderingCard(data) {
   
   <!-- CTA i bunden -->
   <line x1="${PAD}" y1="${H - 110}" x2="${W - PAD}" y2="${H - 110}" stroke="${COLORS.border}" stroke-width="2"/>
-  <text x="${PAD}" y="${H - 50}" font-family="Inter, sans-serif" font-size="28" font-weight="600" fill="${COLORS.ink}">
+  <text x="${PAD}" y="${H - 50}" font-family="sans-serif" font-size="28" font-weight="600" fill="${COLORS.ink}">
     Læs hele vurderingen
   </text>
-  <text x="${W - PAD}" y="${H - 50}" text-anchor="end" font-family="Inter, sans-serif" font-size="28" font-weight="600" fill="${COLORS.accent}">
+  <text x="${W - PAD}" y="${H - 50}" text-anchor="end" font-family="sans-serif" font-size="28" font-weight="600" fill="${COLORS.accent}">
     skaermtjek.dk →
   </text>
 </svg>`;
@@ -397,10 +402,10 @@ function generateUgeTipCard(data) {
   const bulletsXml = bullets.map((b, i) => {
     const y = 1180 + (i * 130);
     return `
-      <text x="${PAD}" y="${y}" font-family="Inter, sans-serif" font-size="36" font-weight="600" fill="${COLORS.ink}">
+      <text x="${PAD}" y="${y}" font-family="sans-serif" font-size="36" font-weight="600" fill="${COLORS.ink}">
         ${escapeXml(b.icon || '•')} ${escapeXml(b.highlight || '')}
       </text>
-      <text x="${PAD}" y="${y + 42}" font-family="Inter, sans-serif" font-size="30" font-weight="400" fill="${COLORS.ink2}">
+      <text x="${PAD}" y="${y + 42}" font-family="sans-serif" font-size="30" font-weight="400" fill="${COLORS.ink2}">
         ${escapeXml((b.text || '').slice(0, 55))}
       </text>
     `;
@@ -420,37 +425,37 @@ function generateUgeTipCard(data) {
   <rect x="0" y="0" width="${W}" height="12" fill="${COLORS.accent}"/>
   
   <!-- Skærmtjek logo -->
-  <text x="${PAD}" y="${PAD + 50}" font-family="Inter, sans-serif" font-size="40" font-weight="700" fill="${COLORS.ink}">
+  <text x="${PAD}" y="${PAD + 50}" font-family="sans-serif" font-size="40" font-weight="700" fill="${COLORS.ink}">
     Skærm<tspan fill="${COLORS.accent}">Tjek</tspan>
   </text>
   
   <!-- Ugens fund-badge -->
   <rect x="${PAD}" y="350" width="540" height="80" rx="40" fill="${COLORS.accent}"/>
-  <text x="${PAD + 270}" y="403" text-anchor="middle" font-family="Inter, sans-serif" font-size="34" font-weight="600" fill="${COLORS.cream}">
+  <text x="${PAD + 270}" y="403" text-anchor="middle" font-family="sans-serif" font-size="34" font-weight="600" fill="${COLORS.cream}">
     🌟 UGENS FAMILIEFUND
   </text>
   
   <!-- Platform -->
-  <text x="${PAD}" y="520" font-family="Inter, sans-serif" font-size="32" font-weight="500" fill="${COLORS.muted}" letter-spacing="3">
+  <text x="${PAD}" y="520" font-family="sans-serif" font-size="32" font-weight="500" fill="${COLORS.muted}" letter-spacing="3">
     ${escapeXml(data.platform.toUpperCase())}
   </text>
   
   <!-- Titel -->
-  <text x="${PAD}" y="700" font-family="Fraunces, Georgia, serif" font-size="${titleFontSize}" font-weight="700" fill="${COLORS.ink}" letter-spacing="-3">
+  <text x="${PAD}" y="700" font-family="serif" font-size="${titleFontSize}" font-weight="700" fill="${COLORS.ink}" letter-spacing="-3">
     ${escapeXml(titleDisplay)}
   </text>
   
   <!-- Score -->
-  <text x="${PAD}" y="900" font-family="Inter, sans-serif" font-size="28" font-weight="500" fill="${COLORS.muted}" letter-spacing="2">
+  <text x="${PAD}" y="900" font-family="sans-serif" font-size="28" font-weight="500" fill="${COLORS.muted}" letter-spacing="2">
     AI-VURDERING
   </text>
-  <text x="${PAD}" y="1030" font-family="Fraunces, Georgia, serif" font-size="180" font-weight="700" fill="${aiColor}">
+  <text x="${PAD}" y="1030" font-family="serif" font-size="180" font-weight="700" fill="${aiColor}">
     ${data.aiScore !== null ? data.aiScore : '—'}
   </text>
   
   <!-- Alder -->
   <rect x="${W - PAD - 380}" y="940" width="380" height="90" rx="45" fill="${COLORS.ink}"/>
-  <text x="${W - PAD - 190}" y="1000" text-anchor="middle" font-family="Inter, sans-serif" font-size="36" font-weight="600" fill="${COLORS.cream}">
+  <text x="${W - PAD - 190}" y="1000" text-anchor="middle" font-family="sans-serif" font-size="36" font-weight="600" fill="${COLORS.cream}">
     ${data.age ? `Fra ${data.age} år` : 'Vejledende'}
   </text>
   
@@ -460,10 +465,10 @@ function generateUgeTipCard(data) {
   
   <!-- CTA -->
   <line x1="${PAD}" y1="${H - 200}" x2="${W - PAD}" y2="${H - 200}" stroke="${COLORS.border}" stroke-width="2"/>
-  <text x="${W / 2}" y="${H - 120}" text-anchor="middle" font-family="Inter, sans-serif" font-size="40" font-weight="600" fill="${COLORS.ink}">
+  <text x="${W / 2}" y="${H - 120}" text-anchor="middle" font-family="sans-serif" font-size="40" font-weight="600" fill="${COLORS.ink}">
     Se hele vurderingen
   </text>
-  <text x="${W / 2}" y="${H - 60}" text-anchor="middle" font-family="Inter, sans-serif" font-size="44" font-weight="700" fill="${COLORS.accent}">
+  <text x="${W / 2}" y="${H - 60}" text-anchor="middle" font-family="sans-serif" font-size="44" font-weight="700" fill="${COLORS.accent}">
     skaermtjek.dk →
   </text>
 </svg>`;
@@ -513,44 +518,44 @@ function generateHeadsUpCard(data) {
   <rect x="0" y="0" width="${W}" height="8" fill="${COLORS.mid}"/>
   
   <!-- Skærmtjek logo -->
-  <text x="${PAD}" y="${PAD + 30}" font-family="Inter, sans-serif" font-size="28" font-weight="700" fill="${COLORS.ink}">
+  <text x="${PAD}" y="${PAD + 30}" font-family="sans-serif" font-size="28" font-weight="700" fill="${COLORS.ink}">
     Skærm<tspan fill="${COLORS.accent}">Tjek</tspan>
   </text>
   
   <!-- Platform -->
-  <text x="${W - PAD}" y="${PAD + 30}" text-anchor="end" font-family="Inter, sans-serif" font-size="22" font-weight="500" fill="${COLORS.muted}">
+  <text x="${W - PAD}" y="${PAD + 30}" text-anchor="end" font-family="sans-serif" font-size="22" font-weight="500" fill="${COLORS.muted}">
     ${escapeXml(data.platform.toUpperCase())}
   </text>
   
   <!-- Heads-up badge -->
   <rect x="${PAD}" y="180" width="430" height="76" rx="38" fill="${COLORS.mid}"/>
-  <text x="${PAD + 215}" y="231" text-anchor="middle" font-family="Inter, sans-serif" font-size="32" font-weight="600" fill="${COLORS.cream}">
+  <text x="${PAD + 215}" y="231" text-anchor="middle" font-family="sans-serif" font-size="32" font-weight="600" fill="${COLORS.cream}">
     👀 FORÆLDRE-TJEK
   </text>
   
   <!-- Titel -->
-  <text x="${PAD}" y="360" font-family="Fraunces, Georgia, serif" font-size="${titleFontSize}" font-weight="700" fill="${COLORS.ink}" letter-spacing="-2">
+  <text x="${PAD}" y="360" font-family="serif" font-size="${titleFontSize}" font-weight="700" fill="${COLORS.ink}" letter-spacing="-2">
     ${escapeXml(titleDisplay)}
   </text>
   
   <!-- Alder -->
   <rect x="${PAD}" y="420" width="280" height="58" rx="29" fill="${COLORS.ink}"/>
-  <text x="${PAD + 140}" y="459" text-anchor="middle" font-family="Inter, sans-serif" font-size="24" font-weight="600" fill="${COLORS.cream}">
+  <text x="${PAD + 140}" y="459" text-anchor="middle" font-family="sans-serif" font-size="24" font-weight="600" fill="${COLORS.cream}">
     ${data.age ? `Vejledende fra ${data.age} år` : 'Vejledende'}
   </text>
   
   <!-- Positiv -->
   ${positive ? `
   <rect x="${PAD}" y="540" width="${W - 2 * PAD}" height="160" rx="12" fill="${COLORS.warm}" stroke="${COLORS.good}" stroke-width="3"/>
-  <text x="${PAD + 30}" y="595" font-family="Inter, sans-serif" font-size="30" font-weight="700" fill="${COLORS.good}">
+  <text x="${PAD + 30}" y="595" font-family="sans-serif" font-size="30" font-weight="700" fill="${COLORS.good}">
     ✅ ${escapeXml(positive.highlight || 'Positiv')}
   </text>
-  <text x="${PAD + 30}" y="650" font-family="Inter, sans-serif" font-size="26" font-weight="400" fill="${COLORS.ink2}">
+  <text x="${PAD + 30}" y="650" font-family="sans-serif" font-size="26" font-weight="400" fill="${COLORS.ink2}">
     ${escapeXml((positive.text || '').slice(0, 60))}
   </text>
   ` : `
   <rect x="${PAD}" y="540" width="${W - 2 * PAD}" height="160" rx="12" fill="${COLORS.warm}" stroke="${COLORS.muted}" stroke-width="3"/>
-  <text x="${PAD + 30}" y="595" font-family="Inter, sans-serif" font-size="30" font-weight="700" fill="${COLORS.muted}">
+  <text x="${PAD + 30}" y="595" font-family="sans-serif" font-size="30" font-weight="700" fill="${COLORS.muted}">
     Ingen klare styrker fremhævet
   </text>
   `}
@@ -558,28 +563,28 @@ function generateHeadsUpCard(data) {
   <!-- Bekymring -->
   ${bekymring ? `
   <rect x="${PAD}" y="730" width="${W - 2 * PAD}" height="160" rx="12" fill="${COLORS.warm}" stroke="${COLORS.bad}" stroke-width="3"/>
-  <text x="${PAD + 30}" y="785" font-family="Inter, sans-serif" font-size="30" font-weight="700" fill="${COLORS.bad}">
+  <text x="${PAD + 30}" y="785" font-family="sans-serif" font-size="30" font-weight="700" fill="${COLORS.bad}">
     ⚠️ ${escapeXml(bekymring.highlight || 'Opmærksomhed')}
   </text>
-  <text x="${PAD + 30}" y="840" font-family="Inter, sans-serif" font-size="26" font-weight="400" fill="${COLORS.ink2}">
+  <text x="${PAD + 30}" y="840" font-family="sans-serif" font-size="26" font-weight="400" fill="${COLORS.ink2}">
     ${escapeXml((bekymring.text || '').slice(0, 60))}
   </text>
   ` : (isHighRisk ? `
   <rect x="${PAD}" y="730" width="${W - 2 * PAD}" height="160" rx="12" fill="${COLORS.warm}" stroke="${COLORS.bad}" stroke-width="3"/>
-  <text x="${PAD + 30}" y="785" font-family="Inter, sans-serif" font-size="30" font-weight="700" fill="${COLORS.bad}">
+  <text x="${PAD + 30}" y="785" font-family="sans-serif" font-size="30" font-weight="700" fill="${COLORS.bad}">
     ⚠️ Høj AI-score
   </text>
-  <text x="${PAD + 30}" y="840" font-family="Inter, sans-serif" font-size="26" font-weight="400" fill="${COLORS.ink2}">
+  <text x="${PAD + 30}" y="840" font-family="sans-serif" font-size="26" font-weight="400" fill="${COLORS.ink2}">
     Score ${data.aiScore} indikerer flere bekymringspunkter
   </text>
   ` : '')}
   
   <!-- CTA -->
   <line x1="${PAD}" y1="${H - 110}" x2="${W - PAD}" y2="${H - 110}" stroke="${COLORS.border}" stroke-width="2"/>
-  <text x="${PAD}" y="${H - 50}" font-family="Inter, sans-serif" font-size="28" font-weight="600" fill="${COLORS.ink}">
+  <text x="${PAD}" y="${H - 50}" font-family="sans-serif" font-size="28" font-weight="600" fill="${COLORS.ink}">
     Vurderingen findes på
   </text>
-  <text x="${W - PAD}" y="${H - 50}" text-anchor="end" font-family="Inter, sans-serif" font-size="28" font-weight="600" fill="${COLORS.accent}">
+  <text x="${W - PAD}" y="${H - 50}" text-anchor="end" font-family="sans-serif" font-size="28" font-weight="600" fill="${COLORS.accent}">
     skaermtjek.dk →
   </text>
 </svg>`;
