@@ -11,6 +11,33 @@
 //   - svg: rå SVG-kode (beholdt for debugging)
 
 const { Resvg } = require('@resvg/resvg-js');
+const path = require('path');
+
+// Find stierne til Inter-font-filer fra @fontsource/inter npm-pakken.
+// Pakken indeholder .ttf-filer i undermappen "files".
+// Vi loader regular (400) + bold (700) så både brødtekst og overskrifter renderes.
+function resolveFontFiles() {
+  const fontFiles = [];
+  try {
+    const interDir = path.dirname(require.resolve('@fontsource/inter/package.json'));
+    const candidates = [
+      'files/inter-latin-400-normal.woff', // bruges ikke af resvg, men nævnt for klarhed
+      'files/inter-latin-400-normal.ttf',
+      'files/inter-latin-700-normal.ttf'
+    ];
+    for (const rel of candidates) {
+      if (rel.endsWith('.ttf')) {
+        fontFiles.push(path.join(interDir, rel));
+      }
+    }
+  } catch (e) {
+    // Hvis pakken ikke kan findes, returneres tom liste —
+    // resvg falder så tilbage til system-fonte.
+  }
+  return fontFiles;
+}
+
+const FONT_FILES = resolveFontFiles();
 
 exports.handler = async (event, context) => {
   const headers = {
@@ -95,12 +122,15 @@ exports.handler = async (event, context) => {
           value: dims.width
         },
         font: {
-          loadSystemFonts: true,
-          // Når SVG'en kalder Inter/Fraunces og de ikke findes,
-          // falder resvg tilbage til disse familier (rækkefølge = prioritet).
-          defaultFontFamily: 'DejaVu Sans',
-          serifFamily: 'DejaVu Serif',
-          sansSerifFamily: 'DejaVu Sans'
+          // Load Inter-font-filer bundlet via @fontsource/inter npm-pakken.
+          fontFiles: FONT_FILES,
+          // Undgå at lede efter system-fonte (de findes ikke pålideligt på Netlify).
+          loadSystemFonts: false,
+          // SVG'en bruger generiske keywords (sans-serif/serif) —
+          // begge peger nu på Inter.
+          defaultFontFamily: 'Inter',
+          serifFamily: 'Inter',
+          sansSerifFamily: 'Inter'
         }
       });
       const pngData = resvg.render();
@@ -119,6 +149,7 @@ exports.handler = async (event, context) => {
         title: rating.title,
         png_base64: pngBase64,
         png_conversion_error: conversionError,
+        font_files_found: FONT_FILES.length,
         svg,
         dimensions: dims
       })
