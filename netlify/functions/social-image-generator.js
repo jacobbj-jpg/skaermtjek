@@ -1,11 +1,16 @@
 // netlify/functions/social-image-generator.js
-// Genererer SVG-cards baseret på rating-data + format
+// Genererer SVG-cards baseret på rating-data + format,
+// konverterer til PNG med @resvg/resvg-js, og returnerer PNG som base64.
 // Tre formater:
 // - vurdering: 1080x1080 (Instagram/Facebook feed)
 // - uge_tip: 1080x1920 (Instagram Stories)
 // - heads_up: 1080x1080 (Facebook gruppe-stil)
 //
-// Returnerer SVG som tekst — Make.com konverterer til PNG via CloudConvert/Img2Go.
+// Output:
+//   - png_base64: PNG-billede som base64-streng (klar til Make.com)
+//   - svg: rå SVG-kode (beholdt for debugging)
+
+const { Resvg } = require('@resvg/resvg-js');
 
 exports.handler = async (event, context) => {
   const headers = {
@@ -78,6 +83,28 @@ exports.handler = async (event, context) => {
         };
     }
 
+    const dims = getDimensions(format);
+
+    // Konverter SVG → PNG med resvg
+    let pngBase64 = null;
+    let conversionError = null;
+    try {
+      const resvg = new Resvg(svg, {
+        fitTo: {
+          mode: 'width',
+          value: dims.width
+        },
+        font: {
+          loadSystemFonts: true
+        }
+      });
+      const pngData = resvg.render();
+      const pngBuffer = pngData.asPng();
+      pngBase64 = pngBuffer.toString('base64');
+    } catch (convErr) {
+      conversionError = convErr.message;
+    }
+
     return {
       statusCode: 200,
       headers,
@@ -85,8 +112,10 @@ exports.handler = async (event, context) => {
         success: true,
         format,
         title: rating.title,
+        png_base64: pngBase64,
+        png_conversion_error: conversionError,
         svg,
-        dimensions: getDimensions(format)
+        dimensions: dims
       })
     };
   } catch (err) {
