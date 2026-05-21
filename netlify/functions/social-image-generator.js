@@ -14,50 +14,25 @@ const { Resvg } = require('@resvg/resvg-js');
 const path = require('path');
 const fs = require('fs');
 
-// Find Inter-font-filer fra @fontsource/inter npm-pakken.
-// I stedet for at gætte filnavne, scanner vi pakkens mapper
-// rekursivt og samler alle .ttf-filer vi finder.
-function findTtfFiles(dir, found, depth) {
-  if (depth > 4) return;
-  let entries;
-  try {
-    entries = fs.readdirSync(dir, { withFileTypes: true });
-  } catch (e) {
-    return;
-  }
-  for (const entry of entries) {
-    const full = path.join(dir, entry.name);
-    if (entry.isDirectory()) {
-      findTtfFiles(full, found, depth + 1);
-    } else if (entry.isFile() && entry.name.toLowerCase().endsWith('.ttf')) {
-      // Foretræk "latin" + "normal" varianter for at holde det let,
-      // men accepter alle .ttf hvis intet bedre findes.
-      found.push(full);
+// Inter-font-filer ligger direkte i functions-mappen (ved siden af denne fil).
+// Vi loader Regular + Bold så både brødtekst og overskrifter renderes korrekt.
+// __dirname peger på mappen hvor denne function-fil ligger ved kørsel.
+function resolveFontFiles() {
+  const candidates = [
+    path.join(__dirname, 'Inter-Regular.ttf'),
+    path.join(__dirname, 'Inter-Bold.ttf')
+  ];
+  const found = [];
+  for (const file of candidates) {
+    try {
+      if (fs.existsSync(file)) {
+        found.push(file);
+      }
+    } catch (e) {
+      // ignorér — hvis filen ikke kan tilgås, springes den bare over
     }
   }
-}
-
-function resolveFontFiles() {
-  const found = [];
-  try {
-    const interDir = path.dirname(require.resolve('@fontsource/inter/package.json'));
-    findTtfFiles(interDir, found, 0);
-  } catch (e) {
-    // Pakke ikke fundet — resvg falder tilbage til system-fonte.
-  }
-  // Hvis vi fandt mange filer, så prioriter latin normal 400 + 700
-  // for at undgå at loade dusinvis af varianter (langsommere).
-  const preferred = found.filter(f => {
-    const n = f.toLowerCase();
-    return n.includes('latin') && n.includes('normal') &&
-      (n.includes('-400-') || n.includes('-700-'));
-  });
-  if (preferred.length > 0) return preferred;
-  // Ellers: hvis vi fandt latin overhovedet, brug dem
-  const latin = found.filter(f => f.toLowerCase().includes('latin'));
-  if (latin.length > 0) return latin.slice(0, 6);
-  // Sidste udvej: brug hvad vi fandt (begrænset antal)
-  return found.slice(0, 6);
+  return found;
 }
 
 const FONT_FILES = resolveFontFiles();
