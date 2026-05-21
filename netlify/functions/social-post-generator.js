@@ -125,6 +125,23 @@ exports.handler = async (event, context) => {
       ? (Object.values(rating.ai_scores).reduce((a, b) => a + b, 0) / Object.values(rating.ai_scores).length).toFixed(1)
       : null;
 
+    // Byg slug til direkte vurderings-URL.
+    // Matcher SkærmTjeks slug-format: små bogstaver, æ→ae, ø→oe, å→aa,
+    // mellemrum/tegn → bindestreg (fx "Hr. Skæg" → "hr-skaeg").
+    function slugify(title) {
+      return String(title || '')
+        .toLowerCase()
+        .replace(/æ/g, 'ae')
+        .replace(/ø/g, 'oe')
+        .replace(/å/g, 'aa')
+        .replace(/[^a-z0-9]+/g, '-')   // alt der ikke er bogstav/tal → bindestreg
+        .replace(/^-+|-+$/g, '');      // fjern bindestreger i start/slut
+    }
+
+    // Brug eksisterende slug fra rating hvis den findes, ellers byg fra titlen.
+    const ratingSlug = rating.slug || slugify(rating.title);
+    const ratingUrl = `skaermtjek.dk/vurdering/${ratingSlug}`;
+
     const ratingData = {
       title: rating.title,
       platform: PLATFORM_LABEL[rating.platform] || rating.platform || 'Ukendt platform',
@@ -136,7 +153,8 @@ exports.handler = async (event, context) => {
       analysis: rating.ai_analysis ? rating.ai_analysis.slice(0, 500) : null,
       positiveTags: rating.positive_tags || [],
       contentType: rating.content_type || 'channel',
-      notes: rating.notes ? rating.notes.slice(0, 200) : null
+      notes: rating.notes ? rating.notes.slice(0, 200) : null,
+      ratingUrl: ratingUrl
     };
 
     // Format-specifikke prompts
@@ -169,7 +187,7 @@ ${editor.emoji} [TITEL]
 
 📊 AI: X.X / Forældre: X.X (eller "Ingen forældrescore endnu")
 
-👉 Læs hele vurderingen på skaermtjek.dk
+👉 Læs hele vurderingen på ${ratingUrl}
 
 ${signatureLine}
 
@@ -192,7 +210,7 @@ Tre ting du skal vide:
 • [Punkt 2 — konkret]
 • [Punkt 3 — konkret]
 
-→ skaermtjek.dk
+→ ${ratingUrl}
 
 ${signatureLine}
 
@@ -217,7 +235,7 @@ Her er hvad I skal vide:
 ✅ Det kan være godt fordi: [konkret styrke]
 ⚠️ Vær opmærksom på: [konkret bekymring]
 
-Vurderingen findes på skaermtjek.dk
+Vurderingen findes på ${ratingUrl}
 
 ${signatureLine}
 
@@ -268,6 +286,11 @@ ABSOLUT TONE-REGEL:
 Brug ALDRIG ordene "anbefaler", "anbefaling" eller "anbefalet".
 Brug i stedet: "vi har vurderet", "vurdering", "vejledende fra X år", "fundet egnet til",
 "kan være et godt valg hvis", "fund", "tip", "vi har set".
+
+LINK-REGEL:
+Når strukturen indeholder en URL (fx skaermtjek.dk/vurdering/...), skal du gengive den
+NØJAGTIGT som angivet — bogstav for bogstav. Lav den ikke om, forkort den ikke,
+og erstat den ikke med "skaermtjek.dk". Den fører direkte til den rigtige vurdering.
 
 Returnér KUN selve opslagsteksten — ingen indledning, ingen forklaring, ingen markdown, ingen anførselstegn omkring det hele.`;
 
