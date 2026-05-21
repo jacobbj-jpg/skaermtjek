@@ -91,11 +91,33 @@ exports.handler = async (event, context) => {
       twitch: 'PEER', pinterest: 'PEER'
     };
 
-    // Vælg skribent ud fra platform-kategori.
-    // Platform-kategorien er afgørende: en app skrives af CACHE uanset alder,
-    // en serie af RØD uanset alder. Kun når platformen er ukendt/uden kategori
-    // falder vi tilbage til ALF (pædagogisk generalist for de mindste).
-    const editorKey = PLATFORM_EDITOR[rating.platform] || 'ALF';
+    // Vælg skribent. content_type er det mest præcise signal:
+    //   app                 → CACHE (teknisk reviewer)
+    //   film / serie / channel → RØD (film- og serie-anmelder)
+    // For sociale medier bruger vi platform (de har ikke en content_type).
+    // ALF er fallback når intet andet matcher.
+    function pickEditor(r) {
+      const ct = String(r.content_type || '').toLowerCase().trim();
+      const SOCIAL = ['tiktok', 'instagram', 'snapchat', 'ytshorts', 'bereal',
+                      'discord', 'twitch', 'pinterest'];
+
+      // Sociale medie-platforme → PEER (uanset content_type)
+      if (SOCIAL.includes(r.platform)) return 'PEER';
+
+      // App → CACHE
+      if (ct === 'app') return 'CACHE';
+
+      // Film / serie / kanal → RØD
+      if (ct === 'film' || ct === 'serie' || ct === 'channel') return 'RØD';
+
+      // Spil-platforme uden tydelig content_type → CACHE
+      if (['gaming', 'switch'].includes(r.platform)) return 'CACHE';
+
+      // Fald tilbage på platform-mapping, ellers ALF
+      return PLATFORM_EDITOR[r.platform] || 'ALF';
+    }
+
+    const editorKey = pickEditor(rating);
     const editor = EDITORS[editorKey];
 
     // Forbered data til AI
@@ -120,6 +142,18 @@ exports.handler = async (event, context) => {
     // Format-specifikke prompts
     // VIGTIG TONE: Vi GIVER VURDERINGER, vi ANBEFALER IKKE.
     const signatureLine = `— Vurderet af ${editorKey} ${editor.emoji}, ${editorKey} er ${editor.role} i SkærmTjeks AI-redaktion. Alt indhold tjekkes af redaktionen og et menneske før det udgives.`;
+
+    // Afgør om indholdet er drevet af barnet eller af forælderen.
+    // Småbørns-indhold (≤4 år) vælges af forælderen — barnet "beder ikke om appen".
+    // Større børn opsøger selv ting (sociale medier, populære spil, virale serier).
+    // Heads_up-hooket tilpasses derfor efter alder.
+    const ageNum = parseInt(String(rating.recommended_age || ''), 10);
+    const isSmallChild = !isNaN(ageNum) && ageNum <= 4;
+    const headsUpHook = isSmallChild
+      ? `Leder I efter noget trygt til de mindste? / Sætter I [titel] på derhjemme?
+   (Hooket skal være forælder-drevet — for de mindste er det forælderen der vælger indholdet, ikke barnet der beder om det.)`
+      : `Er dit barn begyndt at snakke om eller bede om [titel]?
+   (Hooket skal være barn-drevet — større børn opsøger selv indhold.)`;
 
     const FORMAT_PROMPTS = {
       vurdering: `Skriv et Facebook/Instagram-opslag der formidler vores vurdering af titlen.
@@ -174,7 +208,8 @@ Krav:
 Struktur:
 👀 Forældre-tjek: [Titel]
 
-Er dit barn begyndt at snakke om [titel]?
+[ÅBNINGSSPØRGSMÅL — tilpas efter denne anvisning:]
+${headsUpHook}
 
 Her er hvad I skal vide:
 [Kort, konkret sammendrag af hvad det er]
