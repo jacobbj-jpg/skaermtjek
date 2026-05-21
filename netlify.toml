@@ -1,9 +1,7 @@
-[[redirects]]
-  from = "/vurdering/*"
-  to = "/vurdering.html"
-  status = 200
+# netlify.toml — Netlify build- og function-konfiguration for SkærmTjek
 
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+[functions]
+  # Tving Netlify til at pakke font-filer (.ttf) med functions,
+  # så social-image-generator kan loade Inter-fonten ved kørsel.
+  # Uden dette inkluderer Netlify's bundler kun JS-filer.
+  included_files = ["netlify/functions/**/*.ttf"]
