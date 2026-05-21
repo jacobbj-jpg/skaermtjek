@@ -1,12 +1,16 @@
-netlify.toml‎
-+9
-Lines changed: 9 additions & 0 deletions
-Original file line number	Diff line number	Diff line change
-@@ -0,0 +1,9 @@
+# netlify.toml — Netlify konfiguration for SkærmTjek
+
+[functions]
+  # Tving Netlify til at pakke font-filer (.ttf) med functions,
+  # så social-image-generator kan loade Inter-fonten ved kørsel.
+  # Uden dette inkluderer Netlify's bundler kun JS-filer.
+  included_files = ["netlify/functions/**/*.ttf"]
+
 [[redirects]]
   from = "/vurdering/*"
   to = "/vurdering.html"
   status = 200
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
