@@ -91,13 +91,11 @@ exports.handler = async (event, context) => {
       twitch: 'PEER', pinterest: 'PEER'
     };
 
-    // Vælg skribent — ALF som fallback (de mindste / ukendt platform)
-    let editorKey = PLATFORM_EDITOR[rating.platform] || 'ALF';
-    const ageStr = String(rating.recommended_age || '');
-    const ageNum = parseInt(ageStr, 10);
-    if (!isNaN(ageNum) && ageNum <= 3) {
-      editorKey = 'ALF';
-    }
+    // Vælg skribent ud fra platform-kategori.
+    // Platform-kategorien er afgørende: en app skrives af CACHE uanset alder,
+    // en serie af RØD uanset alder. Kun når platformen er ukendt/uden kategori
+    // falder vi tilbage til ALF (pædagogisk generalist for de mindste).
+    const editorKey = PLATFORM_EDITOR[rating.platform] || 'ALF';
     const editor = EDITORS[editorKey];
 
     // Forbered data til AI
@@ -259,7 +257,7 @@ ${JSON.stringify(ratingData, null, 2)}`;
             'anthropic-version': '2023-06-01'
           },
           body: JSON.stringify({
-            model: 'claude-haiku-4-5',
+            model: 'claude-sonnet-4-6',
             max_tokens: 600,
             system: systemPrompt,
             messages: [{ role: 'user', content: fullPrompt }]
